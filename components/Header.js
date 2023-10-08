@@ -19,20 +19,27 @@ const Header = () => {
     // query de apollo
     const { data, loading, error} = useQuery(OBTENER_USUARIO);
 
-    // console.log(data)
+    console.log('Data obtener usuario',data)
     // console.log(loading)
     // console.log(error)
 
     // Proteger que no accedamos a data antes de tener resultados
     if (loading) return null;
 
+    console.log("Data de usuario",data)
+
     // Verifica que data y data.obtenerUsuario estén definidos
-    if (!data || !data.obtenerUsuario) {
+     if (!data || !data.obtenerUsuario) {
         (async () => {
             await router.push('/login');
         })();
         return null;
     }
+    
+
+/*     if(!data) {
+        return router.push('/login');
+    } */
 
     const { nombre, apellido } = data.obtenerUsuario;
 

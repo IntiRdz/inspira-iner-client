@@ -48,7 +48,7 @@ const Login = () => {
                         }
                     }
                 });
-                console.log(data);
+                console.log("Token de autenticación",data);
                 guardarMensaje('Autenticando...');
 
                 // Guardar el token en localstorage
@@ -69,7 +69,7 @@ const Login = () => {
 
                 setTimeout(() => {
                     guardarMensaje(null);
-                }, 3000);
+                }, 5000);
             }
         }
     })
@@ -152,11 +152,7 @@ const Login = () => {
                                 className="bg-gray-800 w-full mt-5 p-2 text-white uppercas hover:cursor-pointer hover:bg-gray-900"
                                 value="Iniciar Sesión"
                             />
-
                         </form>
-                        <div className="bg-blue-500 text-white p-4">
-                            Esta es una caja azul con texto blanco.
-                        </div>
                     </div>
                 </div>
             </Layout>
