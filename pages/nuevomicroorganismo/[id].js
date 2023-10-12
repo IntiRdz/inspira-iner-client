@@ -74,9 +74,15 @@ const NuevoMicroorganismo = () => {
 
   // Mutation de apollo
   const [nuevoMicroorganismo] = useMutation(NUEVO_MICROORGANISMO, {
-    update(cache, { data }) {
+    update(cache, { data: { nuevoMicroorganismo } }) {
+        if (microorganismosLoading || microorganismosError) {
+            console.log('Cargando o error en la consulta de microorganismos');
+            return;
+            
+        }
       // Obtener el objeto de cache
       const { obtenerMicroorganismosPatient } = cache.readQuery({ query: OBTENER_MICROORGANISMOS_PACIENTE, variables: { id } });
+
       // Reescribir ese objeto
       cache.writeQuery({
         query: OBTENER_MICROORGANISMOS_PACIENTE,
@@ -84,7 +90,7 @@ const NuevoMicroorganismo = () => {
           id,
         },
         data: {
-          obtenerMicroorganismosPatient: [...obtenerMicroorganismosPatient, data.nuevoMicroorganismo],
+          obtenerMicroorganismosPatient: [...obtenerMicroorganismosPatient, nuevoMicroorganismo],
         },
       });
     },
@@ -103,7 +109,7 @@ const NuevoMicroorganismo = () => {
             susceptibilidad: 'Sensible',
             comentario_uveh: '',
             paciente_relacionado: id,
-            cama_relacionada: '6517b1da8f71771ba8722fac',
+            cama_relacionada: '6524447af88c3b6be13daf9e',
         },
         validationSchema: Yup.object({
             fecha_deteccion: Yup.date().required('La fecha de detección es obligatoria'),
@@ -177,40 +183,24 @@ const NuevoMicroorganismo = () => {
 
     return ( 
         <Layout>
-            <h1 className="text-2xl text-gray-800 font-light">Crear Nuevo Microorganismo</h1>
-            {id}
-            <div className="flex justify-center mt-5">
+
+            
+            <h1 className="text-2xl text-gray-800 font-light">Asignar Microorganismo</h1>
+            {pacienteData && (
+                    <div>
+                        Paciente :{pacienteData.pacienteData.pac_apellido_paterno} {pacienteData.pacienteData.pac_apellido_materno} {pacienteData.pacienteData.pac_nombre}.
+                    </div>
+                )}
+
+                <div className="flex justify-center mt-5">
+
+
                 <div className="w-full max-w-lg">
                     <form 
                     className="bg-white shadow-md px-8 pt-6 pb-8 mb-4" 
                     onSubmit={formik.handleSubmit}
                     >
                         
-{/*                         <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="paciente_relacionado">
-                                Paciente relacionado
-                            </label>
-        
-                            <input
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="paciente_relacionado"
-                                type="text"
-                                name='paciente_relacionado'
-                                placeholder= 'paciente_relacionado'
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.paciente_relacionado}
-                            />
-                        </div>
-        
-                        { formik.touched.paciente_relacionado && formik.errors.paciente_relacionado ? (
-                            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                <p className="font-bold">Error</p>
-                                <p>{formik.errors.paciente_relacionado}</p>
-                            </div>
-                        ) : null  }  */}
-        
-        
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_deteccion">
                                 Fecha de detección

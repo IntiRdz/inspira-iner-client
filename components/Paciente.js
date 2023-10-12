@@ -10,30 +10,6 @@ const ELIMINAR_PACIENTE = gql`
     }
 `;
 
-/* const OBTENER_PACIENTES = gql`
-    query obtenerPacientesUser {
-        obtenerPacientesUser {
-            id
-            expediente
-            pac_apellido_paterno
-            pac_apellido_materno
-            pac_nombre
-            pac_genero
-            pac_FN
-            pac_dispositivo_o2
-            pac_hemodialisis
-            diagnostico
-            pac_codigo_uveh
-            fecha_ingreso
-            fecha_prealta
-            fecha_egreso
-            hospitalizado
-        }
-    }
-
-`; */
-
-
 const OBTENER_PACIENTES = gql`
 query obtenerPacientes {
     obtenerPacientes{

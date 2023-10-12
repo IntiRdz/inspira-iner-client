@@ -1,13 +1,12 @@
-import React from 'react';
 import Layout from '../components/Layout';
 import Cama from '../components/Cama';
 import { gql, useQuery } from '@apollo/client'
 import Link from 'next/link'
 
 
-const OBTENER_CAMAS = gql`
-  query obtenerCamas {
-      obtenerCamas {
+const OBTENER_CAMAS_DISPONIBLES = gql`
+  query obtenerCamasDisponibles {
+      obtenerCamasDisponibles {
             id
             cama_numero
             cama_compartida
@@ -28,7 +27,7 @@ const OBTENER_CAMAS = gql`
 const Camas = () => {
 
   // Consultar los camas
-  const { data, loading, error } = useQuery(OBTENER_CAMAS)
+  const { data, loading, error } = useQuery(OBTENER_CAMAS_DISPONIBLES)
 
   console.log(data)
   // console.log(loading)
@@ -69,7 +68,7 @@ const Camas = () => {
             </thead>
 
             <tbody className="bg-white">
-              {data.obtenerCamas.map( cama => (
+              {data.obtenerCamasDisponibles.map( cama => (
                 <Cama 
                   key={cama.id}
                   cama={cama}

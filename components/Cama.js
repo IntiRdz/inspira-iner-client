@@ -18,6 +18,7 @@ const OBTENER_CAMAS = gql`
             cama_numero
             cama_compartida
             cama_disponible
+            cama_ocupada
             cama_genero
             cama_dispositivo_o2
             cama_hemodialisis
@@ -35,6 +36,7 @@ const Cama = ({cama}) => {
         cama_numero,
         cama_compartida,
         cama_disponible,
+        cama_ocupada,
         cama_genero,
         cama_dispositivo_o2,
         cama_hemodialisis,
@@ -107,6 +109,7 @@ const Cama = ({cama}) => {
             <td className="border px-4 py-2">{cama_numero} </td>
             <td className="border px-4 py-2">{cama_compartida ? 'Sí' : 'No'} </td>
             <td className="border px-4 py-2">{cama_disponible ? 'Sí' : 'No'} </td>
+            <td className="border px-4 py-2">{cama_ocupada ? 'Sí' : 'No'} </td>
             <td className="border px-4 py-2">{cama_genero} </td>
             <td className="border px-4 py-2">{cama_dispositivo_o2} </td>
             <td className="border px-4 py-2">{cama_hemodialisis ? 'Sí' : 'No'} </td>
@@ -117,11 +120,11 @@ const Cama = ({cama}) => {
             <td className="border px-4 py-2">{cama.cama_fecha_fin ? format(new Date(cama.cama_fecha_fin), 'dd-MM-yy') : ''}</td>
             <td className="border px-4 py-2">
                 <button
-                        type="button"
-                        className="flex justify-center items-center bg-red-800 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
-                        onClick={() => confirmarEliminarCama() }
+                    type="button"
+                    className={`flex justify-center items-center ${cama_ocupada ? 'bg-red-800' : 'bg-green-800'} py-2 px-4 w-full text-white rounded text-xs uppercase font-bold`}
+                    onClick={() => confirmarEliminarCama() }
                 >
-                    Eliminar
+                    {cama_ocupada ? 'Liberar' : 'Ocupar'}
                     <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </button>
             </td>

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
+import { gql, useMutation, useQuery  } from '@apollo/client';
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { gql, useMutation } from '@apollo/client';
-import { useRouter } from 'next/router'
 import Swal from 'sweetalert2';
+import { useRouter } from 'next/router'
 
 const NUEVO_PACIENTE = gql`
     mutation nuevoPaciente($input: PacienteInput) {
@@ -28,9 +28,9 @@ const NUEVO_PACIENTE = gql`
     }
 `;
 
-const OBTENER_PACIENTES_USUARIO = gql`
-    query obtenerPacientesUser {
-        obtenerPacientesUser {
+const OBTENER_PACIENTES = gql`
+    query obtenerPacientes {
+        obtenerPacientes {
             id
             expediente
             pac_apellido_paterno
@@ -53,28 +53,37 @@ const OBTENER_PACIENTES_USUARIO = gql`
 
 const NuevoPaciente = () => {
 
+    // Mensaje de alerta
+    const [mensaje, guardarMensaje] = useState(null);
+    
     // routing
     const router = useRouter();
 
-    // Mensaje de alerta
-    const [mensaje, guardarMensaje] = useState(null);
 
-
-    // Mutation para crear nuevos pacientes
-    const [ nuevoPaciente ] = useMutation(NUEVO_PACIENTE, {
-        update(cache, { data: { nuevoPaciente } } ) {
-            // Obtener el objeto de cache que deseamos actualizar
-            const { obtenerPacientesUser } = cache.readQuery({ query: OBTENER_PACIENTES_USUARIO  });
-
-            // Reescribimos el cache ( el cache nunca se debe modificar )
+    const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
+ 
+    // Mutation de apollo
+    const [nuevoPaciente] = useMutation(NUEVO_PACIENTE, {
+        update(cache, { data: { nuevoPaciente } }) {
+            // Obtener el objeto de cache directamente desde la consulta anterior
+            const { obtenerPacientes } = pacientesData;
+    
+            // Verificar si hay errores o está cargando en la consulta original
+            if (pacientesLoading || pacientesError) {
+                console.log('Cargando o error en la consulta de pacientes');
+                return;
+            }
+    
+            // Reescribir ese objeto
             cache.writeQuery({
-                query: OBTENER_PACIENTES_USUARIO,
+                query: OBTENER_PACIENTES,
                 data: {
-                    obtenerPacientesUser : [...obtenerPacientesUser, nuevoPaciente ]
+                    obtenerPacientes: [...obtenerPacientes, nuevoPaciente]
                 }
-            })
-        }
-    })
+            });
+        },
+    });
+
 
     // Formulario para nuevos microorganismos
     const formik = useFormik({
@@ -171,12 +180,15 @@ const NuevoPaciente = () => {
                         }
                     }
                 });
-                //console.log(data.nuevoPaciente);
+                
+                
+                console.log("Se creo el paciente",data.nuevoPaciente);
+
+                //console.log(data);
 
                 //Mostrar alerta
-
                 Swal.fire(
-                    'Actualizado',
+                    'Creado',
                     'Se agregó correctamente al paciente',
                     'success'
                 )
@@ -205,6 +217,7 @@ const NuevoPaciente = () => {
     return (
         <Layout>
             <h1 className="text-2xl text-gray-800 font-light">Nuevo Paciente</h1>
+                Hola Paciente   
             <div className="flex justify-center mt-5">
                 <div className="w-full max-w-lg">
                     <form

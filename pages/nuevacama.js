@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '../components/Layout'
+import {useQuery, gql, useMutation} from '@apollo/client' 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import {gql, useMutation} from '@apollo/client' 
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
 
@@ -49,13 +49,24 @@ const NuevaCama = () => {
     // routing
     const router = useRouter();
 
+    const { data: camasData, loading: camasLoading, error: camasError } = useQuery(OBTENER_CAMAS);
+
+    // Mensaje de alerta
+    const [mensaje, guardarMensaje] = useState(null);
+
     // Mutation de apollo
     const [nuevaCama] = useMutation(NUEVA_CAMA, {
         update(cache, { data: { nuevaCama } }) {
-            // obtener el objeto de cache
-            const { obtenerCamas } = cache.readQuery({ query: OBTENER_CAMAS });
-            
-            // reescribir ese objeto
+            // Obtener el objeto de cache directamente desde la consulta anterior
+            const { obtenerCamas } = camasData;
+    
+            // Verificar si hay errores o está cargando en la consulta original
+            if (camasLoading || camasError) {
+                console.log('Cargando o error en la consulta de camas');
+                return;
+            }
+    
+            // Reescribir ese objeto
             cache.writeQuery({
                 query: OBTENER_CAMAS,
                 data: {
@@ -71,6 +82,7 @@ const NuevaCama = () => {
             cama_numero: '',
             cama_compartida: true,
             cama_disponible: true,
+            cama_ocupada: false,
             cama_genero: 'No_especificado',
             cama_dispositivo_o2: 'VM',
             cama_hemodialisis: true,
@@ -84,6 +96,7 @@ const NuevaCama = () => {
             cama_numero: Yup.number().required('El número de la cama es obligatorio').positive('No se aceptan números negativos'),
             cama_compartida: Yup.bool(),
             cama_disponible: Yup.bool(),
+            cama_ocupada: Yup.bool(),
             cama_genero: Yup.string().oneOf(['Hombre', 'Mujer', 'No_especificado']).required('El género es obligatorio'),
             cama_dispositivo_o2: Yup.string().oneOf(['No_VM', 'VM']).required('El dispositivo O2 es obligatorio'),
             cama_hemodialisis: Yup.bool(),
@@ -100,6 +113,7 @@ const NuevaCama = () => {
                 cama_numero,
                 cama_compartida,
                 cama_disponible,
+                cama_ocupada,
                 cama_genero,
                 cama_dispositivo_o2,
                 cama_hemodialisis,
@@ -122,6 +136,7 @@ const NuevaCama = () => {
                             cama_numero,
                             cama_compartida,
                             cama_disponible,
+                            cama_ocupada,
                             cama_genero,
                             cama_dispositivo_o2,
                             cama_hemodialisis,
@@ -139,23 +154,35 @@ const NuevaCama = () => {
                 // Mostrar una alerta
                 Swal.fire(
                     'Creado',
-                    'Se creó el cama correctamente',
+                    'Se creó la cama correctamente',
                     'success'
                 )
 
                 // Redireccionar hacia los camas
                 router.push('/camas'); 
+                
             } catch (error) {
-                console.error("Error en la solicitud GraphQL:", error);
-              }
+                guardarMensaje(error.message.replace('GraphQL error: ', ''));
+                setTimeout(() => {
+                    guardarMensaje(null);
+                }, 2000);
+            }
         }
     })
+
+    const mostrarMensaje = () => {
+        return(
+            <div className="bg-white py-2 px-3 w-full my-3 max-w-sm text-center mx-auto">
+                <p>{mensaje}</p>
+            </div>
+        )
+    }
 
 
     return ( 
         <Layout>
             <h1 className="text-2xl text-gray-800 font-light">Crear Nueva Cama</h1>
-
+                Hola cama
             <div className="flex justify-center mt-5">
                 <div className="w-full max-w-lg">
                     <form 
@@ -247,7 +274,36 @@ const NuevaCama = () => {
                             </label>
                         </div>
         
-        
+                        <div>
+                            <label className="block text-gray-700 text-sm font-bold mb-2">
+                                Ocupada
+                            </label>
+                            <label className="inline-flex items-center mr-3" htmlFor="cama_ocupada_true">
+                                <input
+                                    type="radio"
+                                    className="form-radio"
+                                    name="cama_ocupada"
+                                    value="true"
+                                    id= "cama_ocupada_true"
+                                    checked={formik.values.cama_ocupada === true}
+                                    onChange={() => formik.setFieldValue("cama_ocupada", true)}
+                                />
+                                <span className="ml-2">Sí</span>
+                            </label>
+                            <label className="inline-flex items-center" htmlFor="cama_ocupada_false">
+                                <input
+                                    type="radio"
+                                    className="form-radio"
+                                    name="cama_ocupada"
+                                    value="false"
+                                    id="cama_ocupada_false"
+                                    checked={formik.values.cama_ocupada === false}
+                                    onChange={() => formik.setFieldValue("cama_ocupada", false)}
+                                />
+                                <span className="ml-2">No</span>
+                            </label>
+                        </div>
+                        
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_genero">
                                 Género por Habitacion
@@ -468,6 +524,7 @@ const NuevaCama = () => {
                     </form>
                 </div>
             </div>
+            {mensaje && mostrarMensaje()}
         </Layout>
      );
 }

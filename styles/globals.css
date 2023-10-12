@@ -30,3 +30,11 @@ a {
     background: black;
   }
 }
+
+.bg-red-800 {
+  background-color: #e53e3e;
+}
+
+.bg-green-800 {
+  background-color: #48bb78;
+}

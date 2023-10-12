@@ -23,8 +23,15 @@ const Sidebar = () => {
                         </a>
                     </Link>
                 </li>
+                <li className={router.pathname === "/nuevopaciente" ? "bg-blue-800 p-2" : "p-2"}>
+                    <Link href="/nuevopaciente">
+                        <a className="text-white block">
+                            Servicios Clínicos
+                        </a>
+                    </Link>
+                </li>
                 <li className={router.pathname === "/pacientes" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/pacientes">
+                    <Link href="/">
                         <a className="text-white block">
                             Admisión y Coordinacion
                         </a>
@@ -47,21 +54,21 @@ const Sidebar = () => {
                 <li className={router.pathname === "/nuevopaciente" ? "bg-blue-800 p-2" : "p-2"}>
                     <Link href="/nuevopaciente">
                         <a className="text-white block">
-                            Urgencias
+                            Ingresar nuevo paciente 
                         </a>
                     </Link>
                 </li>
                 <li className={router.pathname === "/camas" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/camas">
+                    <Link href="/camasocupadas">
                         <a className="text-white block">
-                            UVEH
+                            Pacientes Hospitalizados
                         </a>
                     </Link>
                 </li>
                 <li className={router.pathname === "/nuevacama" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/nuevacama">
+                    <Link href="/camasdisponibles">
                         <a className="text-white block">
-                            Admisión hospitalaria
+                            Camas Libres
                         </a>
                     </Link>
                 </li>
