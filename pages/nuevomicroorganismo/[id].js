@@ -5,7 +5,6 @@ import { useQuery, gql, useMutation } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
-import { format } from 'date-fns';
 
 const OBTENER_PACIENTE = gql`
   query obtenerPaciente($id: ID!) {
@@ -102,11 +101,11 @@ const NuevoMicroorganismo = () => {
     // Formulario para nuevos microorganismos
     const formik = useFormik({
         initialValues: {
-            fecha_deteccion: '1990-01-01',
-            metodo_deteccion: 'PCR',
-            microorganismo_tipo: 'Virus',
-            microorganismo_nombre: '1',
-            susceptibilidad: 'Sensible',
+            fecha_deteccion: '',
+            metodo_deteccion: '',
+            microorganismo_tipo: '',
+            microorganismo_nombre: '',
+            susceptibilidad: '',
             comentario_uveh: '',
             paciente_relacionado: id,
             cama_relacionada: '6524447af88c3b6be13daf9e',

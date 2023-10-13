@@ -160,7 +160,39 @@ const Paciente = ({paciente}) => {
                 <td className="border px-4 py-2">{pac_dispositivo_o2}</td>
                 <td className="border px-4 py-2">{pac_hemodialisis ? 'Sí' : 'No'}</td>
                 <td className="border px-4 py-2">{diagnostico}</td>
-                <td className="border px-4 py-2">{pac_codigo_uveh}</td>
+                <td
+                    className={`border px-4 py-2 ${
+                      (() => {
+                        switch (pac_codigo_uveh) {
+                            case 'Acinetobacter':
+                                return 'bg-pink-300';
+                            case 'Colonizacion_Acinetobacter':
+                                return 'bg-yellow-200';
+                            case 'Contacto_Acinetobacter':
+                                return 'bg-yellow-200';
+                            case 'Hisopado_Rectal':
+                                return 'yellow-200';
+                            case 'Clostridium_Difficile':
+                                return 'bg-emerald-300';
+                            case 'Enterobacterias_XDR_MDR':
+                                return 'bg-violet-300';
+                            case 'Pseudomonas_XDR_MDR':
+                                return 'bg-amber-400';
+                            case 'SAMR':
+                                return 'bg-rose-500';
+                            case 'Tuberculosisis_o_Sospecha':
+                                return 'bg-cyan-600';
+                            case 'SAMS':
+                                return 'bg-blue-500';
+
+                            default:
+                                return '';  // Sin color predeterminado
+                        }
+                      })()
+                    }`}
+                  >
+                  {pac_codigo_uveh}
+                </td>
                 <td className="border px-4 py-2">{fechaIngreso !== null? fechaIngreso :''}</td>
                 <td className="border px-4 py-2">{fecha_prealta? format(new Date(paciente.fecha_prealta), 'dd-MM-yy') : ''}</td>
                 <td className="border px-4 py-2">{fecha_egreso? format(new Date(paciente.fecha_egreso), 'dd-MM-yy') : ''}</td>

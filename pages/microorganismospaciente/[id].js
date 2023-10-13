@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Layout from '../../components/Layout';
 import { useRouter } from 'next/router';
 import Link from 'next/link'; // Importa Link
-import { useQuery, gql, useMutation } from '@apollo/client';
-import Microorganismo from '../../components/Microorganismo.js';
+import { useQuery, gql } from '@apollo/client';
+import { format, differenceInDays } from 'date-fns';
 
 const OBTENER_PACIENTE = gql`
   query obtenerPaciente($id: ID!) {
@@ -56,10 +56,22 @@ const MicroorganismosPaciente = () => {
         }
     });
 
+
   if (loadingPaciente || loadingMicroorganismo) return 'Cargando...';
 
 
-    return ( 
+  // Función para formatear una fecha en el formato deseado
+  const formatFecha = (fecha, formato) => {
+    return format(new Date(fecha), formato);
+  };
+
+  const calcularDias = (fechaDeteccion) => {
+    const hoy = new Date();
+    const fechaDetec = new Date(fechaDeteccion);
+    return differenceInDays(hoy, fechaDetec);
+};  
+
+  return ( 
         <div>
         <Layout>
         <h1 className="text-2xl text-gray-800 font-light">Microorganismos asociados al paciente</h1>
@@ -73,8 +85,9 @@ const MicroorganismosPaciente = () => {
         <table className="table-auto shadow-md mt-10 w-full w-lg">
           <thead className="bg-gray-800">
             <tr className="text-white">
-                {/* <th className="w-1/7 py-2"> # </th> */}
+                <th className="w-1/7 py-2"> # </th>
                 <th className="w-1/6 py-2">Fecha de Deteccción</th>
+                <th className="w-1/6 py-2">Dias detección</th>
                 <th className="w-1/7 py-2">Método Detección</th>
                 <th className="w-1/7 py-2">Tipo</th>
                 <th className="w-1/7 py-2">Nombre</th>
@@ -85,12 +98,43 @@ const MicroorganismosPaciente = () => {
             </tr>
           </thead>
 
-            <tbody className="bg-white">
-                {dataMicroorganismo.obtenerMicroorganismosPatient.map(microorganismo => (
-                    <Microorganismo
-                        key={microorganismo.id}
-                        microorganismo={microorganismo}
-                    />
+          <tbody className="bg-white">
+          {dataMicroorganismo.obtenerMicroorganismosPatient
+            .sort((a, b) => new Date(b.fecha_deteccion) - new Date(a.fecha_deteccion)) // Ordena por fecha más reciente
+            .map((microorganismo, index) => (
+              <tr key={microorganismo.id}>
+                <td className="border px-4 py-2">{index + 1}</td> {/* Utiliza el índice para el número incremental */}
+                <td className="border px-4 py-2">{formatFecha(microorganismo.fecha_deteccion, 'dd-MM-yy')}</td>
+                <td className="border px-4 py-2">{calcularDias(microorganismo.fecha_deteccion)}</td>
+                <td className="border px-4 py-2">{microorganismo.metodo_deteccion}</td>
+                <td className="border px-4 py-2">{microorganismo.microorganismo_tipo}</td>
+                <td className="border px-4 py-2">{microorganismo.microorganismo_nombre}</td>
+                {/* <td className="border px-4 py-2">{microorganismo.susceptibilidad}</td> */}
+                {/* <td className={`border px-4 py-2 ${microorganismo.susceptibilidad === 'MDR' ? 'bg-yellow-300' : ''}`}> */}
+                <td
+                    className={`border px-4 py-2 ${
+                      (() => {
+                        switch (microorganismo.susceptibilidad) {
+                          case 'Sensible':
+                            return 'bg-green-200';  // Color verde para Sensible
+                            case 'BLEE':
+                              return 'bg-pink-300';   // Color azul para BLEE
+                          case 'MDR':
+                            return 'bg-rose-500'; // Color amarillo para MDR
+                          case 'XDR':
+                            return 'bg-red-300';    // Color rojo para XDR
+                          default:
+                            return '';  // Sin color predeterminado
+                        }
+                      })()
+                    }`}
+                  >
+                  {microorganismo.susceptibilidad}
+                </td>
+                <td className="border px-4 py-2">{microorganismo.comentario_uveh}</td>
+                <td className="border px-4 py-2">{microorganismo.paciente_relacionado}</td>
+                <td className="border px-4 py-2">{microorganismo.cama_relacionada}</td>
+              </tr>
             ))}
           </tbody>
         </table>
