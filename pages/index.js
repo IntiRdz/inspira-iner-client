@@ -4,9 +4,9 @@ import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router';
 import Link from 'next/link'
 
-const OBTENER_PACIENTES = gql`
-    query obtenerPacientes {
-        obtenerPacientes {
+const OBTENER_PACIENTES_SIN_CAMA = gql`
+    query obtenerPacientesHospitalizadosSinCama {
+      obtenerPacientesHospitalizadosSinCama {
           id
           expediente
           pac_apellido_paterno
@@ -31,7 +31,7 @@ const Index = () => {
   const router = useRouter();
 
   // Consulta de Apollo
-  const { data, loading, error } = useQuery(OBTENER_PACIENTES);
+  const { data, loading, error } = useQuery(OBTENER_PACIENTES_SIN_CAMA);
 
   //console.log(data)
   // console.log(loading)
@@ -39,7 +39,7 @@ const Index = () => {
   
   if(loading) return 'Cargando....';
 
-  if( !data.obtenerPacientes ) {
+  if( !data.obtenerPacientesHospitalizadosSinCama ) {
     return router.push('/login');
   } 
 
@@ -74,7 +74,7 @@ const Index = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {data.obtenerPacientes.map((paciente) => (
+              {data.obtenerPacientesHospitalizadosSinCama.map((paciente) => (
                 <Paciente 
                   key={paciente.id} 
                   paciente={paciente} 

@@ -6,6 +6,7 @@ const httpLink = createHttpLink({
   uri: 'https://inspira-iner-server-a98ddf825333.herokuapp.com/',
 });
 
+
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token');
   return {

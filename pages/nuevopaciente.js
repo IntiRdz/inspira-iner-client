@@ -19,7 +19,6 @@ const NUEVO_PACIENTE = gql`
             pac_dispositivo_o2
             pac_hemodialisis
             diagnostico
-            pac_codigo_uveh
             fecha_prealta
             fecha_ingreso
             fecha_egreso
@@ -41,7 +40,6 @@ const OBTENER_PACIENTES = gql`
             pac_dispositivo_o2
             pac_hemodialisis
             diagnostico
-            pac_codigo_uveh
             fecha_prealta
             fecha_ingreso
             fecha_egreso
@@ -97,7 +95,6 @@ const NuevoPaciente = () => {
             pac_dispositivo_o2: '',
             pac_hemodialisis: false,
             diagnostico: '',
-            pac_codigo_uveh: '',
             fecha_ingreso: '',
             fecha_prealta: '',
             fecha_egreso: '',
@@ -118,19 +115,6 @@ const NuevoPaciente = () => {
                 'VM']).required('El dispositivo O2 del paciente es obligatorio'),
             pac_hemodialisis: Yup.boolean(),
             diagnostico: Yup.string().required('El diagnóstico es obligatorio'),
-            pac_codigo_uveh: Yup.string().required([
-                'Sin Aislamientos',
-                'Acinetobacter',
-                'Colonización Acinetobacter',
-                'Contacto Acinetobacter',
-                'Hisopado Rectal',
-                'Clostridium Difficile',
-                'Enterobacterias XDR MDR',
-                'Pseudomonas XDR MDR',
-                'SAMR',
-                'Tuberculosisis o Sospecha',
-                'SAMS'
-            ]).required('El Código es obligatorio'),
             fecha_ingreso: Yup.date().required('La fecha de ingreso es obligatoria'),
             fecha_prealta: Yup.date(),
             fecha_egreso: Yup.date(),
@@ -216,8 +200,7 @@ const NuevoPaciente = () => {
 
     return (
         <Layout>
-            <h1 className="text-2xl text-gray-800 font-light">Nuevo Paciente</h1>
-                Hola Paciente   
+            <h1 className="text-2xl text-gray-800 font-light">Ingresar Paciente</h1>   
             <div className="flex justify-center mt-5">
                 <div className="w-full max-w-lg">
                     <form
@@ -446,7 +429,7 @@ const NuevoPaciente = () => {
 
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_codigo_uveh">
-                                    Código UVEH
+                                    
                                 </label>
                                 <select 
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -454,6 +437,7 @@ const NuevoPaciente = () => {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.pac_codigo_uveh}
+                                    hidden
                                 >
                                     <option value="" label="Seleccione una opción" />
                                     <option value="Sin_Aislamientos" label="Sin Aislamientos" />
@@ -501,7 +485,7 @@ const NuevoPaciente = () => {
 
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_prealta">
-                                    Fecha de Prealta
+                                    
                                 </label>
 
                                 <input
@@ -511,6 +495,7 @@ const NuevoPaciente = () => {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.fecha_prealta}
+                                    hidden
                                 />
                             </div>
 
@@ -524,7 +509,7 @@ const NuevoPaciente = () => {
 
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_egreso">
-                                    Fecha de Egreso
+                                    
                                 </label>
 
                                 <input
@@ -534,6 +519,7 @@ const NuevoPaciente = () => {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.fecha_egreso}
+                                    hidden
                                 />
                             </div>
 
