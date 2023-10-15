@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Layout from '../../components/Layout';
 import { useRouter } from 'next/router';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
+
+import PacienteContext from '../../context/pacientes/PacienteContext';
+import { AsignarCamaTodas } from '../../components/pacientes/AsignarCamaTodas';
 
 const OBTENER_PACIENTE = gql`
   query obtenerPaciente($id: ID!) {
@@ -74,6 +77,8 @@ const NuevoMicroorganismo = () => {
     },
   });
 
+  const { cama } = useContext(PacienteContext);
+
   // Mutation de apollo
   const [nuevoMicroorganismo] = useMutation(NUEVO_MICROORGANISMO, {
     update(cache, { data: { nuevoMicroorganismo } }) {
@@ -124,7 +129,6 @@ const NuevoMicroorganismo = () => {
             microorganismo_nombre: Yup.string(),
             susceptibilidad: Yup.string().oneOf(['BLEE', 'MDR', 'XDR', 'Sensible']),
             comentario_uveh: Yup.string(),
-            cama_relacionada: Yup.string().required('El número de cama es obligatorio'),
         }), 
         onSubmit: async valores => {
 
@@ -150,7 +154,7 @@ const NuevoMicroorganismo = () => {
                             susceptibilidad,
                             comentario_uveh,
                             paciente_relacionado: id,
-                            cama_relacionada,
+                            cama_relacionada: cama
                         }
                     }
                 });
@@ -349,7 +353,9 @@ const NuevoMicroorganismo = () => {
                             </div>
                         ) : null  }
 
-                        <div className="mb-4">
+                        <AsignarCamaTodas /> 
+
+{/*                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_relacionada">
                                 Número de Cama
                             </label>
@@ -363,14 +369,14 @@ const NuevoMicroorganismo = () => {
                                 onBlur={formik.handleBlur}
                                 value={formik.values.cama_relacionada}
                             />
-                        </div>
+                        </div> */}
         
-                        { formik.touched.cama_relacionada && formik.errors.cama_relacionada ? (
+{/*                         { formik.touched.cama_relacionada && formik.errors.cama_relacionada ? (
                             <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
                                 <p className="font-bold">Error</p>
                                 <p>{formik.errors.cama_relacionada}</p>
                             </div>
-                        ) : null  } 
+                        ) : null  }  */}
        
                         <input
                             type="submit"

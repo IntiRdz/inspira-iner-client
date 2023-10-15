@@ -590,7 +590,7 @@ const EditarPaciente = () => {
                         </form>
                         )
                     }}
-                    </Formik> 
+                    </Formik>
                 </div>
             </div>
 
