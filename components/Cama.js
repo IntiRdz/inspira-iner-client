@@ -64,7 +64,7 @@ const Cama = ({cama}) => {
         }
     });
 
-    const confirmarEliminarCama = () => {
+/*     const confirmarEliminarCama = () => {
         Swal.fire({
             title: '¿Deseas eliminar a esta cama?',
             text: "Esta acción no se puede deshacer",
@@ -95,7 +95,7 @@ const Cama = ({cama}) => {
                 
                 }
           })
-    }
+    } */
 
     const editarCama = () => {
         Router.push({
@@ -166,7 +166,7 @@ const Cama = ({cama}) => {
             </td>
             <td className="border px-4 py-2">{cama.cama_fecha_inicio ? format(new Date(cama.cama_fecha_inicio), 'dd-MM-yy') : ''}</td>
             <td className="border px-4 py-2">{cama.cama_fecha_fin ? format(new Date(cama.cama_fecha_fin), 'dd-MM-yy') : ''}</td>
-            <td className="border px-4 py-2">
+{/*             <td className="border px-4 py-2">
                 <button
                     type="button"
                     className={`flex justify-center items-center ${cama_ocupada ? 'bg-red-800' : 'bg-green-800'} py-2 px-4 w-full text-white rounded text-xs uppercase font-bold`}
@@ -175,7 +175,7 @@ const Cama = ({cama}) => {
                     {cama_ocupada ? 'Liberar' : 'Ocupar'}
                     <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </button>
-            </td>
+            </td> */}
             <td className="border px-4 py-2">
                      <button
                         type="button"

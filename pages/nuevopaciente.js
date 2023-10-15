@@ -18,6 +18,7 @@ const NUEVO_PACIENTE = gql`
             pac_FN
             pac_dispositivo_o2
             pac_hemodialisis
+            diagnostico1
             diagnostico
             pac_codigo_uveh
             fecha_prealta
@@ -40,6 +41,7 @@ const OBTENER_PACIENTES = gql`
             pac_FN
             pac_dispositivo_o2
             pac_hemodialisis
+            diagnostico1
             diagnostico
             pac_codigo_uveh
             fecha_prealta
@@ -97,6 +99,7 @@ const NuevoPaciente = () => {
             pac_dispositivo_o2: '',
             pac_hemodialisis: false,
             diagnostico: '',
+            diagnostico1: [],
             pac_codigo_uveh: 'Sin_Definir',
             fecha_ingreso: '',
             fecha_prealta: '',
@@ -117,6 +120,34 @@ const NuevoPaciente = () => {
                 'VMNI', 
                 'VM']).required('El dispositivo O2 del paciente es obligatorio'),
             pac_hemodialisis: Yup.boolean(),
+            diagnostico1: Yup.array()
+            .min(1, 'Debe seleccionar al menos un diagnóstico')
+            .of(
+                Yup.string().oneOf([
+                'CodigoHemoptisis',
+                'CodigoViaAerea',
+                'CodigoInfarto',
+                'COVID',
+                'Influenza',
+                'Parainfluenza',
+                'Adenovirus',
+                'VirusSincialRespiratorio',
+                'TuberculosisSensible',
+                'TuberculosisResistente',
+                'B24',
+                'SIRA',
+                'NeumoniaBacteriana',
+                'EPOC',
+                'Asma',
+                'TromboembiaPulmonar',
+                'DerramePleural',
+                'Neumotorax',
+                'NeumoniaIntersticialDifusa',
+                'InsuficienciaCaridiaca',
+                'CaPulmonarOSospecha',
+                ])
+            )
+            .required('Debe seleccionar al menos un diagnóstico'),
             diagnostico: Yup.string().required('El diagnóstico es obligatorio'),
             pac_codigo_uveh: Yup.string().required([
                 'Sin Definir',
@@ -147,6 +178,7 @@ const NuevoPaciente = () => {
                 pac_FN,
                 pac_dispositivo_o2,
                 pac_hemodialisis,
+                diagnostico1,
                 diagnostico,
                 pac_codigo_uveh,
                 fecha_ingreso,
@@ -173,6 +205,7 @@ const NuevoPaciente = () => {
                             pac_dispositivo_o2,
                             pac_hemodialisis,
                             diagnostico,
+                            diagnostico1,
                             pac_codigo_uveh,
                             fecha_ingreso,
                             fecha_prealta: fechaPrealta,
@@ -201,7 +234,7 @@ const NuevoPaciente = () => {
                 guardarMensaje(error.message.replace('GraphQL error: ', ''));
                 setTimeout(() => {
                     guardarMensaje(null);
-                }, 2000);
+                }, 5000);
             }
         }
         
@@ -366,8 +399,62 @@ const NuevoPaciente = () => {
                             ) : null  }
 
                             <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico1">
+                                Diagnósticos Generales
+                            </label>
+
+                            {[
+                                'CodigoHemoptisis',
+                                'CodigoViaAerea',
+                                'CodigoInfarto',
+                                'COVID',
+                                'Influenza',
+                                'Parainfluenza',
+                                'Adenovirus',
+                                'VirusSincialRespiratorio',
+                                'TuberculosisSensible',
+                                'TuberculosisResistente',
+                                'B24',
+                                'SIRA',
+                                'NeumoniaBacteriana',
+                                'EPOC',
+                                'Asma',
+                                'TromboembiaPulmonar',
+                                'DerramePleural',
+                                'Neumotorax',
+                                'NeumoniaIntersticialDifusa',
+                                'InsuficienciaCaridiaca',
+                                'CaPulmonarOSospecha',
+                            ].map((option) => (
+                                <label key={option} className="block">
+                                <input
+                                    type="checkbox"
+                                    name="diagnostico1"
+                                    value={option}
+                                    onChange={(e) => {
+                                    const isChecked = e.target.checked;
+                                    const value = e.target.value;
+
+                                    formik.setFieldValue(
+                                        'diagnostico1',
+                                        isChecked
+                                        ? [...formik.values.diagnostico1, value]
+                                        : formik.values.diagnostico1.filter((val) => val !== value)
+                                    );
+                                    }}
+                                    onBlur={formik.handleBlur}
+                                    checked={formik.values.diagnostico1.includes(option)}
+                                    className="mr-2"
+                                />
+                                {option}
+                                </label>
+                            ))}
+                            </div>
+
+
+                            <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico">
-                                    Diagnóstico
+                                    Diagnósticos Epecíficos
                                 </label>
 
                                 <input

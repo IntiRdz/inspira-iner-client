@@ -16,6 +16,7 @@ const OBTENER_PACIENTES = gql`
           pac_FN
           pac_dispositivo_o2
           pac_hemodialisis
+          diagnostico1
           diagnostico
           pac_codigo_uveh
           fecha_ingreso
@@ -26,6 +27,8 @@ const OBTENER_PACIENTES = gql`
         }
     }
 `;
+
+
 
 const Index = () => {
 
@@ -56,25 +59,27 @@ const Index = () => {
           <table className="table-auto shadow-md mt-10 w-full w-lg">
             <thead className="bg-gray-800">
               <tr className="text-white">
-              <th className="w-1/6 py-2 text-xs">#</th>
-                <th className="w-1/6 py-2 text-xs">Expediente</th>
-                <th className="w-1/6 py-2 text-xs">Cama</th>
-                <th className="w-1/6 py-2 text-xs">Apellido Paterno</th>
-                <th className="w-1/6 py-2 text-xs">Apellido Materno</th>
-                <th className="w-1/6 py-2 text-xs">Nombre</th>
-                <th className="w-1/6 py-2 text-xs">Genero</th>
-                <th className="w-1/6 py-2 text-xs">Edad</th>
-                <th className="w-1/6 py-2 text-xs">Dispositivo O2</th>
-                <th className="w-1/6 py-2 text-xs">Hemodialisis</th>
-                <th className="w-1/6 py-2 text-xs">Diagnóstico</th>
-                <th className="w-1/6 py-2 text-xs">Código UVEH</th>
-                <th className="w-1/6 py-2 text-xs">Ingreso</th>
-                <th className="w-1/6 py-2 text-xs">Prealta</th>
-                <th className="w-1/6 py-2 text-xs">Egreso</th>
-                <th className="w-1/6 py-2 text-xs">Hospitalizado</th>
+              <th className="border px-2 py-2">#</th>
+                <th className="border px-2 py-2">Expediente</th>
+                <th className="border px-2 py-2">Cama</th>
+                <th className="border px-2 py-2">Apellido Paterno</th>
+                <th className="border px-2 py-2">Apellido Materno</th>
+                <th className="border px-2 py-2">Nombre</th>
+                <th className="border px-2 py-2">Genero</th>
+                <th className="border px-2 py-2">Edad</th>
+                <th className="border px-2 py-2">Dispositivo O2</th>
+                <th className="border px-2 py-2">Hemodialisis</th>
+                <th className="border px-2 py-2">Diagnósticos Generales</th>
+                <th className="border px-2 py-2">Diagnósticos Específicos</th>
+                <th className="border px-2 py-2">Código UVEH</th>
+                <th className="border px-2 py-2">Ingreso</th>
+                <th className="border px-2 py-2">Prealta</th>
+                <th className="border px-2 py-2">Egreso</th>
+                <th className="border px-2 py-2">Hospitalizado</th>
                 {/* <th className="w-1/6 py-2 text-xs">Eliminar</th> */}
-                <th className="w-1/6 py-2 text-xs">Editar</th>
-                <th className="w-1/6 py-2 text-xs">Microorganismos</th>
+                <th className="border px-2 py-2">Editar</th>
+                <th className="border px-2 py-2">Asignar Micro</th>
+                <th className="border px-2 py-2">Ver Micro</th>
               </tr>
             </thead>
             <tbody className="bg-white">

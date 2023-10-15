@@ -26,6 +26,7 @@ query obtenerPacientes {
         pac_FN
         pac_dispositivo_o2
         pac_hemodialisis
+        diagnostico1
         diagnostico
         pac_codigo_uveh
         fecha_ingreso
@@ -40,6 +41,7 @@ query obtenerPacientes {
 let contador = 0
 
 const Paciente = ({paciente}) => {
+    console.log("Paciente del compoente Paciente",paciente)
     
     // Función para formatear una fecha en el formato deseado
     const formatFecha = (fecha, formato) => {
@@ -61,17 +63,33 @@ const Paciente = ({paciente}) => {
 
     const pac_edad = calcularEdad(paciente.pac_FN);
 
+
+    // Verificar si diagnostico1 contiene palabras clave para código rojo o amarillo
+    const isCodigoRojo = ["CodigoInfarto", "CodigoViaAerea", "CodigoHemoptisis"].some((keyword) =>
+    paciente.diagnostico1.includes(keyword)
+    );
+
+    const isCodigoAmarillo = ["COVID", "Influenza", "Parainfluenza", "Adenovirus", "VirusSincialRespiratorio"].some((keyword) =>
+    paciente.diagnostico1.includes(keyword)
+    );
+
+    // Clases CSS condicionales para cambiar el fondo de la columna
+    const diagnostico1Classes = `border px-4 py-2 ${
+    isCodigoAmarillo ? "bg-blue-500" : isCodigoRojo ? "bg-red-500" : ""
+    }`;
+
+
     // mutation para eliminar paciente
     const [ eliminarPaciente ] = useMutation( ELIMINAR_PACIENTE, {
         update(cache) {
             // obtener una copia del objeto de cache
-            const { obtenerPacientesUser } = cache.readQuery({ query: OBTENER_PACIENTES });
+            const { obtenerPacientes } = cache.readQuery({ query: OBTENER_PACIENTES });
 
             // Reescribir el cache
             cache.writeQuery({
                 query: OBTENER_PACIENTES,
                 data: {
-                    obtenerPacientesUser : obtenerPacientesUser.filter( pacienteActual => pacienteActual.id !== id )
+                    obtenerPacientes : obtenerPacientes.filter( pacienteActual => pacienteActual.id !== id )
                 }
             })
         }
@@ -87,6 +105,7 @@ const Paciente = ({paciente}) => {
         pac_FN,
         pac_dispositivo_o2,
         pac_hemodialisis,
+        diagnostico1,
         diagnostico,
         pac_codigo_uveh,
         fecha_ingreso,
@@ -95,44 +114,6 @@ const Paciente = ({paciente}) => {
         hospitalizado,
         id,
     } = paciente;
-    //console.log(paciente)
-
-
-    // Elimina un paciente
-/*     const confirmarEliminarPaciente = () => {
-        Swal.fire({
-            title: '¿Deseas eliminar a este paciente?',
-            text: "Esta acción no se puede deshacer",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, Eliminar',
-            cancelButtonText: 'No, Cancelar'
-          }).then( async (result) => {
-            if (result.value) {
-
-                try {
-                    // Eliminar por ID
-                    const { data } = await eliminarPaciente({
-                        variables: {
-                            id
-                        }
-                    });
-                    // console.log(data);
-
-                    // Mostrar una alerta
-                    Swal.fire(
-                        'Eliminado!',
-                        data.eliminarPaciente,
-                        'success'
-                    )
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-          })
-    } */
 
     const editarPaciente = () => {
         Router.push({
@@ -156,20 +137,29 @@ const Paciente = ({paciente}) => {
     }
 
     return ( 
-            <tr>
-                <td className="border px-4 py-2">{contador++}</td> 
-                <td className="border px-4 py-2">{expediente}</td>
-                <td className="border px-4 py-2">{cama_numero}</td>
-                <td className="border px-4 py-2">{pac_apellido_paterno}</td>
-                <td className="border px-4 py-2">{pac_apellido_materno}</td>
-                <td className="border px-4 py-2">{pac_nombre}</td>
-                <td className="border px-4 py-2">{pac_genero}</td>
-                <td className="border px-4 py-2">{pac_edad}</td>
-                <td className="border px-4 py-2">{pac_dispositivo_o2}</td>
-                <td className="border px-4 py-2">{pac_hemodialisis ? 'Sí' : 'No'}</td>
-                <td className="border px-4 py-2">{diagnostico}</td>
+            <tr className="h-8">
+                <td className="border px-2 py-2">{contador++}</td> 
+                <td className="border px-2 py-2">{expediente}</td>
+                <td className="border px-2 py-2">{cama_numero}</td>
+                <td className="border px-2 py-2">{pac_apellido_paterno}</td>
+                <td className="border px-2 py-2">{pac_apellido_materno}</td>
+                <td className="border px-2 py-2">{pac_nombre}</td>
+                <td className="border px-2 py-2">{pac_genero}</td>
+                <td className="border px-2 py-2">{pac_edad}</td>
+                <td className="border px-2 py-2">{pac_dispositivo_o2}</td>
+                <td className="border px-2 py-2">{pac_hemodialisis ? 'Sí' : 'No'}</td>
+                <td className={diagnostico1Classes}>
+                {Array.isArray(paciente.diagnostico1) ? (
+                    paciente.diagnostico1.map((diagnostico, index) => (
+                        <div key={index}>{diagnostico}</div>
+                    ))
+                ) : (
+                    paciente.diagnostico1 // Si no es un array, muestra el valor tal cual
+                )}
+            </td>
+                <td className="border px-2 py-2">{diagnostico}</td>
                 <td
-                    className={`border px-4 py-2 ${
+                    className={`border px-2 py-2${
                       (() => {
                         switch (pac_codigo_uveh) {
                             case 'Acinetobacter':
@@ -201,11 +191,11 @@ const Paciente = ({paciente}) => {
                   >
                   {pac_codigo_uveh}
                 </td>
-                <td className="border px-4 py-2">{fechaIngreso !== null? fechaIngreso :''}</td>
-                <td className="border px-4 py-2">{fecha_prealta? format(new Date(paciente.fecha_prealta), 'dd-MM-yy') : ''}</td>
-                <td className="border px-4 py-2">{fecha_egreso? format(new Date(paciente.fecha_egreso), 'dd-MM-yy') : ''}</td>
-                <td className="border px-4 py-2">{hospitalizado ? 'Sí' : 'No'}</td>
-                <td className="border px-4 py-2">
+                <td className="border px-2 py-2">{fechaIngreso !== null? fechaIngreso :''}</td>
+                <td className="border px-2 py-2">{fecha_prealta? format(new Date(paciente.fecha_prealta), 'dd-MM-yy') : ''}</td>
+                <td className="border px-2 py-2">{fecha_egreso? format(new Date(paciente.fecha_egreso), 'dd-MM-yy') : ''}</td>
+                <td className="border px-2 py-2">{hospitalizado ? 'Sí' : 'No'}</td>
+                <td className="border px-2 py-2">
                     <button
                         type="button"
                         className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"

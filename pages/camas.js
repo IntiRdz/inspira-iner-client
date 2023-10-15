@@ -63,7 +63,6 @@ const Camas = () => {
                   <th className="w-1/5 py-2">DAN</th>
                   <th className="w-1/5 py-2">Fecha_Ingreso</th>
                   <th className="w-1/5 py-2">Fecha_Egreso</th>
-                  <th className="w-1/5 py-2">Eliminar</th>
                   <th className="w-1/5 py-2">Editar</th>
               </tr>
             </thead>

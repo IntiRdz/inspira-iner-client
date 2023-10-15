@@ -13,6 +13,7 @@ const OBTENER_CAMA = gql`
             cama_numero
             cama_compartida
             cama_disponible
+            cama_ocupada
             cama_genero
             cama_dispositivo_o2
             cama_hemodialisis
@@ -31,6 +32,7 @@ const ACTUALIZAR_CAMA = gql`
                 cama_numero
                 cama_compartida
                 cama_disponible
+                cama_ocupada
                 cama_genero
                 cama_dispositivo_o2
                 cama_hemodialisis
@@ -62,6 +64,7 @@ const EditarCama = () => {
         cama_numero: Yup.number().required('El número de la cama es obligatorio').positive('No se aceptan números negativos'),
         cama_compartida: Yup.bool(),
         cama_disponible: Yup.bool(),
+        cama_ocupada: Yup.bool(),
         cama_genero: Yup.string().oneOf(['Hombre', 'Mujer', 'No_especificado']).required('El género es obligatorio'),
         cama_dispositivo_o2: Yup.string().oneOf(['No_VM', 'VM']).required('El dispositivo O2 es obligatorio'),
         cama_hemodialisis: Yup.bool(),
@@ -83,6 +86,7 @@ const EditarCama = () => {
         cama_numero: obtenerCama.cama_numero,
         cama_compartida: obtenerCama.cama_compartida ,
         cama_disponible: obtenerCama.cama_disponible,
+        cama_ocupada: obtenerCama.cama_ocupada,
         cama_genero: obtenerCama.cama_genero,
         cama_dispositivo_o2: obtenerCama.cama_dispositivo_o2,
         cama_hemodialisis: obtenerCama.cama_hemodialisis,
@@ -101,6 +105,7 @@ const EditarCama = () => {
             cama_numero,
             cama_compartida,
             cama_disponible,
+            cama_ocupada,
             cama_genero,
             cama_dispositivo_o2,
             cama_hemodialisis,
@@ -118,6 +123,7 @@ const EditarCama = () => {
                         cama_numero,
                         cama_compartida,
                         cama_disponible,
+                        cama_ocupada,
                         cama_genero,
                         cama_dispositivo_o2,
                         cama_hemodialisis,
@@ -250,6 +256,33 @@ const EditarCama = () => {
                                                 value="false"
                                                 checked={props.values.cama_disponible === false}
                                                 onChange={() => props.setFieldValue("cama_disponible", false)}
+                                            />
+                                            <span className="ml-2">No</span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_ocupada">
+                                            Ocupada
+                                        </label>
+                                        <label className="inline-flex items-center mr-3">
+                                            <input
+                                                type="radio"
+                                                className="form-radio"
+                                                name="cama_ocupada"
+                                                value="true"
+                                                checked={props.values.cama_ocupada === true}
+                                                onChange={() => props.setFieldValue("cama_ocupada", true)}
+                                            />
+                                            <span className="ml-2">Sí</span>
+                                        </label>
+                                        <label className="inline-flex items-center">
+                                            <input
+                                                type="radio"
+                                                className="form-radio"
+                                                name="cama_ocupada"
+                                                value="false"
+                                                checked={props.values.cama_ocupada === false}
+                                                onChange={() => props.setFieldValue("cama_ocupada", false)}
                                             />
                                             <span className="ml-2">No</span>
                                         </label>
