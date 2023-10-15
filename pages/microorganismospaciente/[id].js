@@ -11,7 +11,9 @@ const OBTENER_PACIENTE = gql`
       id
       pac_apellido_paterno
       pac_apellido_materno
-      pac_nombre
+      pac_nombre {
+        cama_numero
+      }
     }
   }
 `;
@@ -57,6 +59,8 @@ const MicroorganismosPaciente = () => {
     });
 
 
+console.log(dataMicroorganismo)
+
   if (loadingPaciente || loadingMicroorganismo) return 'Cargando...';
 
 
@@ -99,46 +103,48 @@ const MicroorganismosPaciente = () => {
           </thead>
 
           <tbody className="bg-white">
-          {dataMicroorganismo.obtenerMicroorganismosPatient
-            .sort((a, b) => new Date(b.fecha_deteccion) - new Date(a.fecha_deteccion)) // Ordena por fecha más reciente
-            .map((microorganismo, index) => (
-              <tr key={microorganismo.id}>
-                <td className="border px-4 py-2">{index + 1}</td> {/* Utiliza el índice para el número incremental */}
-                <td className="border px-4 py-2">{formatFecha(microorganismo.fecha_deteccion, 'dd-MM-yy')}</td>
-                <td className="border px-4 py-2">{calcularDias(microorganismo.fecha_deteccion)}</td>
-                <td className="border px-4 py-2">{microorganismo.metodo_deteccion}</td>
-                <td className="border px-4 py-2">{microorganismo.microorganismo_tipo}</td>
-                <td className="border px-4 py-2">{microorganismo.microorganismo_nombre}</td>
-                {/* <td className="border px-4 py-2">{microorganismo.susceptibilidad}</td> */}
-                {/* <td className={`border px-4 py-2 ${microorganismo.susceptibilidad === 'MDR' ? 'bg-yellow-300' : ''}`}> */}
-                <td
+            {dataMicroorganismo.obtenerMicroorganismosPatient
+              .sort((a, b) => new Date(b.fecha_deteccion) - new Date(a.fecha_deteccion)) // Ordena por fecha más reciente
+              .map((microorganismo, index) => (
+                <tr key={microorganismo.id}>
+                  <td className="border px-4 py-2">{index + 1}</td> {/* Utiliza el índice para el número incremental */}
+                  <td className="border px-4 py-2">{formatFecha(microorganismo.fecha_deteccion, 'dd-MM-yy')}</td>
+                  <td className="border px-4 py-2">{calcularDias(microorganismo.fecha_deteccion)}</td>
+                  <td className="border px-4 py-2">{microorganismo.metodo_deteccion}</td>
+                  <td className="border px-4 py-2">{microorganismo.microorganismo_tipo}</td>
+                  <td className="border px-4 py-2">{microorganismo.microorganismo_nombre}</td>
+                  <td
                     className={`border px-4 py-2 ${
                       (() => {
                         switch (microorganismo.susceptibilidad) {
                           case 'Sensible':
-                            return 'bg-green-200';  // Color verde para Sensible
-                            case 'BLEE':
-                              return 'bg-pink-300';   // Color azul para BLEE
+                            return 'bg-green-200';
+                          case 'BLEE':
+                            return 'bg-pink-300';
                           case 'MDR':
-                            return 'bg-rose-500'; // Color amarillo para MDR
+                            return 'bg-rose-500';
                           case 'XDR':
-                            return 'bg-red-300';    // Color rojo para XDR
+                            return 'bg-red-300'; 
                           default:
-                            return '';  // Sin color predeterminado
+                            return '';
                         }
                       })()
                     }`}
                   >
-                  {microorganismo.susceptibilidad}
-                </td>
-                <td className="border px-4 py-2">{microorganismo.comentario_uveh}</td>
-                <td className="border px-4 py-2">{microorganismo.paciente_relacionado}</td>
-                <td className="border px-4 py-2">{microorganismo.cama_relacionada}</td>
-              </tr>
-            ))}
+                    {microorganismo.susceptibilidad}
+                  </td>
+                  <td className="border px-4 py-2">{microorganismo.comentario_uveh}</td>
+
+                  <td className="border px-4 py-2">
+                    {microorganismo.paciente_relacionado[0]}
+                  </td>
+                  <td className="border px-4 py-2">
+                    {microorganismo.cama_relacionada[0]}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
-
     </Layout>
     </div>
      )

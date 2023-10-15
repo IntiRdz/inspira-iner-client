@@ -4,9 +4,9 @@ import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router';
 import Link from 'next/link'
 
-const OBTENER_PACIENTES_SIN_CAMA = gql`
-    query obtenerPacientesHospitalizadosSinCama {
-      obtenerPacientesHospitalizadosSinCama {
+const OBTENER_PACIENTES = gql`
+    query obtenerPacientes {
+        obtenerPacientes {
           id
           expediente
           pac_apellido_paterno
@@ -22,6 +22,7 @@ const OBTENER_PACIENTES_SIN_CAMA = gql`
           fecha_prealta
           fecha_egreso
           hospitalizado
+          cama_relacionada
         }
     }
 `;
@@ -31,7 +32,7 @@ const Index = () => {
   const router = useRouter();
 
   // Consulta de Apollo
-  const { data, loading, error } = useQuery(OBTENER_PACIENTES_SIN_CAMA);
+  const { data, loading, error } = useQuery(OBTENER_PACIENTES);
 
   //console.log(data)
   // console.log(loading)
@@ -39,7 +40,7 @@ const Index = () => {
   
   if(loading) return 'Cargando....';
 
-  if( !data.obtenerPacientesHospitalizadosSinCama ) {
+  if( !data.obtenerPacientes ) {
     return router.push('/login');
   } 
 
@@ -55,7 +56,9 @@ const Index = () => {
           <table className="table-auto shadow-md mt-10 w-full w-lg">
             <thead className="bg-gray-800">
               <tr className="text-white">
+              <th className="w-1/6 py-2 text-xs">#</th>
                 <th className="w-1/6 py-2 text-xs">Expediente</th>
+                <th className="w-1/6 py-2 text-xs">Cama</th>
                 <th className="w-1/6 py-2 text-xs">Apellido Paterno</th>
                 <th className="w-1/6 py-2 text-xs">Apellido Materno</th>
                 <th className="w-1/6 py-2 text-xs">Nombre</th>
@@ -69,15 +72,18 @@ const Index = () => {
                 <th className="w-1/6 py-2 text-xs">Prealta</th>
                 <th className="w-1/6 py-2 text-xs">Egreso</th>
                 <th className="w-1/6 py-2 text-xs">Hospitalizado</th>
-                <th className="w-1/6 py-2 text-xs">Eliminar</th>
+                {/* <th className="w-1/6 py-2 text-xs">Eliminar</th> */}
                 <th className="w-1/6 py-2 text-xs">Editar</th>
+                <th className="w-1/6 py-2 text-xs">Microorganismos</th>
               </tr>
             </thead>
             <tbody className="bg-white">
-              {data.obtenerPacientesHospitalizadosSinCama.map((paciente) => (
+            {data.obtenerPacientes
+                .sort((a, b) => parseInt(b.cama_numero) - parseInt(a.cama_numero))
+                .map((paciente,) => (
                 <Paciente 
                   key={paciente.id} 
-                  paciente={paciente} 
+                  paciente={paciente}
                 />
               ))}
             </tbody>

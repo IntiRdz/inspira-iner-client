@@ -97,7 +97,7 @@ const NuevoPaciente = () => {
             pac_dispositivo_o2: '',
             pac_hemodialisis: false,
             diagnostico: '',
-            pac_codigo_uveh: 'Sin_Definir',
+            pac_codigo_uveh: '',
             fecha_ingreso: '',
             fecha_prealta: '',
             fecha_egreso: '',
@@ -119,7 +119,6 @@ const NuevoPaciente = () => {
             pac_hemodialisis: Yup.boolean(),
             diagnostico: Yup.string().required('El diagnóstico es obligatorio'),
             pac_codigo_uveh: Yup.string().required([
-                'Sin Definir',
                 'Sin Aislamientos',
                 'Acinetobacter',
                 'Colonización Acinetobacter',
@@ -366,29 +365,6 @@ const NuevoPaciente = () => {
                             ) : null  }
 
                             <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico">
-                                    Diagnóstico
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="diagnostico"
-                                    type="text"
-                                    placeholder="Diagnóstico"
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.diagnostico}
-                                />
-                            </div>
-
-                            { formik.touched.diagnostico && formik.errors.diagnostico ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{formik.errors.diagnostico}</p>
-                                </div>
-                            ) : null  }
-
-                            <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_dispositivo_o2">
                                     Dispositivo O2
                                 </label>
@@ -445,15 +421,41 @@ const NuevoPaciente = () => {
                             </div>
 
                             <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico">
+                                    Diagnóstico
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="diagnostico"
+                                    type="text"
+                                    placeholder="Diagnóstico"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.diagnostico}
+                                />
+                            </div>
+
+                            { formik.touched.diagnostico && formik.errors.diagnostico ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{formik.errors.diagnostico}</p>
+                                </div>
+                            ) : null  }
+
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_codigo_uveh">
+                                    Código UVEH
+                                </label>
                                 <select 
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="pac_codigo_uveh"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.pac_codigo_uveh}
-                                    hidden
                                 >
-                                    <option value="SinDefinir" label="Sin Definir" />
+                                    <option value="" label="Seleccione una opción" />
                                     <option value="Sin_Aislamientos" label="Sin Aislamientos" />
                                     <option value="Acinetobacter" label="Acinetobacter" />
                                     <option value="Colonización_Acinetobacter" label="Colonización Acinetobacter" />
@@ -497,7 +499,7 @@ const NuevoPaciente = () => {
                                 </div>
                             ) : null  }
 
-                            <div className="mb-4" hidden>
+                            <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_prealta">
                                     Fecha de Prealta
                                 </label>
@@ -520,7 +522,7 @@ const NuevoPaciente = () => {
                             ) : null  }
 
 
-                            <div className="mb-4" hidden>
+                            <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_egreso">
                                     Fecha de Egreso
                                 </label>
@@ -542,7 +544,7 @@ const NuevoPaciente = () => {
                                 </div>
                             ) : null  }
 
-                            <div className="mb-4" hidden>
+                            <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="hospitalizado">
                                     Hospitalizado
                                 </label>

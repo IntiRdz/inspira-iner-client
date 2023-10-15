@@ -3,9 +3,9 @@ import PedidoContext from './PedidoContext';
 import PedidoReducer from './PedidoReducer';
 
 import {
-    SELECCIONAR_CLIENTE,
-    SELECCIONAR_PRODUCTO,
-    CANTIDAD_PRODUCTOS,
+    SELECCIONAR_PACIENTE,
+    SELECCIONAR_CAMA,
+    CANTIDAD_CAMAS,
     ACTUALIZAR_TOTAL
 } from '../../types'
 
@@ -13,48 +13,48 @@ const PedidoState = ({children}) => {
 
     // State de Pedidos
     const initialState = {
-        cliente: {},
-        productos: [],
+        paciente: {},
+        camas: [],
         total: 0
     }
 
     const [ state, dispatch ] = useReducer(PedidoReducer, initialState);
 
-    // Modifica el Cliente
-    const agregarCliente = cliente => {
-        // console.log(cliente);
+    // Modifica el Paciente
+    const agregarPaciente = paciente => {
+        // console.log(paciente);
 
         dispatch({
-            type: SELECCIONAR_CLIENTE,
-            payload: cliente
+            type: SELECCIONAR_PACIENTE,
+            payload: paciente
         })
     }
 
-    // Modifica los productos
-    const agregarProducto = productosSeleccionados => {
+    // Modifica los camas
+    const agregarCama = camasSeleccionadas => {
 
         let nuevoState;
-        if(state.productos.length > 0 ) {
+        if(state.camas.length > 0 ) {
             // Tomar del segundo arreglo, una copia para asignarlo al primero
-            nuevoState = productosSeleccionados.map( producto => {
-                const nuevoObjeto = state.productos.find( productoState => productoState.id === producto.id  );
-                return {...producto, ...nuevoObjeto }
+            nuevoState = camasSeleccionadas.map( cama => {
+                const nuevoObjeto = state.camas.find( camaState => camaState.id === cama.id  );
+                return {...cama, ...nuevoObjeto }
             } )
         } else {
-            nuevoState = productosSeleccionados;
+            nuevoState = camasSeleccionadas;
         }
        
         dispatch({
-            type: SELECCIONAR_PRODUCTO,
+            type: SELECCIONAR_CAMA,
             payload: nuevoState
         })
     }
 
-    // Modifica las cantidades de los productos
-    const cantidadProductos = nuevoProducto => {
+    // Modifica las cantidades de los camas
+    const cantidadCamas = nuevoCama => {
         dispatch({
-            type: CANTIDAD_PRODUCTOS,
-            payload: nuevoProducto
+            type: CANTIDAD_CAMAS,
+            payload: nuevoCama
         })
     }
 
@@ -68,12 +68,12 @@ const PedidoState = ({children}) => {
     return (
         <PedidoContext.Provider
             value={{
-                cliente: state.cliente,
-                productos: state.productos,
+                paciente: state.paciente,
+                camas: state.camas,
                 total: state.total,
-                agregarCliente,
-                agregarProducto,
-                cantidadProductos,
+                agregarPaciente,
+                agregarCama,
+                cantidadCamas,
                 actualizarTotal
             }}
         > {children}

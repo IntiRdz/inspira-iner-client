@@ -28,7 +28,10 @@ const OBTENER_MICROORGANISMOS_PACIENTE = gql`
       susceptibilidad
       comentario_uveh
       paciente_relacionado
-      cama_relacionada
+      cama_relacionada{
+        cama_numero
+        id
+      }
     }
   }
 `;
