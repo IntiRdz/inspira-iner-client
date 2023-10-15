@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Select from 'react-select'
 import { gql, useQuery } from '@apollo/client';
+import PacienteContext from '../../context/pacientes/PacienteContext';
 
-  
   const OBTENER_CAMAS_DISPONIBLES = gql`
     query obtenerCamasDisponibles {
         obtenerCamasDisponibles {
@@ -14,36 +14,35 @@ import { gql, useQuery } from '@apollo/client';
     }
 `;
 
-const AsignarCama = () => {
-  const handleCamaSelection = (camaId) => {
-    setSelectedCamaId(camaId);
-  };
+export const AsignarCama = () => {
+  
 
-    const[cama, setCama] =useState([]);
-    const [selectedCamaId, setSelectedCamaId] = useState(null);
+    const[cama, setCama] =useState({});
 
+    //Context de cama
+    const { agregarCama } = useContext(PacienteContext);
+   
+    console.log("Cama ID",cama.id)
 
     const { data, loading, error } = useQuery(OBTENER_CAMAS_DISPONIBLES)
-    console.log(data)
-    // console.log(loading)
-    // console.log(error)
     
-    
+    useEffect(() => {
+         agregarCama (cama.id);
+     }, [cama.id])
+   
     const seleccionarCama = camas => {
         setCama(camas);
-        setSelectedCamaId(camas.id);
       }
-    
+
     if(loading) return 'cargando...';
 
-
     const { obtenerCamasDisponibles } = data;
-
+    
+   
     return ( 
 
         <>
-
-            <p className="mt-10 my-2 bg-white border-l-4 border-gray-800 text-gray-700 p-2 text-sm font-bold">1.- Asignar cama a paciente</p>
+          <p className="mt-10 my-2 bg-white border-l-4 border-gray-800 text-gray-700 p-2 text-sm font-bold">Asignar cama a paciente</p>
             <Select
                 className="mt-3"
                 options={ obtenerCamasDisponibles }
@@ -51,14 +50,12 @@ const AsignarCama = () => {
                 getOptionValue={ opciones => opciones.id }
                 getOptionLabel={ opciones => opciones.cama_numero }
                 placeholder="Busque o Seleccione la Cama"
-                noOptionsMessage={() => "No hay resultados"}
+                noOptionsMessage={() => "No se encuentra esa cama disponible"}
             />
-              {selectedCamaId && (
-                <p className="text-sm text-gray-600">Cama seleccionada: {selectedCamaId}</p>
+              {cama.id && (
+                <p className="text-sm text-gray-600">Cama seleccionada: {cama.id}</p>
             )}
-
         </>
      );
 }
  
-export default AsignarCama;

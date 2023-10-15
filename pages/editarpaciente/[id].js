@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router'
+import React, { useState, useContext } from 'react';
+import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
-import { useQuery, gql, useMutation } from '@apollo/client'
-import { Formik } from 'formik'
-import * as Yup from 'yup'
+import { useQuery, gql, useMutation } from '@apollo/client';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
-import AsignarCama from '../../components/AsignarCama';
-
+import PacienteContext from '../../context/pacientes/PacienteContext';
+import { AsignarCama } from '../../components/pacientes/AsignarCama';
 const OBTENER_PACIENTE = gql`
     query obtenerPaciente($id:ID!) {
         obtenerPaciente(id:$id) {
@@ -56,21 +56,23 @@ const ACTUALIZAR_PACIENTE = gql`
 
 const EditarPaciente = () => {
 
-    const [camaRelacionada, setCamaRelacionada] = useState('');
-    const [selectedCamaId, setSelectedCamaId] = useState(null);
     const [mensajeError, setMensajeError] = useState(null);
 
     // obtener el ID actual
     const router = useRouter();
     const { query: { id } } = router;
     //console.log(id)
-
+    
+    
     // Consultar para obtener el paciente
     const { data, loading, error } = useQuery(OBTENER_PACIENTE, {
         variables: {
             id
         }
     });
+    
+    const { cama } = useContext(PacienteContext);
+    //console.log("Valor de id.cama desde el contexto:", cama);
 
    // console.log(data)
 
@@ -135,7 +137,7 @@ const EditarPaciente = () => {
         fecha_prealta: obtenerPaciente.fecha_prealta ? format(new Date(obtenerPaciente.fecha_prealta), 'yyyy-MM-dd') : '', // Si no hay fecha en las props, se establece como cadena vacía
         fecha_egreso: obtenerPaciente.fecha_egreso ? format(new Date(obtenerPaciente.fecha_egreso), 'yyyy-MM-dd') : '',
         hospitalizado: obtenerPaciente.hospitalizado,// Si no hay fecha en las props, se establece como cadena vacía
-        cama_relacionada: obtenerPaciente.camaRelacionada
+        cama_relacionada: obtenerPaciente.cama_relacionada
     };
 
 
@@ -181,13 +183,12 @@ const EditarPaciente = () => {
                         fecha_prealta: fecha_prealta === '' ? undefined : fecha_prealta, // Si es cadena vacía, se envía undefined
                         fecha_egreso: fecha_egreso === '' ? undefined : fecha_egreso,
                         hospitalizado,
-                        cama_relacionada: cama_relacionada === '' ? undefined : cama_relacionada
+                        cama_relacionada: cama
                     }
                 }
             });
 
-            console.log("Esta e la ultima DATA",data);
-  
+ 
             // Mostrar Alerta
             Swal.fire(
                 'Actualizado',
@@ -576,49 +577,8 @@ const EditarPaciente = () => {
                                     <label htmlFor="hospitalizado_false">No</label>
                                 </div>
                             </div>
-                            <AsignarCama
-                                selectedCamaId={selectedCamaId}
-                                setSelectedCamaId={setSelectedCamaId}
-                            />   
-
-{/*                             <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_relacionada">
-                                    Cama relacionada
-                                </label>
-
-                                <input
-                                    className="mr-2 leading-tight"
-                                    id="cama_relacionada"
-                                    type="text"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={camaRelacionada}
-                                />
-                            </div>  */}
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_relacionada">
-                                    cama diagnostico
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="cama_relacionada"
-                                    type="text"
-                                    placeholder= "cama_relacionada"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.cama_relacionada}
-                                />
-                            </div>
-
-                            { props.touched.cama_relacionada && props.errors.cama_relacionada ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.cama_relacionada}</p>
-                                </div>
-                            ) : null  }
-                                
+                            <AsignarCama />   
+                           
 
                             <input
                             type="submit"

@@ -99,7 +99,7 @@ const Paciente = ({paciente}) => {
 
 
     // Elimina un paciente
-    const confirmarEliminarPaciente = () => {
+/*     const confirmarEliminarPaciente = () => {
         Swal.fire({
             title: '¿Deseas eliminar a este paciente?',
             text: "Esta acción no se puede deshacer",
@@ -132,7 +132,7 @@ const Paciente = ({paciente}) => {
                 }
             }
           })
-    }
+    } */
 
     const editarPaciente = () => {
         Router.push({
@@ -141,12 +141,12 @@ const Paciente = ({paciente}) => {
         })
     }
 
-    const asignarMicroorganismo = () => {
+/*     const asignarMicroorganismo = () => {
         Router.push({
             pathname: "/nuevomicroorganismo/[id]",
             query: { id }
         })
-    }
+    } */
 
     const verMicroorganismo = () => {
         Router.push({
