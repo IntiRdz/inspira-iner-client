@@ -63,8 +63,7 @@ const Paciente = ({paciente}) => {
 
     const pac_edad = calcularEdad(paciente.pac_FN);
 
-
-    // Verificar si diagnostico1 contiene palabras clave para código rojo o amarillo
+    // Verificar si diagnostico1 contiene palabras clave para código rojo, amarillo o azul
     const isCodigoRojo = ["CodigoInfarto", "CodigoViaAerea", "CodigoHemoptisis"].some((keyword) =>
     paciente.diagnostico1.includes(keyword)
     );
@@ -73,10 +72,27 @@ const Paciente = ({paciente}) => {
     paciente.diagnostico1.includes(keyword)
     );
 
+    const isCodigoAzul = ["TuberculosisSensible", "TuberculosisResistente", "B24"].some((keyword) =>
+    paciente.diagnostico1.includes(keyword)
+    );
+
     // Clases CSS condicionales para cambiar el fondo de la columna
-    const diagnostico1Classes = `border px-4 py-2 ${
-    isCodigoAmarillo ? "bg-blue-500" : isCodigoRojo ? "bg-red-500" : ""
-    }`;
+    let diagnostico1Classes = "border px-4 py-2";
+
+    switch (true) {
+    case isCodigoRojo:
+        diagnostico1Classes += " bg-red-400";
+        break;
+    case isCodigoAmarillo:
+        diagnostico1Classes += " bg-yellow-400";
+        break;
+    case isCodigoAzul:
+        diagnostico1Classes += " bg-blue-400";
+        break;
+    default:
+        // Puedes manejar un caso predeterminado aquí si es necesario
+        break;
+    }
 
 
     // mutation para eliminar paciente
