@@ -4,6 +4,8 @@ import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router';
 import Link from 'next/link'
 
+
+//De aquí con las busquedas reales
 const OBTENER_PACIENTES = gql`
     query obtenerPacientes {
         obtenerPacientes {
@@ -24,6 +26,8 @@ const OBTENER_PACIENTES = gql`
           fecha_egreso
           hospitalizado
           cama_relacionada
+          microorganismo_relacionado
+
         }
     }
 `;

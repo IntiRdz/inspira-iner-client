@@ -13,10 +13,7 @@ const ELIMINAR_PACIENTE = gql`
 const OBTENER_PACIENTES = gql`
 query obtenerPacientes {
     obtenerPacientes{
-        cama_relacionada{
-            cama_numero
-            id
-        }
+        cama_relacionada
         id
         expediente
         pac_apellido_paterno
@@ -33,6 +30,7 @@ query obtenerPacientes {
         fecha_prealta
         fecha_egreso
         hospitalizado
+        microorganismo_relacionado
     }
   }
 `;
@@ -41,7 +39,7 @@ query obtenerPacientes {
 let contador = 0
 
 const Paciente = ({paciente}) => {
-    console.log("Paciente del compoente Paciente",paciente)
+    console.log("Paciente del componente Paciente",paciente)
     
     // Función para formatear una fecha en el formato deseado
     const formatFecha = (fecha, formato) => {
@@ -156,7 +154,16 @@ const Paciente = ({paciente}) => {
             <tr className="h-8">
                 <td className="border px-2 py-2">{contador++}</td> 
                 <td className="border px-2 py-2">{expediente}</td>
-                <td className="border px-2 py-2">{cama_numero}</td>
+                {/* <td className="border px-2 py-2">{cama_numero}</td> */}
+                <td className="border px-2 py-2">
+                    {Array.isArray(paciente.cama_relacionada) ? (
+                        paciente.cama_relacionada.map((cama, index) => (
+                        <div key={index}>{cama}</div>
+                        ))
+                    ) : (
+                        paciente.cama_relacionada // Si no es un arreglo, muestra el valor tal cual
+                    )}
+                </td>
                 <td className="border px-2 py-2">{pac_apellido_paterno}</td>
                 <td className="border px-2 py-2">{pac_apellido_materno}</td>
                 <td className="border px-2 py-2">{pac_nombre}</td>

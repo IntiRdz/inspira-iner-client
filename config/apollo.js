@@ -3,7 +3,8 @@ import { createHttpLink } from '@apollo/client/link/http';
 import { setContext } from '@apollo/client/link/context';
 
 const httpLink = createHttpLink({
-  uri: 'https://inspira-iner-server-a98ddf825333.herokuapp.com/',
+  //uri: 'https://inspira-iner-server-a98ddf825333.herokuapp.com/',
+  uri: 'http://localhost:4000',
 });
 
 const authLink = setContext((_, { headers }) => {
