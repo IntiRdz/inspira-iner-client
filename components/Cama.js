@@ -14,7 +14,7 @@ const ELIMINAR_CAMA = gql`
 const OBTENER_CAMAS = gql`
   query obtenerCamas {
       obtenerCamas {
-            id
+            _id
             cama_numero
             cama_compartida
             cama_disponible
@@ -45,7 +45,7 @@ const Cama = ({cama}) => {
         cama_codigo_uveh,
         cama_fecha_inicio,
         cama_fecha_fin,
-        id
+        _id
      } = cama;
 
     // Mutation para eliminar camas
@@ -58,7 +58,7 @@ const Cama = ({cama}) => {
             cache.writeQuery({
                 query: OBTENER_CAMAS,
                 data: {
-                    obtenerCamas: obtenerCamas.filter( camaActual => camaActual.id !== id )
+                    obtenerCamas: obtenerCamas.filter( camaActual => camaActual._id !== _id )
                 }
             })
         }
@@ -99,8 +99,7 @@ const Cama = ({cama}) => {
 
     const editarCama = () => {
         Router.push({
-            pathname: "/editarcama/[id]",
-            query: { id }
+            pathname: `/editarcama/${cama._id}`,
         })
     }
 

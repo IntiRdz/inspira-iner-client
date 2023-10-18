@@ -6,7 +6,7 @@ import PacienteContext from '../../context/pacientes/PacienteContext';
   const OBTENER_CAMAS_DISPONIBLES = gql`
     query obtenerCamasDisponibles {
         obtenerCamasDisponibles {
-                id
+                _id
                 cama_numero
                 cama_disponible
                 cama_ocupada
@@ -22,13 +22,13 @@ export const AsignarCama = () => {
     //Context de cama
     const { agregarCama } = useContext(PacienteContext);
    
-    console.log("Cama ID",cama.id)
+    console.log("Cama ID",cama._id)
 
     const { data, loading, error } = useQuery(OBTENER_CAMAS_DISPONIBLES)
     
     useEffect(() => {
-         agregarCama (cama.id);
-     }, [cama.id])
+         agregarCama (cama._id);
+     }, [cama._id])
    
     const seleccionarCama = camas => {
         setCama(camas);
@@ -47,13 +47,13 @@ export const AsignarCama = () => {
                 className="mt-3"
                 options={ obtenerCamasDisponibles }
                 onChange={ opcion => seleccionarCama(opcion) }
-                getOptionValue={ opciones => opciones.id }
+                getOptionValue={ opciones => opciones._id }
                 getOptionLabel={ opciones => opciones.cama_numero }
                 placeholder="Busque o Seleccione la Cama"
                 noOptionsMessage={() => "No se encuentra esa cama disponible"}
             />
-              {cama.id && (
-                <p className="text-sm text-gray-600">Cama seleccionada: {cama.id}</p>
+              {cama._id && (
+                <p className="text-sm text-gray-600">Cama seleccionada: {cama._id}</p>
             )}
         </>
      );

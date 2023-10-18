@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 const NUEVA_CAMA = gql`
     mutation nuevaCama($input: CamaInput) {
         nuevaCama(input: $input) {
-            id
+            _id
             cama_numero
             cama_compartida
             cama_disponible
@@ -28,7 +28,7 @@ const NUEVA_CAMA = gql`
 const OBTENER_CAMAS = gql`
   query obtenerCamas {
       obtenerCamas {
-            id
+            _id
             cama_numero
             cama_compartida
             cama_disponible

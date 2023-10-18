@@ -9,7 +9,7 @@ import Link from 'next/link'
 const OBTENER_PACIENTES = gql`
     query obtenerPacientes {
         obtenerPacientes {
-          id
+          _id
           expediente
           pac_apellido_paterno
           pac_apellido_materno
@@ -66,6 +66,7 @@ const Index = () => {
               <th className="border px-2 py-2">#</th>
                 <th className="border px-2 py-2">Expediente</th>
                 <th className="border px-2 py-2">Cama</th>
+                <th className="border px-2 py-2">Microorganismo</th>
                 <th className="border px-2 py-2">Apellido Paterno</th>
                 <th className="border px-2 py-2">Apellido Materno</th>
                 <th className="border px-2 py-2">Nombre</th>
@@ -91,7 +92,7 @@ const Index = () => {
                 .sort((a, b) => parseInt(b.cama_numero) - parseInt(a.cama_numero))
                 .map((paciente,) => (
                 <Paciente 
-                  key={paciente.id} 
+                  key={paciente._id} 
                   paciente={paciente}
                 />
               ))}

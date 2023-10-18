@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 const NUEVO_PACIENTE = gql`
     mutation nuevoPaciente($input: PacienteInput) {
         nuevoPaciente(input: $input) {
-            id
+            _id
             expediente
             pac_apellido_paterno
             pac_apellido_materno
@@ -32,7 +32,7 @@ const NUEVO_PACIENTE = gql`
 const OBTENER_PACIENTES = gql`
     query obtenerPacientes {
         obtenerPacientes {
-            id
+            _id
             expediente
             pac_apellido_paterno
             pac_apellido_materno
@@ -148,7 +148,7 @@ const NuevoPaciente = () => {
                 ])
             )
             .required('Debe seleccionar al menos un diagnóstico'),
-            diagnostico: Yup.string().required('El diagnóstico es obligatorio'),
+            diagnostico: Yup.string(),
             pac_codigo_uveh: Yup.string().required([
                 'Sin Definir',
                 'Sin Aislamientos',

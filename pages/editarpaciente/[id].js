@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 import { AsignarCama } from '../../components/pacientes/AsignarCama';
+
 const OBTENER_PACIENTE = gql`
     query obtenerPaciente($id:ID!) {
         obtenerPaciente(id:$id) {
@@ -94,7 +95,7 @@ const EditarPaciente = () => {
             'VMNI', 
             'VM']).required('El dispositivo O2 del paciente es obligatorio'),
         pac_hemodialisis: Yup.boolean(),
-        diagnostico: Yup.string().required('El diagnóstico es obligatorio'),
+        diagnostico: Yup.string(),
         pac_codigo_uveh: Yup.string().required([
             'Sin Aislamientos',
             'Acinetobacter',

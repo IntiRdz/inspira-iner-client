@@ -13,9 +13,10 @@ const ELIMINAR_PACIENTE = gql`
 const OBTENER_PACIENTES = gql`
 query obtenerPacientes {
     obtenerPacientes{
-        cama_relacionada
-        id
+        _id
         expediente
+        cama_relacionada
+        microorganimo_relacionado
         pac_apellido_paterno
         pac_apellido_materno
         pac_nombre
@@ -109,9 +110,10 @@ const Paciente = ({paciente}) => {
         }
     }  );
 
+    console.log("el ID del paciente es",paciente._id)
     const { 
-        cama_numero,
         expediente,
+        cama_numero,
         pac_apellido_paterno,
         pac_apellido_materno,
         pac_nombre,
@@ -130,25 +132,26 @@ const Paciente = ({paciente}) => {
     } = paciente;
 
     const editarPaciente = () => {
+        console.log("el ID del paciente es en el botón",paciente._id)
         Router.push({
-            pathname: "/editarpaciente/[id]",
-            query: { id }
+            pathname: `/editarpaciente/${paciente._id}`,
+            
         })
     }
 
      const asignarMicroorganismo = () => {
         Router.push({
-            pathname: "/nuevomicroorganismo/[id]",
-            query: { id }
+            pathname: `/nuevomicroorganismo/${paciente._id}`,
         })
     } 
 
     const verMicroorganismo = () => {
         Router.push({
-            pathname: "/microorganismospaciente/[id]",
-            query: { id }
+            pathname: `/microorganismospaciente/${paciente._id}`,
         })
     }
+
+    console.log("paciente recibido",paciente)
 
     return ( 
             <tr className="h-8">
@@ -162,6 +165,15 @@ const Paciente = ({paciente}) => {
                         ))
                     ) : (
                         paciente.cama_relacionada // Si no es un arreglo, muestra el valor tal cual
+                    )}
+                </td>
+                <td className="border px-2 py-2">
+                    {Array.isArray(paciente.microorganimo_relacionado) ? (
+                        paciente.microorganimo_relacionado.map((microorganismo, index) => (
+                        <div key={index}>{microorganismo}</div>
+                        ))
+                    ) : (
+                        paciente.microorganimo_relacionado // Si no es un arreglo, muestra el valor tal cual
                     )}
                 </td>
                 <td className="border px-2 py-2">{pac_apellido_paterno}</td>

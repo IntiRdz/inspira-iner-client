@@ -5,7 +5,7 @@ import { useRouter } from 'next/dist/client/router';
 const OBTENER_USUARIO = gql`
     query obtenerUsuario{
         obtenerUsuario {
-            id
+            _id
             nombre
             apellido
         }

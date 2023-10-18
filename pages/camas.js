@@ -8,7 +8,7 @@ import Link from 'next/link'
 const OBTENER_CAMAS = gql`
   query obtenerCamas {
       obtenerCamas {
-            id
+            _id
             cama_numero
             cama_compartida
             cama_disponible
@@ -70,7 +70,7 @@ const Camas = () => {
             <tbody className="bg-white">
               {data.obtenerCamas.map( cama => (
                 <Cama 
-                  key={cama.id}
+                  key={cama._id}
                   cama={cama}
                 />
               ))}
