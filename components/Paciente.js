@@ -4,36 +4,47 @@ import { gql, useMutation } from '@apollo/client';
 import Router from 'next/router';
 import { format, differenceInYears } from 'date-fns';
 
+//Esta busqueda es para modifcar al encotrado en el botón 
+//Utilizo el resolver de eliminar que modifiqué por dentro 
 const ELIMINAR_PACIENTE = gql`
     mutation eliminarPaciente($id: ID!) {
         eliminarPaciente(id:$id) 
     }
 `;
 
+//Esta busqueda es para modifcar al encotrado en el botón 
 const OBTENER_PACIENTES = gql`
-query obtenerPacientes {
-    obtenerPacientes{
-        _id
-        expediente
-        cama_relacionada
-        microorganimo_relacionado
-        pac_apellido_paterno
-        pac_apellido_materno
-        pac_nombre
-        pac_genero
-        pac_FN
-        pac_dispositivo_o2
-        pac_hemodialisis
-        diagnostico1
-        diagnostico
-        pac_codigo_uveh
-        fecha_ingreso
-        fecha_prealta
-        fecha_egreso
-        hospitalizado
-        microorganismo_relacionado
+    query ObtenerPacientes {
+        obtenerPacientes {
+            _id
+            expediente
+            pac_apellido_paterno
+            pac_apellido_materno
+            pac_nombre
+            pac_genero
+            pac_FN
+            pac_dispositivo_o2
+            pac_hemodialisis
+            diagnostico
+            diagnostico1
+            pac_codigo_uveh
+            fecha_ingreso
+            fecha_prealta
+            fecha_egreso
+            hospitalizado
+            creado
+            user
+            cama_relacionada {
+                _id
+                cama_numero
+            }
+            microorganismo_relacionado {
+                _id
+                microorganismo_nombre
+            }
+            antibiotico_relacionado
+        }
     }
-  }
 `;
 
 
@@ -104,7 +115,7 @@ const Paciente = ({paciente}) => {
             cache.writeQuery({
                 query: OBTENER_PACIENTES,
                 data: {
-                    obtenerPacientes : obtenerPacientes.filter( pacienteActual => pacienteActual.id !== id )
+                    obtenerPacientes : obtenerPacientes.filter( pacienteActual => pacienteActual._id !== paciente._id )
                 }
             })
         }
@@ -161,19 +172,23 @@ const Paciente = ({paciente}) => {
                 <td className="border px-2 py-2">
                     {Array.isArray(paciente.cama_relacionada) ? (
                         paciente.cama_relacionada.map((cama, index) => (
-                        <div key={index}>{cama}</div>
+                        <div key={index}>{cama.cama_numero}</div>
                         ))
                     ) : (
-                        paciente.cama_relacionada // Si no es un arreglo, muestra el valor tal cual
+                        paciente.cama_relacionada.map((cama, index) => (
+                        <div key={index}>{cama.cama_numero}</div>
+                        ))
                     )}
                 </td>
                 <td className="border px-2 py-2">
-                    {Array.isArray(paciente.microorganimo_relacionado) ? (
-                        paciente.microorganimo_relacionado.map((microorganismo, index) => (
-                        <div key={index}>{microorganismo}</div>
+                    {Array.isArray(paciente.microorganismo_relacionado) ? (
+                        paciente.microorganismo_relacionado.map((microorganismo, index) => (
+                        <div key={index}>{microorganismo.microorganismo_nombre}</div>
                         ))
                     ) : (
-                        paciente.microorganimo_relacionado // Si no es un arreglo, muestra el valor tal cual
+                        paciente.microorganismo_relacionado.map((microorganismo, index) => (
+                        <div key={index}>{microorganismo.microorganismo_nombre}</div>
+                        ))
                     )}
                 </td>
                 <td className="border px-2 py-2">{pac_apellido_paterno}</td>

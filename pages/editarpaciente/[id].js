@@ -8,10 +8,11 @@ import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 import { AsignarCama } from '../../components/pacientes/AsignarCama';
+//import { makeVar } from '@apollo/client';
 
 const OBTENER_PACIENTE = gql`
-    query obtenerPaciente($id:ID!) {
-        obtenerPaciente(id:$id) {
+    query ObtenerPaciente($id: ID!) {
+        obtenerPaciente(id: $id) {
             expediente
             pac_apellido_paterno
             pac_apellido_materno
@@ -21,13 +22,20 @@ const OBTENER_PACIENTE = gql`
             pac_dispositivo_o2
             pac_hemodialisis
             diagnostico
+            diagnostico1
             pac_codigo_uveh
-            fecha_prealta
             fecha_ingreso
+            fecha_prealta
             fecha_egreso
             hospitalizado
-            cama_relacionada
-            
+            creado
+            user
+            cama_relaciona{
+                _id
+            }
+            microorganismo_relacionado{
+                _id
+            }
         }
     }
 `;
@@ -49,8 +57,9 @@ const ACTUALIZAR_PACIENTE = gql`
             fecha_ingreso
             fecha_egreso
             hospitalizado
-            cama_relacionada
-            
+            cama_relacionada{
+                _id
+            }
         }
     }
 `;
@@ -62,8 +71,10 @@ const EditarPaciente = () => {
     // obtener el ID actual
     const router = useRouter();
     const { query: { id } } = router;
-    //console.log(id)
-    
+       
+    const { cama } = useContext(PacienteContext);
+    console.log("Valor de id.cama desde el contexto:", cama);
+
     
     // Consultar para obtener el paciente
     const { data, loading, error } = useQuery(OBTENER_PACIENTE, {
@@ -72,10 +83,7 @@ const EditarPaciente = () => {
         }
     });
     
-    const { cama } = useContext(PacienteContext);
-    //console.log("Valor de id.cama desde el contexto:", cama);
-
-   // console.log(data)
+    //console.log("la dada es",data)
 
     // Actualizar el paciente
     const [ actualizarPaciente ] = useMutation( ACTUALIZAR_PACIENTE );
@@ -97,6 +105,7 @@ const EditarPaciente = () => {
         pac_hemodialisis: Yup.boolean(),
         diagnostico: Yup.string(),
         pac_codigo_uveh: Yup.string().required([
+            'Sin Definir',
             'Sin Aislamientos',
             'Acinetobacter',
             'Colonización Acinetobacter',
@@ -119,9 +128,10 @@ const EditarPaciente = () => {
 
     if(loading) return 'Cargando...';
 
-    // console.log(data.obtenerPaciente)
-
+    
     const { obtenerPaciente } = data;
+    console.log("Data de Obtener Paciente",obtenerPaciente)
+
 
     const valoresIniciales = {
         expediente: obtenerPaciente.expediente ,
@@ -141,8 +151,6 @@ const EditarPaciente = () => {
         cama_relacionada: obtenerPaciente.cama_relacionada
     };
 
-
-    console.log("Valores Iniales",valoresIniciales)
 
     // Modifica el paciente en la BD
     const actualizarInfoPaciente = async valores => {
@@ -164,32 +172,41 @@ const EditarPaciente = () => {
             cama_relacionada
         } = valores;
 
+        //const camaId = makeVar( cama.camaIdString);
+        //console.log("Valor de id de cama despues de makeVar:", camaId);
+     
+        console.log("Valores Inciales:", valores)
+
+        const valoresActualizados = {
+            expediente,
+            pac_apellido_paterno,
+            pac_apellido_materno,
+            pac_nombre,
+            pac_genero,
+            pac_FN,
+            pac_dispositivo_o2,
+            pac_hemodialisis,
+            diagnostico,
+            pac_codigo_uveh,
+            fecha_ingreso: fecha_ingreso === '' ? undefined : fecha_ingreso, // Si es cadena vacía, se envía undefined
+            fecha_prealta: fecha_prealta === '' ? undefined : fecha_prealta, // Si es cadena vacía, se envía undefined
+            fecha_egreso: fecha_egreso === '' ? undefined : fecha_egreso,
+            hospitalizado,
+            cama_relacionada: cama,
+        };
+
+        console.log("Valores actualizados:", valoresActualizados)
 
         try {
             const { data} = await actualizarPaciente({
                 variables: {
                     id,
-                    input: {
-                        expediente,
-                        pac_apellido_paterno,
-                        pac_apellido_materno,
-                        pac_nombre,
-                        pac_genero,
-                        pac_FN,
-                        pac_dispositivo_o2,
-                        pac_hemodialisis,
-                        diagnostico,
-                        pac_codigo_uveh,
-                        fecha_ingreso: fecha_ingreso === '' ? undefined : fecha_ingreso, // Si es cadena vacía, se envía undefined
-                        fecha_prealta: fecha_prealta === '' ? undefined : fecha_prealta, // Si es cadena vacía, se envía undefined
-                        fecha_egreso: fecha_egreso === '' ? undefined : fecha_egreso,
-                        hospitalizado,
-                        cama_relacionada: cama
-                    }
+                    input: valoresActualizados
                 }
             });
 
- 
+            console.log("Después de la llamada a actualizarPaciente");
+
             // Mostrar Alerta
             Swal.fire(
                 'Actualizado',
@@ -201,6 +218,8 @@ const EditarPaciente = () => {
             router.push('/');
             
         } catch (error) {
+            console.error("Error durante la llamada a actualizarPaciente:", error);
+
             setMensajeError(error.message.replace('GraphQL error: ', ''));
             setTimeout(() => {
                 setMensajeError(null);
@@ -462,7 +481,6 @@ const EditarPaciente = () => {
                                     onBlur={props.handleBlur}
                                     value={props.values.pac_codigo_uveh}
                                 >
-                                    <option value="" label="Seleccione un dispositivo" />
                                     <option value="Sin_Aislamientos" label="Sin Aislamientos" />
                                     <option value="Acinetobacter" label="Acinetobacter" />
                                     <option value="Colonización_Acinetobacter" label="Colonización Acinetobacter" />

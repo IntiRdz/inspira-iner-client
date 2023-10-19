@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery, gql } from '@apollo/client'
 import { useRouter } from 'next/dist/client/router';
+import jwtDecode from 'jwt-decode';
 
 const OBTENER_USUARIO = gql`
     query obtenerUsuario{
@@ -23,6 +24,24 @@ const Header = () => {
     // console.log(loading)
     // console.log(error)
 
+    // Función para verificar si el token está expirado
+    const isTokenExpired = (token) => {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000; // Fecha actual en segundos
+        return decodedToken.exp < currentTime;
+    };
+
+    // Verifica si el token está expirado o no existe
+    const authToken = localStorage.getItem('token'); // Cambia esto por tu forma de obtener el token
+
+    if (!authToken || isTokenExpired(authToken)) {
+        // Si no hay token o está expirado, redirige a la página de autenticación
+        (async () => {
+        await router.push('/login');
+        })();
+        return null; // No renderices nada más en este componente
+    }
+
     // Proteger que no accedamos a data antes de tener resultados
     if (loading) return null;
 
@@ -35,9 +54,7 @@ const Header = () => {
     }
      */
 
-    if(!data) {
-        return router.push('/login');
-    }
+ 
 
     const { nombre, apellido } = data.obtenerUsuario;
 

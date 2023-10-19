@@ -12,7 +12,7 @@ import { AsignarCamaTodas } from '../../components/pacientes/AsignarCamaTodas';
 const OBTENER_PACIENTE = gql`
   query obtenerPaciente($id: ID!) {
     pacienteData: obtenerPaciente(id: $id) {
-      id
+      _id
       pac_apellido_paterno
       pac_apellido_materno
       pac_nombre
@@ -23,17 +23,18 @@ const OBTENER_PACIENTE = gql`
 const OBTENER_MICROORGANISMOS_PACIENTE = gql`
   query obtenerMicroorganismosPatient($id: ID!) {
     obtenerMicroorganismosPatient(id: $id) {
-      id
+      _id
       fecha_deteccion
       metodo_deteccion
       microorganismo_tipo
       microorganismo_nombre
       susceptibilidad
       comentario_uveh
-      paciente_relacionado
+      paciente_relacionado{
+        _id
+      }
       cama_relacionada{
-        cama_numero
-        id
+        _id
       }
     }
   }
@@ -42,26 +43,32 @@ const OBTENER_MICROORGANISMOS_PACIENTE = gql`
 const NUEVO_MICROORGANISMO = gql`
   mutation nuevoMicroorganismo($input: MicroorganismoInput) {
     nuevoMicroorganismo(input: $input) {
-      id
       fecha_deteccion
       metodo_deteccion
       microorganismo_tipo
       microorganismo_nombre
       susceptibilidad
       comentario_uveh
-      paciente_relacionado
-      cama_relacionada
+      paciente_relacionado {
+        _id
+      }
+      cama_relacionada{
+        _id
+      }
     }
   }
 `;
 
 const NuevoMicroorganismo = () => {
   // Mensaje de alerta
-  const [mensaje, guardarMensaje] = useState(null);
+  const [mensajeError, setMensajeError] = useState(null);
 
   // routing
   const router = useRouter();
   const { query: { id } } = router;
+
+  const { cama } = useContext(PacienteContext);
+  console.log("Valor de id.cama desde el contexto:", cama);
 
   // Consulta para obtener el paciente
   const { data: pacienteData, loading: pacienteLoading, error: pacienteError } = useQuery(OBTENER_PACIENTE, {
@@ -77,7 +84,6 @@ const NuevoMicroorganismo = () => {
     },
   });
 
-  const { cama } = useContext(PacienteContext);
 
   // Mutation de apollo
   const [nuevoMicroorganismo] = useMutation(NUEVO_MICROORGANISMO, {
@@ -116,7 +122,6 @@ const NuevoMicroorganismo = () => {
             susceptibilidad: '',
             comentario_uveh: '',
             paciente_relacionado: id,
-            cama_relacionada: '6524447af88c3b6be13daf9e',
         },
         validationSchema: Yup.object({
             fecha_deteccion: Yup.date().required('La fecha de detección es obligatoria'),
@@ -132,6 +137,7 @@ const NuevoMicroorganismo = () => {
         }), 
         onSubmit: async valores => {
 
+            
             const { 
                 fecha_deteccion,
                 metodo_deteccion,
@@ -139,25 +145,34 @@ const NuevoMicroorganismo = () => {
                 microorganismo_nombre,
                 susceptibilidad,
                 comentario_uveh,
-                paciente_relacionado: id,
+                paciente_relacionado,
                 cama_relacionada,
             } = valores;
+            
+            console.log("Valores Inciales:", valores)
+
+            const valoresActualizados = {
+                fecha_deteccion,
+                metodo_deteccion,
+                microorganismo_tipo,
+                microorganismo_nombre,
+                susceptibilidad,
+                comentario_uveh,
+                paciente_relacionado: id,
+                cama_relacionada: cama
+            };
+
+            console.log("Valores actualizados:", valoresActualizados)
 
             try {
                 const { data } = await nuevoMicroorganismo({
                     variables: {
-                        input: {
-                            fecha_deteccion,
-                            metodo_deteccion,
-                            microorganismo_tipo,
-                            microorganismo_nombre,
-                            susceptibilidad,
-                            comentario_uveh,
-                            paciente_relacionado: id,
-                            cama_relacionada: cama
-                        }
+                        input: valoresActualizados
                     }
                 });
+
+            
+                console.log("Después de la llamada a actualizarPaciente");
                 // Mostrar una alerta
                 Swal.fire(
                     'Creado',
@@ -169,11 +184,14 @@ const NuevoMicroorganismo = () => {
                 router.push('/'); 
 
 
+
             } catch (error) {
-                guardarMensaje(error.message.replace('GraphQL error: ', ''));
+                console.error("Error durante la llamada a actualizarPaciente:", error);
+    
+                setMensajeError(error.message.replace('GraphQL error: ', ''));
                 setTimeout(() => {
-                    guardarMensaje(null);
-                }, 4000);
+                    setMensajeError(null);
+                }, 2000);
             }
         }
     })
@@ -386,7 +404,6 @@ const NuevoMicroorganismo = () => {
                     </form>
                 </div>
             </div>
-            {mensaje && mostrarMensaje()}
         </Layout>
      );
 }

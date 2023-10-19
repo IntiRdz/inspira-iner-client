@@ -8,7 +8,7 @@ import { useMutation, gql } from '@apollo/client';
 const NUEVA_CUENTA = gql`
     mutation nuevoUsuario($input: UsuarioInput) {
         nuevoUsuario(input: $input) {
-            id
+            _id
             nombre
             apellido
             email

@@ -7,27 +7,35 @@ import Link from 'next/link'
 
 //De aquí con las busquedas reales
 const OBTENER_PACIENTES = gql`
-    query obtenerPacientes {
+    query ObtenerPacientes {
         obtenerPacientes {
-          _id
-          expediente
-          pac_apellido_paterno
-          pac_apellido_materno
-          pac_nombre
-          pac_genero
-          pac_FN
-          pac_dispositivo_o2
-          pac_hemodialisis
-          diagnostico1
-          diagnostico
-          pac_codigo_uveh
-          fecha_ingreso
-          fecha_prealta
-          fecha_egreso
-          hospitalizado
-          cama_relacionada
-          microorganismo_relacionado
-
+            _id
+            expediente
+            pac_apellido_paterno
+            pac_apellido_materno
+            pac_nombre
+            pac_genero
+            pac_FN
+            pac_dispositivo_o2
+            pac_hemodialisis
+            diagnostico
+            diagnostico1
+            pac_codigo_uveh
+            fecha_ingreso
+            fecha_prealta
+            fecha_egreso
+            hospitalizado
+            creado
+            user
+            cama_relacionada {
+            _id
+            cama_numero
+            }
+            microorganismo_relacionado {
+            _id
+            microorganismo_nombre
+            }
+            antibiotico_relacionado
         }
     }
 `;

@@ -11,9 +11,7 @@ const OBTENER_PACIENTE = gql`
       id
       pac_apellido_paterno
       pac_apellido_materno
-      pac_nombre {
-        cama_numero
-      }
+      pac_nombre
     }
   }
 `;
@@ -21,15 +19,22 @@ const OBTENER_PACIENTE = gql`
 const OBTENER_MICROORGANISMOS_PACIENTE = gql`
   query obtenerMicroorganismosPatient($id: ID!) {
     obtenerMicroorganismosPatient(id: $id) {
-      id
+      _id
       fecha_deteccion
       metodo_deteccion
       microorganismo_tipo
       microorganismo_nombre
       susceptibilidad
       comentario_uveh
-      paciente_relacionado
-      cama_relacionada
+      cama_relacionada{
+        _id
+        cama_numero
+      }
+      paciente_relacionado{
+        id
+        pac_nombre
+      }
+
     }
   }
 `;
@@ -97,16 +102,15 @@ console.log(dataMicroorganismo)
                 <th className="w-1/7 py-2">Nombre</th>
                 <th className="w-1/6 py-2">Susceptibilidad</th>
                 <th className="w-1/5 py-2">Comentario UVEH</th>
-                <th className="w-1/5 py-2">Paciente</th>
                 <th className="w-1/5 py-2">Cama</th>
             </tr>
           </thead>
 
           <tbody className="bg-white">
-            {dataMicroorganismo.obtenerMicroorganismosPatient
-              .sort((a, b) => new Date(b.fecha_deteccion) - new Date(a.fecha_deteccion)) // Ordena por fecha más reciente
-              .map((microorganismo, index) => (
-                <tr key={microorganismo.id}>
+          {dataMicroorganismo && dataMicroorganismo.obtenerMicroorganismosPatient
+                .sort((a, b) => new Date(b.fecha_deteccion) - new Date(a.fecha_deteccion))
+                .map((microorganismo, index) => (
+                <tr key={microorganismo._id}>
                   <td className="border px-4 py-2">{index + 1}</td> {/* Utiliza el índice para el número incremental */}
                   <td className="border px-4 py-2">{formatFecha(microorganismo.fecha_deteccion, 'dd-MM-yy')}</td>
                   <td className="border px-4 py-2">{calcularDias(microorganismo.fecha_deteccion)}</td>
@@ -133,14 +137,18 @@ console.log(dataMicroorganismo)
                   >
                     {microorganismo.susceptibilidad}
                   </td>
-                  <td className="border px-4 py-2">{microorganismo.comentario_uveh}</td>
-
-                  <td className="border px-4 py-2">
-                    {microorganismo.paciente_relacionado[0]}
-                  </td>
-                  <td className="border px-4 py-2">
-                    {microorganismo.cama_relacionada[0]}
-                  </td>
+                   <td className="border px-4 py-2">{microorganismo.comentario_uveh}</td>
+                   <td className="border px-2 py-2">
+                    {Array.isArray(microorganismo.cama_relacionada) ? (
+                        microorganismo.cama_relacionada.map((cama, index) => (
+                        <div key={index}>{cama.cama_numero}</div>
+                        ))
+                    ) : (
+                        microorganismo.cama_relacionada.map((cama, index) => (
+                        <div key={index}>{cama.cama_numero}</div>
+                        ))
+                    )}
+                </td>
                 </tr>
               ))}
           </tbody>
