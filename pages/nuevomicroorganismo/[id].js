@@ -12,7 +12,7 @@ import { AsignarCamaTodas } from '../../components/pacientes/AsignarCamaTodas';
 const OBTENER_PACIENTE = gql`
   query obtenerPaciente($id: ID!) {
     pacienteData: obtenerPaciente(id: $id) {
-      _id
+      id
       pac_apellido_paterno
       pac_apellido_materno
       pac_nombre
@@ -23,7 +23,7 @@ const OBTENER_PACIENTE = gql`
 const OBTENER_MICROORGANISMOS_PACIENTE = gql`
   query obtenerMicroorganismosPatient($id: ID!) {
     obtenerMicroorganismosPatient(id: $id) {
-      _id
+      id
       fecha_deteccion
       metodo_deteccion
       microorganismo_tipo
@@ -31,10 +31,10 @@ const OBTENER_MICROORGANISMOS_PACIENTE = gql`
       susceptibilidad
       comentario_uveh
       paciente_relacionado{
-        _id
+        id
       }
       cama_relacionada{
-        _id
+        id
       }
     }
   }
@@ -50,18 +50,18 @@ const NUEVO_MICROORGANISMO = gql`
       susceptibilidad
       comentario_uveh
       paciente_relacionado {
-        _id
+        id
       }
       cama_relacionada{
-        _id
+        id
       }
     }
   }
 `;
 
 const NuevoMicroorganismo = () => {
-  // Mensaje de alerta
-  const [mensajeError, setMensajeError] = useState(null);
+    // Mensaje de alerta
+    const [mensaje, guardarMensaje] = useState(null);
 
   // routing
   const router = useRouter();
@@ -186,12 +186,12 @@ const NuevoMicroorganismo = () => {
 
 
             } catch (error) {
-                console.error("Error durante la llamada a actualizarPaciente:", error);
-    
-                setMensajeError(error.message.replace('GraphQL error: ', ''));
+                console.error("Error durante al crear microorganismo:", error);
+
+                guardarMensaje(error.message.replace('GraphQL error: ', ''));
                 setTimeout(() => {
-                    setMensajeError(null);
-                }, 2000);
+                    guardarMensaje(null);
+                }, 5000);
             }
         }
     })
@@ -404,6 +404,7 @@ const NuevoMicroorganismo = () => {
                     </form>
                 </div>
             </div>
+            {mensaje && mostrarMensaje()}
         </Layout>
      );
 }

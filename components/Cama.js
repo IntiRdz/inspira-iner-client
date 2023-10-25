@@ -12,23 +12,32 @@ const ELIMINAR_CAMA = gql`
 `;
 
 const OBTENER_CAMAS = gql`
-  query obtenerCamas {
-      obtenerCamas {
-            _id
-            cama_numero
-            cama_compartida
-            cama_disponible
-            cama_ocupada
-            cama_genero
-            cama_dispositivo_o2
-            cama_hemodialisis
-            cama_aislamiento
-            cama_dan
-            cama_codigo_uveh
-            cama_fecha_inicio
-            cama_fecha_fin
-      }
+query ObtenerCamas {
+  obtenerCamas {
+    id
+    cama_numero
+    cama_compartida
+    cama_disponible
+    cama_ocupada
+    cama_genero
+    cama_dispositivo_o2
+    cama_hemodialisis
+    cama_aislamiento
+    cama_dan
+    cama_codigo_uveh
+    cama_fecha_inicio
+    cama_fecha_fin
+    creado
+    paciente_relacionado {
+      id
+      pac_nombre
+    }
+    microorganismo_relacionado {
+      id
+      microorganismo_nombre
+    }
   }
+}
 `;
 
 const Cama = ({cama}) => {
@@ -45,7 +54,7 @@ const Cama = ({cama}) => {
         cama_codigo_uveh,
         cama_fecha_inicio,
         cama_fecha_fin,
-        _id
+        id
      } = cama;
 
     // Mutation para eliminar camas
@@ -58,7 +67,7 @@ const Cama = ({cama}) => {
             cache.writeQuery({
                 query: OBTENER_CAMAS,
                 data: {
-                    obtenerCamas: obtenerCamas.filter( camaActual => camaActual._id !== _id )
+                    obtenerCamas: obtenerCamas.filter( camaActual => camaActual.id !== id )
                 }
             })
         }
@@ -99,7 +108,7 @@ const Cama = ({cama}) => {
 
     const editarCama = () => {
         Router.push({
-            pathname: `/editarcama/${cama._id}`,
+            pathname: `/editarcama/${cama.id}`,
         })
     }
 

@@ -16,7 +16,7 @@ const ELIMINAR_PACIENTE = gql`
 const OBTENER_PACIENTES = gql`
     query ObtenerPacientes {
         obtenerPacientes {
-            _id
+            id
             expediente
             pac_apellido_paterno
             pac_apellido_materno
@@ -35,18 +35,23 @@ const OBTENER_PACIENTES = gql`
             creado
             user
             cama_relacionada {
-                _id
+                id
                 cama_numero
             }
             microorganismo_relacionado {
-                _id
+                id
                 microorganismo_nombre
             }
-            antibiotico_relacionado
+            antibiotico_relacionado{
+                id
+                antibiotico_nombre
+            }
         }
     }
 `;
 
+
+//Esta busqueda es para modifcar al encotrado en el botón 
 
 let contador = 0
 
@@ -115,13 +120,13 @@ const Paciente = ({paciente}) => {
             cache.writeQuery({
                 query: OBTENER_PACIENTES,
                 data: {
-                    obtenerPacientes : obtenerPacientes.filter( pacienteActual => pacienteActual._id !== paciente._id )
+                    obtenerPacientes : obtenerPacientes.filter( pacienteActual => pacienteActual.id !== paciente.id )
                 }
             })
         }
     }  );
 
-    console.log("el ID del paciente es",paciente._id)
+    console.log("el ID del paciente es",paciente.id)
     const { 
         expediente,
         cama_numero,
@@ -143,22 +148,22 @@ const Paciente = ({paciente}) => {
     } = paciente;
 
     const editarPaciente = () => {
-        console.log("el ID del paciente es en el botón",paciente._id)
+        console.log("el ID del paciente es en el botón",paciente.id)
         Router.push({
-            pathname: `/editarpaciente/${paciente._id}`,
+            pathname: `/editarpaciente/${paciente.id}`,
             
         })
     }
 
      const asignarMicroorganismo = () => {
         Router.push({
-            pathname: `/nuevomicroorganismo/${paciente._id}`,
+            pathname: `/nuevomicroorganismo/${paciente.id}`,
         })
     } 
 
     const verMicroorganismo = () => {
         Router.push({
-            pathname: `/microorganismospaciente/${paciente._id}`,
+            pathname: `/microorganismospaciente/${paciente.id}`,
         })
     }
 
@@ -262,7 +267,7 @@ const Paciente = ({paciente}) => {
                         className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
                         onClick={() => asignarMicroorganismo() }
                     >
-                        Asignar Microorganismo
+                        + Microorganismo
 
                         <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </button>

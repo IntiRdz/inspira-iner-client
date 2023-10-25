@@ -8,9 +8,10 @@ import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 import { AsignarCama } from '../../components/pacientes/AsignarCama';
-//import { makeVar } from '@apollo/client';
+import { makeVar } from '@apollo/client';
 
 const OBTENER_PACIENTE = gql`
+
     query ObtenerPaciente($id: ID!) {
         obtenerPaciente(id: $id) {
             expediente
@@ -30,12 +31,7 @@ const OBTENER_PACIENTE = gql`
             hospitalizado
             creado
             user
-            cama_relaciona{
-                _id
-            }
-            microorganismo_relacionado{
-                _id
-            }
+
         }
     }
 `;
@@ -57,9 +53,7 @@ const ACTUALIZAR_PACIENTE = gql`
             fecha_ingreso
             fecha_egreso
             hospitalizado
-            cama_relacionada{
-                _id
-            }
+
         }
     }
 `;
@@ -72,18 +66,19 @@ const EditarPaciente = () => {
     const router = useRouter();
     const { query: { id } } = router;
        
-    const { cama } = useContext(PacienteContext);
-    console.log("Valor de id.cama desde el contexto:", cama);
-
+    
     
     // Consultar para obtener el paciente
     const { data, loading, error } = useQuery(OBTENER_PACIENTE, {
         variables: {
-            id
+            id:id
         }
     });
     
     //console.log("la dada es",data)
+    
+    const { cama } = useContext(PacienteContext);
+    console.log("Valor de id.cama desde el contexto:", cama);
 
     // Actualizar el paciente
     const [ actualizarPaciente ] = useMutation( ACTUALIZAR_PACIENTE );
@@ -172,8 +167,8 @@ const EditarPaciente = () => {
             cama_relacionada
         } = valores;
 
-        //const camaId = makeVar( cama.camaIdString);
-        //console.log("Valor de id de cama despues de makeVar:", camaId);
+        const camaId = makeVar( cama.camaIdString);
+        console.log("Valor de id de cama despues de makeVar:", camaId);
      
         console.log("Valores Inciales:", valores)
 

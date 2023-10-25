@@ -19,7 +19,7 @@ const OBTENER_PACIENTE = gql`
 const OBTENER_MICROORGANISMOS_PACIENTE = gql`
   query obtenerMicroorganismosPatient($id: ID!) {
     obtenerMicroorganismosPatient(id: $id) {
-      _id
+      id
       fecha_deteccion
       metodo_deteccion
       microorganismo_tipo
@@ -27,7 +27,7 @@ const OBTENER_MICROORGANISMOS_PACIENTE = gql`
       susceptibilidad
       comentario_uveh
       cama_relacionada{
-        _id
+        id
         cama_numero
       }
       paciente_relacionado{
@@ -90,7 +90,6 @@ console.log(dataMicroorganismo)
             Regresar
           </a>
         </Link>
-
         <table className="table-auto shadow-md mt-10 w-full w-lg">
           <thead className="bg-gray-800">
             <tr className="text-white">
@@ -105,12 +104,11 @@ console.log(dataMicroorganismo)
                 <th className="w-1/5 py-2">Cama</th>
             </tr>
           </thead>
-
           <tbody className="bg-white">
-          {dataMicroorganismo && dataMicroorganismo.obtenerMicroorganismosPatient
+              {dataMicroorganismo && dataMicroorganismo.obtenerMicroorganismosPatient
                 .sort((a, b) => new Date(b.fecha_deteccion) - new Date(a.fecha_deteccion))
                 .map((microorganismo, index) => (
-                <tr key={microorganismo._id}>
+                  <tr key={microorganismo.id}>
                   <td className="border px-4 py-2">{index + 1}</td> {/* Utiliza el índice para el número incremental */}
                   <td className="border px-4 py-2">{formatFecha(microorganismo.fecha_deteccion, 'dd-MM-yy')}</td>
                   <td className="border px-4 py-2">{calcularDias(microorganismo.fecha_deteccion)}</td>
@@ -137,18 +135,18 @@ console.log(dataMicroorganismo)
                   >
                     {microorganismo.susceptibilidad}
                   </td>
-                   <td className="border px-4 py-2">{microorganismo.comentario_uveh}</td>
-                   <td className="border px-2 py-2">
+                  <td className="border px-4 py-2">{microorganismo.comentario_uveh}</td>
+                  <td className="border px-2 py-2">
                     {Array.isArray(microorganismo.cama_relacionada) ? (
-                        microorganismo.cama_relacionada.map((cama, index) => (
+                      microorganismo.cama_relacionada.map((cama, index) => (
                         <div key={index}>{cama.cama_numero}</div>
-                        ))
+                      ))
                     ) : (
-                        microorganismo.cama_relacionada.map((cama, index) => (
+                      microorganismo.cama_relacionada.map((cama, index) => (
                         <div key={index}>{cama.cama_numero}</div>
-                        ))
+                      ))
                     )}
-                </td>
+                  </td>
                 </tr>
               ))}
           </tbody>

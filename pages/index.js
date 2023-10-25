@@ -7,37 +7,40 @@ import Link from 'next/link'
 
 //De aquí con las busquedas reales
 const OBTENER_PACIENTES = gql`
-    query ObtenerPacientes {
-        obtenerPacientes {
-            _id
-            expediente
-            pac_apellido_paterno
-            pac_apellido_materno
-            pac_nombre
-            pac_genero
-            pac_FN
-            pac_dispositivo_o2
-            pac_hemodialisis
-            diagnostico
-            diagnostico1
-            pac_codigo_uveh
-            fecha_ingreso
-            fecha_prealta
-            fecha_egreso
-            hospitalizado
-            creado
-            user
-            cama_relacionada {
-            _id
-            cama_numero
-            }
-            microorganismo_relacionado {
-            _id
-            microorganismo_nombre
-            }
-            antibiotico_relacionado
-        }
+query Query {
+  obtenerPacientes {
+    id
+    expediente
+    pac_apellido_paterno
+    pac_apellido_materno
+    pac_nombre
+    pac_genero
+    pac_FN
+    pac_dispositivo_o2
+    pac_hemodialisis
+    diagnostico
+    diagnostico1
+    pac_codigo_uveh
+    fecha_ingreso
+    fecha_prealta
+    fecha_egreso
+    hospitalizado
+    creado
+    user
+    cama_relacionada {
+      id
+      cama_numero
     }
+    microorganismo_relacionado {
+      id
+      microorganismo_nombre
+    }
+    antibiotico_relacionado {
+      id
+      antibiotico_nombre
+    }
+  }
+}
 `;
 
 
@@ -100,7 +103,7 @@ const Index = () => {
                 .sort((a, b) => parseInt(b.cama_numero) - parseInt(a.cama_numero))
                 .map((paciente,) => (
                 <Paciente 
-                  key={paciente._id} 
+                  key={paciente.id} 
                   paciente={paciente}
                 />
               ))}

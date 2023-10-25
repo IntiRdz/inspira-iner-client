@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 import { AsignarCama } from '../../components/pacientes/AsignarCama';
+//import { makeVar } from '@apollo/client';
 
 const OBTENER_PACIENTE = gql`
     query ObtenerPaciente($id: ID!) {
@@ -30,13 +31,11 @@ const OBTENER_PACIENTE = gql`
             hospitalizado
             creado
             user
-            cama_relacionada {
-            _id
-            cama_numero
+            cama_relaciona{
+                _id
             }
-            microorganismo_relacionado {
-            _id
-            microorganismo_nombre
+            microorganismo_relacionado{
+                _id
             }
         }
     }
@@ -59,8 +58,9 @@ const ACTUALIZAR_PACIENTE = gql`
             fecha_ingreso
             fecha_egreso
             hospitalizado
-            cama_relacionada
-            
+            cama_relacionada{
+                _id
+            }
         }
     }
 `;
@@ -72,7 +72,9 @@ const EditarPaciente = () => {
     // obtener el ID actual
     const router = useRouter();
     const { query: { id } } = router;
-    //console.log(id)
+
+    console.log("ID obtenido del router",id)
+       
     
     
     // Consultar para obtener el paciente
@@ -82,10 +84,10 @@ const EditarPaciente = () => {
         }
     });
     
+    console.log("la data es",data)
+    
     const { cama } = useContext(PacienteContext);
-    //console.log("Valor de id.cama desde el contexto:", cama);
-
-   //console.log(data)
+    console.log("Valor de id.cama desde el contexto:", cama);
 
     // Actualizar el paciente
     const [ actualizarPaciente ] = useMutation( ACTUALIZAR_PACIENTE );
@@ -130,10 +132,10 @@ const EditarPaciente = () => {
 
     if(loading) return 'Cargando...';
 
-    //console.log("la dada es",data)
-    //console.log(" data.obteberPaciente es",data.obtenerPaciente)
+    
     const { obtenerPaciente } = data;
-    //console.log("Data de Obtener Paciente",obtenerPaciente)
+    console.log("Data de Obtener Paciente",obtenerPaciente)
+
 
     const valoresIniciales = {
         expediente: obtenerPaciente.expediente ,
@@ -153,8 +155,6 @@ const EditarPaciente = () => {
         cama_relacionada: obtenerPaciente.cama_relacionada
     };
 
-
-    //console.log("Valores Iniales",valoresIniciales)
 
     // Modifica el paciente en la BD
     const actualizarInfoPaciente = async valores => {
@@ -176,32 +176,41 @@ const EditarPaciente = () => {
             cama_relacionada
         } = valores;
 
+        //const camaId = makeVar( cama.camaIdString);
+        //console.log("Valor de id de cama despues de makeVar:", camaId);
+     
+        console.log("Valores Inciales:", valores)
+
+        const valoresActualizados = {
+            expediente,
+            pac_apellido_paterno,
+            pac_apellido_materno,
+            pac_nombre,
+            pac_genero,
+            pac_FN,
+            pac_dispositivo_o2,
+            pac_hemodialisis,
+            diagnostico,
+            pac_codigo_uveh,
+            fecha_ingreso: fecha_ingreso === '' ? undefined : fecha_ingreso, // Si es cadena vacía, se envía undefined
+            fecha_prealta: fecha_prealta === '' ? undefined : fecha_prealta, // Si es cadena vacía, se envía undefined
+            fecha_egreso: fecha_egreso === '' ? undefined : fecha_egreso,
+            hospitalizado,
+            cama_relacionada: cama,
+        };
+
+        console.log("Valores actualizados:", valoresActualizados)
 
         try {
             const { data} = await actualizarPaciente({
                 variables: {
-                    _id,
-                    input: {
-                        expediente,
-                        pac_apellido_paterno,
-                        pac_apellido_materno,
-                        pac_nombre,
-                        pac_genero,
-                        pac_FN,
-                        pac_dispositivo_o2,
-                        pac_hemodialisis,
-                        diagnostico,
-                        pac_codigo_uveh,
-                        fecha_ingreso: fecha_ingreso === '' ? undefined : fecha_ingreso, // Si es cadena vacía, se envía undefined
-                        fecha_prealta: fecha_prealta === '' ? undefined : fecha_prealta, // Si es cadena vacía, se envía undefined
-                        fecha_egreso: fecha_egreso === '' ? undefined : fecha_egreso,
-                        hospitalizado,
-                        cama_relacionada: cama
-                    }
+                    id,
+                    input: valoresActualizados
                 }
             });
 
-            console.log("data antes de la alerta",data)
+            console.log("Después de la llamada a actualizarPaciente");
+
             // Mostrar Alerta
             Swal.fire(
                 'Actualizado',
@@ -213,6 +222,8 @@ const EditarPaciente = () => {
             router.push('/');
             
         } catch (error) {
+            console.error("Error durante la llamada a actualizarPaciente:", error);
+
             setMensajeError(error.message.replace('GraphQL error: ', ''));
             setTimeout(() => {
                 setMensajeError(null);
@@ -227,22 +238,6 @@ const EditarPaciente = () => {
             <div className="flex justify-center mt-5">
                 <div className="w-full max-w-lg">
 
-                    <Formik
-                        validationSchema={ schemaValidacion }
-                        enableReinitialize
-                        initialValues={ valoresIniciales }
-                        onSubmit={ ( valores ) => {
-                            actualizarInfoPaciente(valores)
-                        }}
-                    >
-
-                    {props => {
-                    // console.log(props);
-                    return (
-                        ... demás código ...
-                        )
-                    }}
-                    </Formik>
                 </div>
             </div>
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '../../components/Layout';
 import { useRouter } from 'next/router'
 import { gql, useQuery, useMutation } from '@apollo/client'
@@ -46,8 +46,12 @@ const ACTUALIZAR_CAMA = gql`
 `;
 
 const EditarCama = () => {
+    
     const router = useRouter();
     const { query: { id } } = router;
+    
+    // Mensaje de alerta
+    const [mensaje, guardarMensaje] = useState(null);
 
     // Consultar para obtener la cama
     const { data, loading, error } = useQuery(OBTENER_CAMA, {
@@ -149,13 +153,20 @@ const EditarCama = () => {
             
         } catch (error) {
             guardarMensaje(error.message.replace('GraphQL error: ', ''));
+
             setTimeout(() => {
                 guardarMensaje(null);
             }, 2000);
         }
     }
 
-
+    const mostrarMensaje = () => {
+        return(
+            <div className="bg-white py-2 px-3 w-full my-3 max-w-sm text-center mx-auto">
+                <p>{mensaje}</p>
+            </div>
+        )
+    }
 
     return ( 
         <Layout>
@@ -505,6 +516,7 @@ const EditarCama = () => {
                     </Formik>
                 </div>
             </div>
+            {mensaje && mostrarMensaje() }
         </Layout>
      );
 }

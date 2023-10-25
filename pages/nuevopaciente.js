@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 const NUEVO_PACIENTE = gql`
     mutation nuevoPaciente($input: PacienteInput) {
         nuevoPaciente(input: $input) {
-            _id
+            id
             expediente
             pac_apellido_paterno
             pac_apellido_materno
@@ -32,7 +32,7 @@ const NUEVO_PACIENTE = gql`
 const OBTENER_PACIENTES = gql`
     query obtenerPacientes {
         obtenerPacientes {
-            _id
+            id
             expediente
             pac_apellido_paterno
             pac_apellido_materno
@@ -98,13 +98,13 @@ const NuevoPaciente = () => {
             pac_FN: '',
             pac_dispositivo_o2: '',
             pac_hemodialisis: false,
-            diagnostico: '',
             diagnostico1: [],
+            diagnostico: '',
             pac_codigo_uveh: 'Sin_Definir',
             fecha_ingreso: '',
             fecha_prealta: '',
             fecha_egreso: '',
-            hospitalizado: true
+            hospitalizado: true,
         },
         validationSchema: Yup.object({
             expediente: Yup.string().required('El expediente del paciente es obligatorio'),
@@ -184,39 +184,46 @@ const NuevoPaciente = () => {
                 fecha_ingreso,
                 fecha_prealta,
                 fecha_egreso,
-                hospitalizado
+                hospitalizado,
             } = valores;
+
+            console.log("valores inciales del nuevo objeto", valores)
 
             // Verificar si las fechas son nulas o vacías
             const fechaPrealta = fecha_prealta || undefined; // Establece un valor predeterminado si es nulo o vacío
             const fechaEgreso = fecha_egreso || undefined; // Establece un valor predeterminado si es nulo o vacío
 
+            const valoresActualizados = {
+                expediente,
+                pac_apellido_paterno,
+                pac_apellido_materno,
+                pac_nombre,
+                pac_genero,
+                pac_FN,
+                pac_dispositivo_o2,
+                pac_hemodialisis,
+                diagnostico,
+                diagnostico1,
+                pac_codigo_uveh,
+                fecha_ingreso,
+                fecha_prealta: fechaPrealta,
+                fecha_egreso: fechaEgreso,
+                hospitalizado,
+            };
+
+            console.log("Valores actualizados:", valoresActualizados)
+
+
         
             try {
                 const { data } = await nuevoPaciente({
                     variables: {
-                        input: {
-                            expediente,
-                            pac_apellido_paterno,
-                            pac_apellido_materno,
-                            pac_nombre,
-                            pac_genero,
-                            pac_FN,
-                            pac_dispositivo_o2,
-                            pac_hemodialisis,
-                            diagnostico,
-                            diagnostico1,
-                            pac_codigo_uveh,
-                            fecha_ingreso,
-                            fecha_prealta: fechaPrealta,
-                            fecha_egreso: fechaEgreso,
-                            hospitalizado
-                        }
+                        input: valoresActualizados
                     }
                 });
                 
                 
-                console.log("Se creo el paciente",data.nuevoPaciente);
+                console.log("Después de la llamada a crear Paciente");
 
                 //console.log(data);
 
@@ -231,6 +238,8 @@ const NuevoPaciente = () => {
                 router.push('/');
 
             } catch (error) {
+                console.error("Error durante la llamada a actualizarPaciente:", error);
+
                 guardarMensaje(error.message.replace('GraphQL error: ', ''));
                 setTimeout(() => {
                     guardarMensaje(null);

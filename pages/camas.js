@@ -6,23 +6,32 @@ import Link from 'next/link'
 
 
 const OBTENER_CAMAS = gql`
-  query obtenerCamas {
-      obtenerCamas {
-            _id
-            cama_numero
-            cama_compartida
-            cama_disponible
-            cama_ocupada
-            cama_genero
-            cama_dispositivo_o2
-            cama_hemodialisis
-            cama_aislamiento
-            cama_dan
-            cama_codigo_uveh
-            cama_fecha_inicio
-            cama_fecha_fin
-      }
+query ObtenerCamas {
+  obtenerCamas {
+    id
+    cama_numero
+    cama_compartida
+    cama_disponible
+    cama_ocupada
+    cama_genero
+    cama_dispositivo_o2
+    cama_hemodialisis
+    cama_aislamiento
+    cama_dan
+    cama_codigo_uveh
+    cama_fecha_inicio
+    cama_fecha_fin
+    creado
+    paciente_relacionado {
+      id
+      pac_nombre
+    }
+    microorganismo_relacionado {
+      id
+      microorganismo_nombre
+    }
   }
+}
 `;
 
 const Camas = () => {
@@ -70,7 +79,7 @@ const Camas = () => {
             <tbody className="bg-white">
               {data.obtenerCamas.map( cama => (
                 <Cama 
-                  key={cama._id}
+                  key={cama.id}
                   cama={cama}
                 />
               ))}
