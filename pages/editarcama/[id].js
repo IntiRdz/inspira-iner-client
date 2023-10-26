@@ -7,6 +7,25 @@ import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 
+const OBTENER_CAMAS = gql`
+  query obtenerCamas {
+      obtenerCamas {
+            id
+            cama_numero
+            cama_compartida
+            cama_disponible
+            cama_genero
+            cama_dispositivo_o2
+            cama_hemodialisis
+            cama_aislamiento
+            cama_dan
+            cama_codigo_uveh
+            cama_fecha_inicio
+            cama_fecha_fin
+      }
+  }
+`;
+
 const OBTENER_CAMA = gql`
     query obtenerCama($id: ID!) {
         obtenerCama(id: $id) {
@@ -59,9 +78,31 @@ const EditarCama = () => {
             id
         }
     });
+    
+    const { data: camasData, loading: camasLoading, error: camasError } = useQuery(OBTENER_CAMAS);
 
     // Mutation para modificar la cama
-    const [ actualizarCama ] = useMutation(ACTUALIZAR_CAMA);
+
+    const [actualizarCama] = useMutation(ACTUALIZAR_CAMA, {
+        update(cache, { data: { actualizarCama } }) {
+            // Obtener el objeto de cache directamente desde la consulta anterior
+            const { obtenerCamas } = camasData;
+    
+            // Verificar si hay errores o está cargando en la consulta original
+            if (camasLoading || camasError) {
+                console.log('Cargando o error en la consulta de camas');
+                return;
+            }
+    
+            // Reescribir ese objeto
+            cache.writeQuery({
+                query: OBTENER_CAMAS,
+                data: {
+                    obtenerCamas: [...obtenerCamas, actualizarCama]
+                }
+            });
+        },
+    });
 
     // Schema de validación
     const schemaValidacion = Yup.object({

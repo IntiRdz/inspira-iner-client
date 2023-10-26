@@ -68,7 +68,7 @@ const NuevoMicroorganismo = () => {
   const { query: { id } } = router;
 
   const { cama } = useContext(PacienteContext);
-  console.log("Valor de id.cama desde el contexto:", cama);
+  //console.log("Valor de id.cama desde el contexto:", cama);
 
   // Consulta para obtener el paciente
   const { data: pacienteData, loading: pacienteLoading, error: pacienteError } = useQuery(OBTENER_PACIENTE, {
@@ -84,12 +84,11 @@ const NuevoMicroorganismo = () => {
     },
   });
 
-
   // Mutation de apollo
   const [nuevoMicroorganismo] = useMutation(NUEVO_MICROORGANISMO, {
     update(cache, { data: { nuevoMicroorganismo } }) {
         if (microorganismosLoading || microorganismosError) {
-            console.log('Cargando o error en la consulta de microorganismos');
+            //console.log('Cargando o error en la consulta de microorganismos');
             return;
             
         }
@@ -109,8 +108,8 @@ const NuevoMicroorganismo = () => {
     },
   });
 
-  console.log('datos paciente', pacienteData);
-  console.log('datos micro', microData);
+  //console.log('datos paciente', pacienteData);
+  //console.log('datos micro', microData);
             
     // Formulario para nuevos microorganismos
     const formik = useFormik({
@@ -126,13 +125,27 @@ const NuevoMicroorganismo = () => {
         validationSchema: Yup.object({
             fecha_deteccion: Yup.date().required('La fecha de detección es obligatoria'),
             metodo_deteccion: Yup.string()
-                .oneOf(['PCR', 'Panel', 'Cultivo'])
+                .oneOf([
+                    'PCR', 
+                    'Panel', 
+                    'Cultivo'
+                ])
                 .required('El método de detección es obligatorio'),
             microorganismo_tipo: Yup.string()
-                .oneOf(['Virus', 'Bacteria', 'Micobacteria', 'Hongo'])
+                .oneOf([
+                    'Virus', 
+                    'Bacteria', 
+                    'Micobacteria', 
+                    'Hongo'
+                ])
                 .required('El tipo de microorganismo es obligatorio'),
             microorganismo_nombre: Yup.string(),
-            susceptibilidad: Yup.string().oneOf(['BLEE', 'MDR', 'XDR', 'Sensible']),
+            susceptibilidad: Yup.string().oneOf([
+                'BLEE', 
+                'MDR', 
+                'XDR', 
+                'Sensible'
+            ]),
             comentario_uveh: Yup.string(),
         }), 
         onSubmit: async valores => {
@@ -371,31 +384,7 @@ const NuevoMicroorganismo = () => {
                             </div>
                         ) : null  }
 
-                        <AsignarCamaTodas /> 
-
-{/*                         <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_relacionada">
-                                Número de Cama
-                            </label>
-        
-                            <input
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="cama_relacionada"
-                                type="text"
-                                placeholder="Número de Cama"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.cama_relacionada}
-                            />
-                        </div> */}
-        
-{/*                         { formik.touched.cama_relacionada && formik.errors.cama_relacionada ? (
-                            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                <p className="font-bold">Error</p>
-                                <p>{formik.errors.cama_relacionada}</p>
-                            </div>
-                        ) : null  }  */}
-       
+                        <AsignarCamaTodas />      
                         <input
                             type="submit"
                             className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"

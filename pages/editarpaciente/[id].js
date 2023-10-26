@@ -8,10 +8,31 @@ import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 import { AsignarCama } from '../../components/pacientes/AsignarCama';
-import { makeVar } from '@apollo/client';
+
+const OBTENER_PACIENTES = gql`
+    query obtenerPacientes {
+        obtenerPacientes {
+            id
+            expediente
+            pac_apellido_paterno
+            pac_apellido_materno
+            pac_nombre
+            pac_genero
+            pac_FN
+            pac_dispositivo_o2
+            pac_hemodialisis
+            diagnostico1
+            diagnostico
+            pac_codigo_uveh
+            fecha_prealta
+            fecha_ingreso
+            fecha_egreso
+            hospitalizado
+        }
+    }
+`;
 
 const OBTENER_PACIENTE = gql`
-
     query ObtenerPaciente($id: ID!) {
         obtenerPaciente(id: $id) {
             expediente
@@ -22,16 +43,13 @@ const OBTENER_PACIENTE = gql`
             pac_FN
             pac_dispositivo_o2
             pac_hemodialisis
-            diagnostico
             diagnostico1
+            diagnostico
             pac_codigo_uveh
             fecha_ingreso
             fecha_prealta
             fecha_egreso
             hospitalizado
-            creado
-            user
-
         }
     }
 `;
@@ -47,41 +65,59 @@ const ACTUALIZAR_PACIENTE = gql`
             pac_FN
             pac_dispositivo_o2
             pac_hemodialisis
+            diagnostico1
             diagnostico
             pac_codigo_uveh
             fecha_prealta
             fecha_ingreso
             fecha_egreso
             hospitalizado
-
         }
     }
 `;
 
 const EditarPaciente = () => {
 
-    const [mensajeError, setMensajeError] = useState(null);
-
-    // obtener el ID actual
     const router = useRouter();
     const { query: { id } } = router;
-       
     
-    
+    // Mensaje de alerta
+    const [mensajeError, setMensajeError] = useState(null);
+
     // Consultar para obtener el paciente
     const { data, loading, error } = useQuery(OBTENER_PACIENTE, {
         variables: {
             id:id
         }
     });
-    
-    //console.log("la dada es",data)
-    
-    const { cama } = useContext(PacienteContext);
-    console.log("Valor de id.cama desde el contexto:", cama);
 
-    // Actualizar el paciente
-    const [ actualizarPaciente ] = useMutation( ACTUALIZAR_PACIENTE );
+    const { cama } = useContext(PacienteContext);
+    //console.log("Valor de id.cama desde el contexto:", cama);
+    
+    const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
+    
+    
+    // Mutation para modificar al paceinte
+    const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
+        update(cache, { data: { actualizarPaciente } }) {
+            // Obtener el objeto de cache directamente desde la consulta anterior
+            const { obtenerPacientes } = pacientesData;
+    
+            // Verificar si hay errores o está cargando en la consulta original
+            if (pacientesLoading || pacientesError) {
+                console.log('Cargando o error en la consulta de pacientes');
+                return;
+            }
+    
+            // Reescribir ese objeto
+            cache.writeQuery({
+                query: OBTENER_PACIENTES,
+                data: {
+                    obtenerPacientes: [...obtenerPacientes, actualizarPaciente]
+                }
+            });
+        },
+    });
 
     // Schema de validacion
     const schemaValidacion = Yup.object({
@@ -98,6 +134,34 @@ const EditarPaciente = () => {
             'VMNI', 
             'VM']).required('El dispositivo O2 del paciente es obligatorio'),
         pac_hemodialisis: Yup.boolean(),
+        diagnostico1: Yup.array()
+        .min(1, 'Debe seleccionar al menos un diagnóstico')
+        .of(
+            Yup.string().oneOf([
+            'CodigoHemoptisis',
+            'CodigoViaAerea',
+            'CodigoInfarto',
+            'COVID',
+            'Influenza',
+            'Parainfluenza',
+            'Adenovirus',
+            'VirusSincialRespiratorio',
+            'TuberculosisSensible',
+            'TuberculosisResistente',
+            'B24',
+            'SIRA',
+            'NeumoniaBacteriana',
+            'EPOC',
+            'Asma',
+            'TromboembiaPulmonar',
+            'DerramePleural',
+            'Neumotorax',
+            'NeumoniaIntersticialDifusa',
+            'InsuficienciaCaridiaca',
+            'CaPulmonarOSospecha',
+            ])
+        )
+        .required('Debe seleccionar al menos un diagnóstico'),
         diagnostico: Yup.string(),
         pac_codigo_uveh: Yup.string().required([
             'Sin Definir',
@@ -120,13 +184,10 @@ const EditarPaciente = () => {
 
     });
 
-
     if(loading) return 'Cargando...';
-
     
     const { obtenerPaciente } = data;
-    console.log("Data de Obtener Paciente",obtenerPaciente)
-
+    //console.log("Data de Obtener Paciente",obtenerPaciente)
 
     const valoresIniciales = {
         expediente: obtenerPaciente.expediente ,
@@ -136,7 +197,8 @@ const EditarPaciente = () => {
         pac_genero: obtenerPaciente.pac_genero,
         pac_FN: obtenerPaciente.pac_FN ? format(new Date(obtenerPaciente.pac_FN), 'yyyy-MM-dd') : '',
         pac_dispositivo_o2: obtenerPaciente.pac_dispositivo_o2,
-        pac_hemodialisis: obtenerPaciente.pac_hemodialisis ,
+        pac_hemodialisis: obtenerPaciente.pac_hemodialisis,
+        diagnostico1: obtenerPaciente.diagnostico1,
         diagnostico: obtenerPaciente.diagnostico ,
         pac_codigo_uveh: obtenerPaciente.pac_codigo_uveh  || '', 
         fecha_ingreso: obtenerPaciente.fecha_ingreso  ? format(new Date(obtenerPaciente.fecha_ingreso), 'yyyy-MM-dd') : '', // Si no hay fecha en las props, se establece como cadena vacía
@@ -158,6 +220,7 @@ const EditarPaciente = () => {
             pac_FN,
             pac_dispositivo_o2,
             pac_hemodialisis,
+            diagnostico1,
             diagnostico,
             pac_codigo_uveh,
             fecha_ingreso,
@@ -167,10 +230,7 @@ const EditarPaciente = () => {
             cama_relacionada
         } = valores;
 
-        const camaId = makeVar( cama.camaIdString);
-        console.log("Valor de id de cama despues de makeVar:", camaId);
-     
-        console.log("Valores Inciales:", valores)
+        //console.log("Valores Inciales:", valores)
 
         const valoresActualizados = {
             expediente,
@@ -181,6 +241,7 @@ const EditarPaciente = () => {
             pac_FN,
             pac_dispositivo_o2,
             pac_hemodialisis,
+            diagnostico1,
             diagnostico,
             pac_codigo_uveh,
             fecha_ingreso: fecha_ingreso === '' ? undefined : fecha_ingreso, // Si es cadena vacía, se envía undefined
@@ -218,7 +279,7 @@ const EditarPaciente = () => {
             setMensajeError(error.message.replace('GraphQL error: ', ''));
             setTimeout(() => {
                 setMensajeError(null);
-            }, 2000);
+            }, 5000);
         }
     }
 
@@ -411,8 +472,6 @@ const EditarPaciente = () => {
                                     <p>{props.errors.pac_dispositivo_o2}</p>
                                 </div>
                             ) : null  }
-
-
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_hemodialisis">
                                     Hemodialisis
@@ -440,7 +499,57 @@ const EditarPaciente = () => {
                                     <label htmlFor="pac_hemodialisis_false">No</label>
                                 </div>
                             </div>
+                            <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico1">
+                                Diagnósticos Generales
+                            </label>
+                            {[
+                                'CodigoHemoptisis',
+                                'CodigoViaAerea',
+                                'CodigoInfarto',
+                                'COVID',
+                                'Influenza',
+                                'Parainfluenza',
+                                'Adenovirus',
+                                'VirusSincialRespiratorio',
+                                'TuberculosisSensible',
+                                'TuberculosisResistente',
+                                'B24',
+                                'SIRA',
+                                'NeumoniaBacteriana',
+                                'EPOC',
+                                'Asma',
+                                'TromboembiaPulmonar',
+                                'DerramePleural',
+                                'Neumotorax',
+                                'NeumoniaIntersticialDifusa',
+                                'InsuficienciaCaridiaca',
+                                'CaPulmonarOSospecha',
+                            ].map((option) => (
+                                <label key={option} className="block">
+                                <input
+                                    type="checkbox"
+                                    name="diagnostico1"
+                                    value={option}
+                                    onChange={(e) => {
+                                    const isChecked = e.target.checked;
+                                    const value = e.target.value;
 
+                                    props.setFieldValue(
+                                        'diagnostico1',
+                                        isChecked
+                                        ? [...props.values.diagnostico1, value]
+                                        : props.values.diagnostico1.filter((val) => val !== value)
+                                    );
+                                    }}
+                                    onBlur={props.handleBlur}
+                                    checked={props.values.diagnostico1.includes(option)}
+                                    className="mr-2"
+                                />
+                                {option}
+                                </label>
+                            ))}
+                            </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico">
                                     Diagnóstico
@@ -592,14 +701,11 @@ const EditarPaciente = () => {
                                 </div>
                             </div>
                             <AsignarCama />   
-                           
 
                             <input
                             type="submit"
                             className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
                             value="Registrar Paciente"
-
-                            
                         />
                         </form>
                         )
@@ -607,7 +713,6 @@ const EditarPaciente = () => {
                     </Formik>
                 </div>
             </div>
-
         </Layout>
      );
 }
