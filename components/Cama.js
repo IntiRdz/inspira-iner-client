@@ -25,8 +25,6 @@ query ObtenerCamas {
     cama_aislamiento
     cama_dan
     cama_codigo_uveh
-    cama_fecha_inicio
-    cama_fecha_fin
     creado
     paciente_relacionado {
       id
@@ -52,8 +50,6 @@ const Cama = ({cama}) => {
         cama_aislamiento,
         cama_dan,
         cama_codigo_uveh,
-        cama_fecha_inicio,
-        cama_fecha_fin,
         id
      } = cama;
 
@@ -72,39 +68,6 @@ const Cama = ({cama}) => {
             })
         }
     });
-
-/*     const confirmarEliminarCama = () => {
-        Swal.fire({
-            title: '¿Deseas eliminar a esta cama?',
-            text: "Esta acción no se puede deshacer",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, Eliminar',
-            cancelButtonText: 'No, Cancelar'
-          }).then( async (result) => {
-                if (result.value) {
-                        try {
-                            // eliminar cama de la bd
-                            const { data } = await eliminarCama({
-                                variables: {
-                                    id
-                                }
-                            });
-
-                            Swal.fire(
-                                'Correcto',
-                                data.eliminarCama,
-                                'success'
-                            )
-                        } catch (error) {
-                            console.log(error);
-                        }
-                
-                }
-          })
-    } */
 
     const editarCama = () => {
         Router.push({
@@ -172,18 +135,6 @@ const Cama = ({cama}) => {
                 >
                 {cama_dan ? 'Sí' : 'No'}
             </td>
-            <td className="border px-4 py-2">{cama.cama_fecha_inicio ? format(new Date(cama.cama_fecha_inicio), 'dd-MM-yy') : ''}</td>
-            <td className="border px-4 py-2">{cama.cama_fecha_fin ? format(new Date(cama.cama_fecha_fin), 'dd-MM-yy') : ''}</td>
-{/*             <td className="border px-4 py-2">
-                <button
-                    type="button"
-                    className={`flex justify-center items-center ${cama_ocupada ? 'bg-red-800' : 'bg-green-800'} py-2 px-4 w-full text-white rounded text-xs uppercase font-bold`}
-                    onClick={() => confirmarEliminarCama() }
-                >
-                    {cama_ocupada ? 'Liberar' : 'Ocupar'}
-                    <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </button>
-            </td> */}
             <td className="border px-4 py-2">
                      <button
                         type="button"

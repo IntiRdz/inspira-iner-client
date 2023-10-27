@@ -80,23 +80,20 @@ const Paciente = ({paciente}) => {
 
     // Verificar si diagnostico1 contiene palabras clave para código rojo, amarillo o azul
     const isCodigoRojo = ["CodigoInfarto", "CodigoViaAerea", "CodigoHemoptisis"].some((keyword) =>
-    paciente.diagnostico1.includes(keyword)
-    );
+    paciente.diagnostico1.includes(keyword));
 
     const isCodigoAmarillo = ["COVID", "Influenza", "Parainfluenza", "Adenovirus", "VirusSincialRespiratorio"].some((keyword) =>
-    paciente.diagnostico1.includes(keyword)
-    );
+    paciente.diagnostico1.includes(keyword));
 
     const isCodigoAzul = ["TuberculosisSensible", "TuberculosisResistente", "B24"].some((keyword) =>
-    paciente.diagnostico1.includes(keyword)
-    );
+    paciente.diagnostico1.includes(keyword));
 
     // Clases CSS condicionales para cambiar el fondo de la columna
     let diagnostico1Classes = "border px-4 py-2";
 
     switch (true) {
     case isCodigoRojo:
-        diagnostico1Classes += " bg-red-400";
+        diagnostico1Classes += " bg-amber-400";
         break;
     case isCodigoAmarillo:
         diagnostico1Classes += " bg-yellow-400";
@@ -110,6 +107,56 @@ const Paciente = ({paciente}) => {
     }
 
 
+    // Verificar si diagnostico1 contiene palabras clave para código rojo, amarillo o azul
+    const isCodigoUve1 = ["Acinetobacter"].some((keyword) =>  paciente.pac_codigo_uveh.includes(keyword));
+    const isCodigoUve2 = ["ColonizacionAcinetobacter"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
+    const isCodigoUve3 = ["ContactoAcinetobacter"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
+    const isCodigoUve4 = ["HisopadoRectal"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
+    const isCodigoUve5 = ["ClostridiumDifficile"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
+    const isCodigoUve6 = ["Enterobacterias_XDR_MDR"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
+    const isCodigoUve7 = ["Pseudomonas_XDR_MDR"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
+    const isCodigoUve8 = ["SAMR"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
+    const isCodigoUve9 = ["TuberculosisisOSospecha"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
+    const isCodigoUve10 = ["SAMS"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
+    
+    let codigoUvehClasses = "px-2 py-2";
+
+    switch (true) {
+        case  isCodigoUve1:
+            codigoUvehClasses += ' bg-pink-300';
+            break;
+        case isCodigoUve2:
+            codigoUvehClasses += ' bg-yellow-200';
+            break;
+        case isCodigoUve3:
+            codigoUvehClasses += ' bg-yellow-200';
+            break;
+        case isCodigoUve4:
+            codigoUvehClasses += ' bg-yellow-200'; // Te faltó el prefijo 'bg-'
+            break;
+        case isCodigoUve5:
+            codigoUvehClasses += ' bg-emerald-300';
+            break;
+        case isCodigoUve6:
+            codigoUvehClasses += ' bg-violet-300';
+            break;
+        case isCodigoUve7:
+            codigoUvehClasses += ' bg-amber-400';
+            break;
+        case isCodigoUve8:
+            codigoUvehClasses += ' bg-rose-500';
+            break;
+        case isCodigoUve9:
+            codigoUvehClasses += ' bg-cyan-600';
+            break;
+        case isCodigoUve10:
+            codigoUvehClasses += ' bg-blue-500';
+            break;
+        default:
+            // Sin color predeterminado
+            break;
+    }
+    
     // mutation para eliminar paciente
     const [ eliminarPaciente ] = useMutation( ELIMINAR_PACIENTE, {
         update(cache) {
@@ -148,19 +195,16 @@ const Paciente = ({paciente}) => {
     } = paciente;
 
     const editarPaciente = () => {
-        console.log("el ID del paciente es en el botón",paciente.id)
+        //console.log("el ID del paciente es en el botón",paciente.id)
         Router.push({
-            pathname: `/editarpaciente/${paciente.id}`,
-            
+            pathname: `/editarpaciente/${paciente.id}`,         
         })
     }
-
      const asignarMicroorganismo = () => {
         Router.push({
             pathname: `/nuevomicroorganismo/${paciente.id}`,
         })
     } 
-
     const verMicroorganismo = () => {
         Router.push({
             pathname: `/microorganismospaciente/${paciente.id}`,
@@ -204,47 +248,23 @@ const Paciente = ({paciente}) => {
                 <td className="border px-2 py-2">{pac_dispositivo_o2}</td>
                 <td className="border px-2 py-2">{pac_hemodialisis ? 'Sí' : 'No'}</td>
                 <td className={diagnostico1Classes}>
-                {Array.isArray(paciente.diagnostico1) ? (
-                    paciente.diagnostico1.map((diagnostico, index) => (
-                        <div key={index}>{diagnostico}</div>
-                    ))
-                ) : (
-                    paciente.diagnostico1 // Si no es un array, muestra el valor tal cual
-                )}
-            </td>
+                    {Array.isArray(paciente.diagnostico1) ? (
+                        paciente.diagnostico1.map((diagnostico, index) => (
+                            <div key={index}>{diagnostico}</div>
+                        ))
+                    ) : (
+                        paciente.diagnostico1 // Si no es un array, muestra el valor tal cual
+                    )}
+                </td>
                 <td className="border px-2 py-2">{diagnostico}</td>
-                <td
-                    className={`border px-2 py-2${
-                      (() => {
-                        switch (pac_codigo_uveh) {
-                            case 'Acinetobacter':
-                                return 'bg-pink-300';
-                            case 'Colonizacion_Acinetobacter':
-                                return 'bg-yellow-200';
-                            case 'Contacto_Acinetobacter':
-                                return 'bg-yellow-200';
-                            case 'Hisopado_Rectal':
-                                return 'yellow-200';
-                            case 'Clostridium_Difficile':
-                                return 'bg-emerald-300';
-                            case 'Enterobacterias_XDR_MDR':
-                                return 'bg-violet-300';
-                            case 'Pseudomonas_XDR_MDR':
-                                return 'bg-amber-400';
-                            case 'SAMR':
-                                return 'bg-rose-500';
-                            case 'Tuberculosisis_o_Sospecha':
-                                return 'bg-cyan-600';
-                            case 'SAMS':
-                                return 'bg-blue-500';
-
-                            default:
-                                return '';  // Sin color predeterminado
-                        }
-                      })()
-                    }`}
-                  >
-                  {pac_codigo_uveh}
+                <td className={codigoUvehClasses}>
+                    {Array.isArray(paciente.pac_codigo_uveh) ? (
+                        paciente.pac_codigo_uveh.map((codigo_uveh, index) => (
+                            <div key={index}>{codigo_uveh}</div>
+                        ))
+                    ) : (
+                        paciente.pac_codigo_uveh
+                    )}
                 </td>
                 <td className="border px-2 py-2">{fechaIngreso !== null? fechaIngreso :''}</td>
                 <td className="border px-2 py-2">{fecha_prealta? format(new Date(paciente.fecha_prealta), 'dd-MM-yy') : ''}</td>

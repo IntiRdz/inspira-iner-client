@@ -1,16 +1,20 @@
-import React, { useState, useContext } from 'react';
-import { useRouter } from 'next/router';
-import Layout from '../../components/Layout';
-import { useQuery, gql, useMutation } from '@apollo/client';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
+import React from 'react';
 import Swal from 'sweetalert2';
-import { format } from 'date-fns';
-import PacienteContext from '../../context/pacientes/PacienteContext';
-import { AsignarCama } from '../../components/pacientes/AsignarCama';
+import { gql, useMutation } from '@apollo/client';
+import Router from 'next/router';
+import { format, differenceInYears } from 'date-fns';
 
+//Esta busqueda es para modifcar al encotrado en el botón 
+//Utilizo el resolver de eliminar que modifiqué por dentro 
+const ELIMINAR_PACIENTE = gql`
+    mutation eliminarPaciente($id: ID!) {
+        eliminarPaciente(id:$id) 
+    }
+`;
+
+//Esta busqueda es para modifcar al encotrado en el botón 
 const OBTENER_PACIENTES = gql`
-    query obtenerPacientes {
+    query ObtenerPacientes {
         obtenerPacientes {
             id
             expediente
@@ -21,28 +25,6 @@ const OBTENER_PACIENTES = gql`
             pac_FN
             pac_dispositivo_o2
             pac_hemodialisis
-            diagnostico1
-            diagnostico
-            pac_codigo_uveh
-            fecha_prealta
-            fecha_ingreso
-            fecha_egreso
-            hospitalizado
-        }
-    }
-`;
-
-const OBTENER_PACIENTE = gql`
-    query ObtenerPaciente($id: ID!) {
-        obtenerPaciente(id: $id) {
-            expediente
-            pac_apellido_paterno
-            pac_apellido_materno
-            pac_nombre
-            pac_genero
-            pac_FN
-            pac_dispositivo_o2
-            pac_hemodialisis
             diagnostico
             diagnostico1
             pac_codigo_uveh
@@ -50,659 +32,267 @@ const OBTENER_PACIENTE = gql`
             fecha_prealta
             fecha_egreso
             hospitalizado
+            creado
+            user
+            cama_relacionada {
+                id
+                cama_numero
+            }
+            microorganismo_relacionado {
+                id
+                microorganismo_nombre
+            }
+            antibiotico_relacionado{
+                id
+                antibiotico_nombre
+            }
         }
     }
 `;
 
-const ACTUALIZAR_PACIENTE = gql`
-    mutation actualizarPaciente($id: ID!, $input: PacienteInput) {
-        actualizarPaciente(id: $id, input: $input) {
-            expediente
-            pac_apellido_paterno
-            pac_apellido_materno
-            pac_nombre
-            pac_genero
-            pac_FN
-            pac_dispositivo_o2
-            pac_hemodialisis
-            diagnostico1
-            diagnostico
-            pac_codigo_uveh
-            fecha_prealta
-            fecha_ingreso
-            fecha_egreso
-            hospitalizado
-        }
-    }
-`;
 
-const EditarPaciente = () => {
+//Esta busqueda es para modifcar al encotrado en el botón 
 
-    const [mensajeError, setMensajeError] = useState(null);
+let contador = 0
 
-    // obtener el ID actual
-    const router = useRouter();
-    const { query: { id } } = router;
-       
-    // Consultar para obtener el paciente
-    const { data, loading, error } = useQuery(OBTENER_PACIENTE, {
-        variables: {
-            id:id
-        }
-    });
+const Paciente = ({paciente}) => {
+    console.log("Paciente del componente Paciente",paciente)
     
-    //console.log("la dada es",data)
-    
-    const { cama } = useContext(PacienteContext);
-    //console.log("Valor de id.cama desde el contexto:", cama);
-
-    // Actualizar el paciente
-    const [ actualizarPaciente ] = useMutation( ACTUALIZAR_PACIENTE );
-
-
-    // Schema de validacion
-    const schemaValidacion = Yup.object({
-        expediente: Yup.string().required('El expediente del paciente es obligatorio'),
-        pac_apellido_paterno: Yup.string().required('El apellido paterno del paciente es obligatorio'),
-        pac_apellido_materno: Yup.string().required('El apellido materno del paciente es obligatorio'),
-        pac_nombre: Yup.string().required('El nombre del paciente es obligatorio'),
-        pac_genero: Yup.string().oneOf(['Hombre', 'Mujer']).required('El género del paciente es obligatorio'),
-        pac_FN: Yup.date(),
-        pac_dispositivo_o2: Yup.string().oneOf([
-            'AA', 
-            'PN', 
-            'PNAF', 
-            'VMNI', 
-            'VM']).required('El dispositivo O2 del paciente es obligatorio'),
-        pac_hemodialisis: Yup.boolean(),
-        diagnostico1: Yup.array()
-        .min(1, 'Debe seleccionar al menos un diagnóstico')
-        .of(
-            Yup.string().oneOf([
-            'CodigoHemoptisis',
-            'CodigoViaAerea',
-            'CodigoInfarto',
-            'COVID',
-            'Influenza',
-            'Parainfluenza',
-            'Adenovirus',
-            'VirusSincialRespiratorio',
-            'TuberculosisSensible',
-            'TuberculosisResistente',
-            'B24',
-            'SIRA',
-            'NeumoniaBacteriana',
-            'EPOC',
-            'Asma',
-            'TromboembiaPulmonar',
-            'DerramePleural',
-            'Neumotorax',
-            'NeumoniaIntersticialDifusa',
-            'InsuficienciaCaridiaca',
-            'CaPulmonarOSospecha',
-            ])
-        )
-        .required('Debe seleccionar al menos un diagnóstico'),
-        diagnostico: Yup.string(),
-        pac_codigo_uveh: Yup.string().required([
-            'Sin Definir',
-            'Sin Aislamientos',
-            'Acinetobacter',
-            'Colonización Acinetobacter',
-            'Contacto Acinetobacter',
-            'Hisopado Rectal',
-            'Clostridium Difficile',
-            'Enterobacterias XDR MDR',
-            'Pseudomonas XDR MDR',
-            'SAMR',
-            'Tuberculosisis o Sospecha',
-            'SAMS'
-        ]).required('El Código es obligatorio'),
-        fecha_ingreso: Yup.date(),
-        fecha_prealta: Yup.date(),
-        fecha_egreso: Yup.date(),
-        hospitalizado: Yup.boolean()
-    });
-
-    if(loading) return 'Cargando...';
-
-    const { obtenerPaciente } = data;
-    //console.log("Data de Obtener Paciente",obtenerPaciente)
-
-    const valoresIniciales = {
-        expediente: obtenerPaciente.expediente ,
-        pac_apellido_paterno: obtenerPaciente.pac_apellido_paterno,
-        pac_apellido_materno: obtenerPaciente.pac_apellido_materno,
-        pac_nombre: obtenerPaciente.pac_nombre,
-        pac_genero: obtenerPaciente.pac_genero,
-        pac_FN: obtenerPaciente.pac_FN ? format(new Date(obtenerPaciente.pac_FN), 'yyyy-MM-dd') : '',
-        pac_dispositivo_o2: obtenerPaciente.pac_dispositivo_o2,
-        pac_hemodialisis: obtenerPaciente.pac_hemodialisis ,
-        diagnostico1: obtenerPaciente.diagnostico1,
-        diagnostico: obtenerPaciente.diagnostico ,
-        pac_codigo_uveh: obtenerPaciente.pac_codigo_uveh  || '', 
-        fecha_ingreso: obtenerPaciente.fecha_ingreso  ? format(new Date(obtenerPaciente.fecha_ingreso), 'yyyy-MM-dd') : '', // Si no hay fecha en las props, se establece como cadena vacía
-        fecha_prealta: obtenerPaciente.fecha_prealta ? format(new Date(obtenerPaciente.fecha_prealta), 'yyyy-MM-dd') : '', // Si no hay fecha en las props, se establece como cadena vacía
-        fecha_egreso: obtenerPaciente.fecha_egreso ? format(new Date(obtenerPaciente.fecha_egreso), 'yyyy-MM-dd') : '',
-        hospitalizado: obtenerPaciente.hospitalizado,// Si no hay fecha en las props, se establece como cadena vacía
-        cama_relacionada: obtenerPaciente.cama_relacionada
+    // Función para formatear una fecha en el formato deseado
+    const formatFecha = (fecha, formato) => {
+        return format(new Date(fecha), formato);
     };
+    
+    // Uso de la función para formatear la fecha de ingreso
+    const fechaNac = formatFecha(paciente.pac_FN, 'dd-MM-yy');
+    const fechaIngreso = formatFecha(paciente.fecha_ingreso, 'dd-MM-yy');
 
-    // Modifica el paciente en la BD
-    const actualizarInfoPaciente = async valores => {
-        const { 
-            expediente,
-            pac_apellido_paterno,
-            pac_apellido_materno,
-            pac_nombre,
-            pac_genero,
-            pac_FN,
-            pac_dispositivo_o2,
-            pac_hemodialisis,
-            diagnostico1,
-            diagnostico,
-            pac_codigo_uveh,
-            fecha_ingreso,
-            fecha_prealta,
-            fecha_egreso,
-            hospitalizado,
-            cama_relacionada
-        } = valores;
+    //console.log('Fecha de nacimiento con formato:', fechaIngreso);
 
-        //console.log("Valores Inciales:", valores)
 
-        const valoresActualizados = {
-            expediente,
-            pac_apellido_paterno,
-            pac_apellido_materno,
-            pac_nombre,
-            pac_genero,
-            pac_FN,
-            pac_dispositivo_o2,
-            pac_hemodialisis,
-            diagnostico1,
-            diagnostico,
-            pac_codigo_uveh,
-            fecha_ingreso: fecha_ingreso === '' ? undefined : fecha_ingreso, // Si es cadena vacía, se envía undefined
-            fecha_prealta: fecha_prealta === '' ? undefined : fecha_prealta, // Si es cadena vacía, se envía undefined
-            fecha_egreso: fecha_egreso === '' ? undefined : fecha_egreso,
-            hospitalizado,
-            cama_relacionada: cama,
-        };
+    const calcularEdad = (fechaNacimiento) => {
+        const hoy = new Date();
+        const fechaNac = new Date(fechaNacimiento);
+        return differenceInYears(hoy, fechaNac);
+    };  
 
-        //console.log("Valores actualizados:", valoresActualizados)
+    const pac_edad = calcularEdad(paciente.pac_FN);
 
-        try {
-            const { data} = await actualizarPaciente({
-                variables: {
-                    id,
-                    input: valoresActualizados
-                }
-            });
+    // Verificar si diagnostico1 contiene palabras clave para código rojo, amarillo o azul
+    const isCodigoRojo = ["CodigoInfarto", "CodigoViaAerea", "CodigoHemoptisis"].some((keyword) =>
+    paciente.diagnostico1.includes(keyword)
+    );
 
-            console.log("Después de la llamada a actualizarPaciente");
+    const isCodigoAmarillo = ["COVID", "Influenza", "Parainfluenza", "Adenovirus", "VirusSincialRespiratorio"].some((keyword) =>
+    paciente.diagnostico1.includes(keyword)
+    );
 
-            // Mostrar Alerta
-            Swal.fire(
-                'Actualizado',
-                'El paciente se actualizó correctamente',
-                'success'
-            )
+    const isCodigoAzul = ["TuberculosisSensible", "TuberculosisResistente", "B24"].some((keyword) =>
+    paciente.diagnostico1.includes(keyword)
+    );
 
-            // Redireccionar
-            router.push('/');
-            
-        } catch (error) {
-            console.error("Error durante la llamada a actualizarPaciente:", error);
+    // Clases CSS condicionales para cambiar el fondo de la columna
+    let diagnostico1Classes = "border px-4 py-2";
 
-            setMensajeError(error.message.replace('GraphQL error: ', ''));
-            setTimeout(() => {
-                setMensajeError(null);
-            }, 5000);
-        }
+    switch (true) {
+    case isCodigoRojo:
+        diagnostico1Classes += " bg-amber-400";
+        break;
+    case isCodigoAmarillo:
+        diagnostico1Classes += " bg-yellow-400";
+        break;
+    case isCodigoAzul:
+        diagnostico1Classes += " bg-blue-400";
+        break;
+    default:
+        // Puedes manejar un caso predeterminado aquí si es necesario
+        break;
     }
+
+    let codigoUvehClasses = "px-2 py-2";
+    switch (paciente.pac_codigo_uveh) {
+        case 'Acinetobacter':
+        codigoUvehClasses += ' bg-pink-300';
+        break;
+        case 'ColonizacionAcinetobacter':
+        codigoUvehClasses += ' bg-yellow-200';
+        break;
+        case 'ContactoAcinetobacter':
+        codigoUvehClasses += ' bg-yellow-200';
+        break;
+        case 'HisopadoRectal':
+        codigoUvehClasses += ' yellow-200';
+        break;
+        case 'ClostridiumDifficile':
+        codigoUvehClasses += ' bg-emerald-300';
+        break;
+        case 'Enterobacterias_XDR_MDR':
+        codigoUvehClasses += ' bg-violet-300';
+        break;
+        case 'Pseudomonas_XDR_MDR':
+        codigoUvehClasses += ' bg-amber-400';
+        break;
+        case 'SAMR':
+        codigoUvehClasses += ' bg-rose-500';
+        break;
+        case 'TuberculosisisOSospecha':
+        codigoUvehClasses += ' bg-cyan-600';
+        break;
+        case 'SAMS':
+        codigoUvehClasses += ' bg-blue-500';
+        break;
+        default:
+        // Sin color predeterminado
+        break;
+    }
+
+    // mutation para eliminar paciente
+    const [ eliminarPaciente ] = useMutation( ELIMINAR_PACIENTE, {
+        update(cache) {
+            // obtener una copia del objeto de cache
+            const { obtenerPacientes } = cache.readQuery({ query: OBTENER_PACIENTES });
+
+            // Reescribir el cache
+            cache.writeQuery({
+                query: OBTENER_PACIENTES,
+                data: {
+                    obtenerPacientes : obtenerPacientes.filter( pacienteActual => pacienteActual.id !== paciente.id )
+                }
+            })
+        }
+    }  );
+
+    console.log("el ID del paciente es",paciente.id)
+    const { 
+        expediente,
+        cama_numero,
+        pac_apellido_paterno,
+        pac_apellido_materno,
+        pac_nombre,
+        pac_genero,
+        pac_FN,
+        pac_dispositivo_o2,
+        pac_hemodialisis,
+        diagnostico1,
+        diagnostico,
+        pac_codigo_uveh,
+        fecha_ingreso,
+        fecha_prealta,
+        fecha_egreso,
+        hospitalizado,
+        id,
+    } = paciente;
+
+    const editarPaciente = () => {
+        //console.log("el ID del paciente es en el botón",paciente.id)
+        Router.push({
+            pathname: `/editarpaciente/${paciente.id}`,       
+        })
+    }
+    const asignarMicroorganismo = () => {
+        Router.push({
+            pathname: `/nuevomicroorganismo/${paciente.id}`,
+        })
+    } 
+    const verMicroorganismo = () => {
+        Router.push({
+            pathname: `/microorganismospaciente/${paciente.id}`,
+        })
+    }
+
+    console.log("paciente recibido",paciente)
 
     return ( 
-        <Layout>
-            <h1 className="text-2xl text-gray-800 font-light">Editar Paciente</h1>
-
-            <div className="flex justify-center mt-5">
-                <div className="w-full max-w-lg">
-
-                    <Formik
-                        validationSchema={ schemaValidacion }
-                        enableReinitialize
-                        initialValues={ valoresIniciales }
-                        onSubmit={ ( valores ) => {
-                            actualizarInfoPaciente(valores)
-                        }}
+            <tr className="h-8">
+                <td className="border px-2 py-2">{contador++}</td> 
+                <td className="border px-2 py-2">{expediente}</td>
+                {/* <td className="border px-2 py-2">{cama_numero}</td> */}
+                <td className="border px-2 py-2">
+                    {Array.isArray(paciente.cama_relacionada) ? (
+                        paciente.cama_relacionada.map((cama, index) => (
+                        <div key={index}>{cama.cama_numero}</div>
+                        ))
+                    ) : (
+                        paciente.cama_relacionada.map((cama, index) => (
+                        <div key={index}>{cama.cama_numero}</div>
+                        ))
+                    )}
+                </td>
+                <td className="border px-2 py-2">
+                    {Array.isArray(paciente.microorganismo_relacionado) ? (
+                        paciente.microorganismo_relacionado.map((microorganismo, index) => (
+                        <div key={index}>{microorganismo.microorganismo_nombre}</div>
+                        ))
+                    ) : (
+                        paciente.microorganismo_relacionado.map((microorganismo, index) => (
+                        <div key={index}>{microorganismo.microorganismo_nombre}</div>
+                        ))
+                    )}
+                </td>
+                <td className="border px-2 py-2">{pac_apellido_paterno}</td>
+                <td className="border px-2 py-2">{pac_apellido_materno}</td>
+                <td className="border px-2 py-2">{pac_nombre}</td>
+                <td className="border px-2 py-2">{pac_genero}</td>
+                <td className="border px-2 py-2">{pac_edad}</td>
+                <td className="border px-2 py-2">{pac_dispositivo_o2}</td>
+                <td className="border px-2 py-2">{pac_hemodialisis ? 'Sí' : 'No'}</td>
+                <td className={diagnostico1Classes}>
+                {Array.isArray(paciente.diagnostico1) ? (
+                    paciente.diagnostico1.map((diagnostico, index) => (
+                        <div key={index}>{diagnostico}</div>
+                    ))
+                ) : (
+                    paciente.diagnostico1 // Si no es un array, muestra el valor tal cual
+                )}
+                </td>
+                <td className="border px-2 py-2">{diagnostico}</td>
+                <td className="border px-2 py-2">
+                <td className="border px-2 py-2">
+                    {Array.isArray(paciente.pac_codigo_uveh) ? (
+                        paciente.pac_codigo_uveh.map((codigo_uveh, index) => (
+                            <div key={index}>{codigo_uveh}</div>
+                        ))
+                    ) : (
+                        paciente.pac_codigo_uveh
+                    )}
+                </td>
+                </td>
+                <td className="border px-2 py-2">{fechaIngreso !== null? fechaIngreso :''}</td>
+                <td className="border px-2 py-2">{fecha_prealta? format(new Date(paciente.fecha_prealta), 'dd-MM-yy') : ''}</td>
+                <td className="border px-2 py-2">{fecha_egreso? format(new Date(paciente.fecha_egreso), 'dd-MM-yy') : ''}</td>
+                <td className="border px-2 py-2">{hospitalizado ? 'Sí' : 'No'}</td>
+                <td className="border px-2 py-2">
+                    <button
+                        type="button"
+                        className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
+                        onClick={() => editarPaciente() }
                     >
-
-                    {props => {
-                    // console.log(props);
-                    return (
-                        <form
-                        className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"
-                        onSubmit={props.handleSubmit}
-                        >
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="expediente">
-                                    Expediente
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="expediente"
-                                    type="text"
-                                    placeholder="Expediente"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.expediente}
-                                />
-                            </div>
-
-                            { props.touched.expediente && props.errors.expediente ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.expediente}</p>
-                                </div>
-                            ) : null  }
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_apellido_paterno">
-                                    Apellido Paterno
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="pac_apellido_paterno"
-                                    type="text"
-                                    placeholder="Apellido Paterno"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.pac_apellido_paterno}
-                                />
-                            </div>
-
-                            { props.touched.pac_apellido_paterno && props.errors.pac_apellido_paterno ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.pac_apellido_paterno}</p>
-                                </div>
-                            ) : null  }
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_apellido_materno">
-                                    Apellido Materno
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="pac_apellido_materno"
-                                    type="text"
-                                    placeholder="Apellido Materno"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.pac_apellido_materno}
-                                />
-                            </div>
-
-                            { props.touched.pac_apellido_materno && props.errors.pac_apellido_materno ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.pac_apellido_materno}</p>
-                                </div>
-                            ) : null  }
-
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_nombre">
-                                    Nombre
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="pac_nombre"
-                                    type="text"
-                                    placeholder="Nombre Paciente"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.pac_nombre}
-                                />
-                            </div>
-
-                            { props.touched.pac_nombre && props.errors.pac_nombre ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.pac_nombre}</p>
-                                </div>
-                            ) : null  }
-
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_genero">
-                                    Género
-                                </label>
-                                <select 
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="pac_genero"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.pac_genero}
-                                >
-                                    <option value="" label="Seleccione un género" />
-                                    <option value="Hombre" label="Hombre" />
-                                    <option value="Mujer" label="Mujer" />
-                                </select>
-                            </div>
-
-                            { props.touched.pac_genero && props.errors.pac_genero ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.pac_genero}</p>
-                                </div>
-                            ) : null  }
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_FN">
-                                    Fecha de Nacimiento
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="pac_FN"
-                                    type="date"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.pac_FN}
-                                />
-                            </div>
-
-                            { props.touched.pac_FN && props.errors.pac_FN ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.pac_FN}</p>
-                                </div>
-                            ) : null  }
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_dispositivo_o2">
-                                    Dispositivo O2
-                                </label>
-                                <select 
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="pac_dispositivo_o2"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.pac_dispositivo_o2}
-                                >
-                                    <option value="" label="Seleccione un dispositivo" />
-                                    <option value="AA" label="AA" />
-                                    <option value="PN" label="PN" />
-                                    <option value="PNAF" label="PNAF" />
-                                    <option value="VMNI" label="VMNI" />
-                                    <option value="VM" label="VM" />
-                                </select>
-                            </div>
-
-                            { props.touched.pac_dispositivo_o2 && props.errors.pac_dispositivo_o2 ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.pac_dispositivo_o2}</p>
-                                </div>
-                            ) : null  }
-
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_hemodialisis">
-                                    Hemodialisis
-                                </label>
-
-                                <div className="flex items-center">
-                                    <input
-                                        className="mr-2 leading-tight"
-                                        id="pac_hemodialisis_true"
-                                        type="radio"
-                                        onChange={() => props.setFieldValue("pac_hemodialisis", true)}
-                                        onBlur={props.handleBlur}
-                                        checked={props.values.pac_hemodialisis === true}
-                                    />
-                                    <label htmlFor="pac_hemodialisis_true">Sí</label>
-
-                                    <input
-                                        className="ml-4 mr-2 leading-tight"
-                                        id="pac_hemodialisis_false"
-                                        type="radio"
-                                        onChange={() => props.setFieldValue("pac_hemodialisis", false)}
-                                        onBlur={props.handleBlur}
-                                        checked={props.values.pac_hemodialisis === false}
-                                    />
-                                    <label htmlFor="pac_hemodialisis_false">No</label>
-                                </div>
-                            </div>
-
-                            <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico1">
-                                Diagnósticos Generales
-                            </label>
-
-                            {[
-                                'CodigoHemoptisis',
-                                'CodigoViaAerea',
-                                'CodigoInfarto',
-                                'COVID',
-                                'Influenza',
-                                'Parainfluenza',
-                                'Adenovirus',
-                                'VirusSincialRespiratorio',
-                                'TuberculosisSensible',
-                                'TuberculosisResistente',
-                                'B24',
-                                'SIRA',
-                                'NeumoniaBacteriana',
-                                'EPOC',
-                                'Asma',
-                                'TromboembiaPulmonar',
-                                'DerramePleural',
-                                'Neumotorax',
-                                'NeumoniaIntersticialDifusa',
-                                'InsuficienciaCaridiaca',
-                                'CaPulmonarOSospecha',
-                            ].map((option) => (
-                                <label key={option} className="block">
-                                <input
-                                    type="checkbox"
-                                    name="diagnostico1"
-                                    value={option}
-                                    onChange={(e) => {
-                                    const isChecked = e.target.checked;
-                                    const value = e.target.value;
-
-                                    props.setFieldValue(
-                                        'diagnostico1',
-                                        isChecked
-                                        ? [...props.values.diagnostico1, value]
-                                        : props.values.diagnostico1.filter((val) => val !== value)
-                                    );
-                                    }}
-                                    onBlur={props.handleBlur}
-                                    checked={props.values.diagnostico1.includes(option)}
-                                    className="mr-2"
-                                />
-                                {option}
-                                </label>
-                            ))}
-                            </div>
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico">
-                                Diagnósticos Epecíficos
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="diagnostico"
-                                    type="text"
-                                    placeholder="Diagnóstico"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.diagnostico}
-                                />
-                            </div>
-
-                            { props.touched.diagnostico && props.errors.diagnostico ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.diagnostico}</p>
-                                </div>
-                            ) : null  }
-
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_codigo_uveh">
-                                    Código UVEH
-                                </label>
-                                <select 
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="pac_codigo_uveh"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.pac_codigo_uveh}
-                                >
-                                    <option value="Sin_Aislamientos" label="Sin Aislamientos" />
-                                    <option value="Acinetobacter" label="Acinetobacter" />
-                                    <option value="Colonización_Acinetobacter" label="Colonización Acinetobacter" />
-                                    <option value="Contacto_Acinetobacter" label="Contacto Acinetobacter" />
-                                    <option value="Hisopado_Rectal" label="Hisopado Rectal" />
-                                    <option value="Clostridium_Difficile" label="Clostridium Difficile" />
-                                    <option value="Enterobacterias_XDR_MDR" label="Enterobacterias XDR MDR" />
-                                    <option value="Pseudomonas_XDR_MDR" label="Pseudomonas XDR MDR" />
-                                    <option value="SAMR" label="SAMR" />                                  
-                                    <option value="Tuberculosisis_o_Sospecha" label="Tuberculosisis o Sospecha" />
-                                    <option value="SAMS" label="SAMS" />  
-                                </select>
-                            </div>
-
-                            { props.touched.pac_codigo_uveh && props.errors.pac_codigo_uveh ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.pac_codigo_uveh}</p>
-                                </div>
-                            ) : null  }
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_ingreso">
-                                    Fecha de Ingreso
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="fecha_ingreso"
-                                    type="date"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.fecha_ingreso}
-                                />
-                            </div>
-
-                            { props.touched.fecha_ingreso && props.errors.fecha_ingreso ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.fecha_ingreso}</p>
-                                </div>
-                            ) : null  }
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_prealta">
-                                    Fecha de Prealta
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="fecha_prealta"
-                                    type="date"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.fecha_prealta}
-                                />
-                            </div>
-
-                            { props.touched.fecha_prealta && props.errors.fecha_prealta ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.fecha_prealta}</p>
-                                </div>
-                            ) : null  }
-
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_egreso">
-                                    Fecha de Egreso
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="fecha_egreso"
-                                    type="date"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.fecha_egreso}
-                                />
-                            </div>
-
-                            { props.touched.fecha_egreso && props.errors.fecha_egreso ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.fecha_egreso}</p>
-                                </div>
-                            ) : null  }
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="hospitalizado">
-                                    Hospitalizado
-                                </label>
-
-                                <div className="flex items-center">
-                                    <input
-                                        className="mr-2 leading-tight"
-                                        id="hospitalizado_true"
-                                        type="radio"
-                                        onChange={() => props.setFieldValue("hospitalizado", true)}
-                                        onBlur={props.handleBlur}
-                                        checked={props.values.hospitalizado === true}
-                                    />
-                                    <label htmlFor="hospitalizado_true">Sí</label>
-
-                                    <input
-                                        className="ml-4 mr-2 leading-tight"
-                                        id="hospitalizado_false"
-                                        type="radio"
-                                        onChange={() => props.setFieldValue("hospitalizado", false)}
-                                        onBlur={props.handleBlur}
-                                        checked={props.values.hospitalizado === false}
-                                    />
-                                    <label htmlFor="hospitalizado_false">No</label>
-                                </div>
-                            </div>
-                            <AsignarCama />   
-                           
-
-                            <input
-                            type="submit"
-                            className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
-                            value="Registrar Paciente"
-
-                            
-                        />
-                        </form>
-                        )
-                    }}
-                    </Formik>
-                </div>
-            </div>
-
-        </Layout>
+                        Editar
+                        <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    </button>
+                </td>
+                <td className="border px-4 py-2">
+                    <button
+                        type="button"
+                        className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
+                        onClick={() => asignarMicroorganismo() }
+                    >
+                        + Microorganismo
+                        <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    </button>
+                </td>           
+                <td className="border px-4 py-2">
+                    <button
+                        type="button"
+                        className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
+                        onClick={() => verMicroorganismo() }
+                    >
+                        Microorganismos
+                        <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    </button>
+                </td>
+            </tr>
      );
 }
  
-export default EditarPaciente;
+export default Paciente;

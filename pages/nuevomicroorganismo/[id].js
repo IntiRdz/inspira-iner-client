@@ -9,6 +9,29 @@ import Swal from 'sweetalert2';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 import { AsignarCamaTodas } from '../../components/pacientes/AsignarCamaTodas';
 
+const OBTENER_PACIENTES = gql`
+    query obtenerPacientes {
+        obtenerPacientes {
+            id
+            expediente
+            pac_apellido_paterno
+            pac_apellido_materno
+            pac_nombre
+            pac_genero
+            pac_FN
+            pac_dispositivo_o2
+            pac_hemodialisis
+            diagnostico1
+            diagnostico
+            pac_codigo_uveh
+            fecha_prealta
+            fecha_ingreso
+            fecha_egreso
+            hospitalizado
+        }
+    }
+`;
+
 const OBTENER_PACIENTE = gql`
   query obtenerPaciente($id: ID!) {
     pacienteData: obtenerPaciente(id: $id) {
@@ -60,16 +83,20 @@ const NUEVO_MICROORGANISMO = gql`
 `;
 
 const NuevoMicroorganismo = () => {
+    // routing
+    const router = useRouter();
+    const { query: { id } } = router;
+
     // Mensaje de alerta
     const [mensaje, guardarMensaje] = useState(null);
 
-  // routing
-  const router = useRouter();
-  const { query: { id } } = router;
 
   const { cama } = useContext(PacienteContext);
   //console.log("Valor de id.cama desde el contexto:", cama);
 
+// Consulta para obtener todos los pacientes y actualizar el context de la consulta obtenerPacientes
+  const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
+  
   // Consulta para obtener el paciente
   const { data: pacienteData, loading: pacienteLoading, error: pacienteError } = useQuery(OBTENER_PACIENTE, {
     variables: {
@@ -84,29 +111,52 @@ const NuevoMicroorganismo = () => {
     },
   });
 
-  // Mutation de apollo
-  const [nuevoMicroorganismo] = useMutation(NUEVO_MICROORGANISMO, {
-    update(cache, { data: { nuevoMicroorganismo } }) {
-        if (microorganismosLoading || microorganismosError) {
-            //console.log('Cargando o error en la consulta de microorganismos');
-            return;
-            
-        }
-      // Obtener el objeto de cache
-      const { obtenerMicroorganismosPatient } = cache.readQuery({ query: OBTENER_MICROORGANISMOS_PACIENTE, variables: { id } });
+/*       // Mutation para asignar el microrganismo al paciente al paciente
+      const [nuevoMicroorganismo] = useMutation(NUEVO_MICROORGANISMO, {
+        update(cache, { data: { nuevoMicroorganismo } }) {
+            if (microorganismosLoading || microorganismosError) {
+                //console.log('Cargando o error en la consulta de microorganismos');
+                return;
+                
+            }
+          // Obtener el objeto de cache
+          const { obtenerMicroorganismosPatient } = cache.readQuery({ query: OBTENER_MICROORGANISMOS_PACIENTE, variables: { id } });
+    
+          // Reescribir ese objeto
+          cache.writeQuery({
+            query: OBTENER_MICROORGANISMOS_PACIENTE,
+            variables: {
+              id,
+            },
+            data: {
+              obtenerMicroorganismosPatient: [...obtenerMicroorganismosPatient, nuevoMicroorganismo],
+            },
+          });
+        },
+      }); */
 
-      // Reescribir ese objeto
-      cache.writeQuery({
-        query: OBTENER_MICROORGANISMOS_PACIENTE,
-        variables: {
-          id,
+    // Mutation para asignar el microrganismo al paciente al paciente
+    const [nuevoMicroorganismo] = useMutation(NUEVO_MICROORGANISMO, {
+
+        update(cache, { data: { nuevoMicroorganismo } }) {
+            // Obtener el objeto de cache directamente desde la consulta anterior
+            const { obtenerPacientes } = pacientesData;
+    
+            // Verificar si hay errores o está cargando en la consulta original
+            if (pacientesLoading || pacientesError) {
+                console.log('Cargando o error en la consulta de pacientes');
+                return;
+            }
+    
+            // Reescribir ese objeto
+            cache.writeQuery({
+                query: OBTENER_PACIENTES,
+                data: {
+                    obtenerPacientes: [...obtenerPacientes, nuevoMicroorganismo]
+                }
+            });
         },
-        data: {
-          obtenerMicroorganismosPatient: [...obtenerMicroorganismosPatient, nuevoMicroorganismo],
-        },
-      });
-    },
-  });
+    });
 
   //console.log('datos paciente', pacienteData);
   //console.log('datos micro', microData);

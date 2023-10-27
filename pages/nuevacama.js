@@ -19,8 +19,6 @@ const NUEVA_CAMA = gql`
             cama_aislamiento
             cama_dan
             cama_codigo_uveh
-            cama_fecha_inicio
-            cama_fecha_fin
         }
     }
 `;
@@ -38,8 +36,6 @@ const OBTENER_CAMAS = gql`
             cama_aislamiento
             cama_dan
             cama_codigo_uveh
-            cama_fecha_inicio
-            cama_fecha_fin
       }
   }
 `;
@@ -88,24 +84,33 @@ const NuevaCama = () => {
             cama_hemodialisis: true,
             cama_aislamiento: false,
             cama_dan: false,
-            cama_codigo_uveh: 'Sin_Aislamientos',
-            cama_fecha_inicio: '',
-            cama_fecha_fin: ''
+            cama_codigo_uveh: 'Sin_Definir',
         },
         validationSchema: Yup.object({
             cama_numero: Yup.number().required('El número de la cama es obligatorio').positive('No se aceptan números negativos'),
             cama_compartida: Yup.bool(),
             cama_disponible: Yup.bool(),
             cama_ocupada: Yup.bool(),
-            cama_genero: Yup.string().oneOf(['Hombre', 'Mujer', 'No_especificado']).required('El género es obligatorio'),
-            cama_dispositivo_o2: Yup.string().oneOf(['No_VM', 'VM']).required('El dispositivo O2 es obligatorio'),
+            cama_genero: Yup.string().oneOf([
+                'Hombre', 
+                'Mujer', 
+                'No_especificado'
+            ]).required('El género es obligatorio'),
+            cama_dispositivo_o2: Yup.string().oneOf([
+                'No_VM', 
+                'VM'
+            ]).required('El dispositivo O2 es obligatorio'),
             cama_hemodialisis: Yup.bool(),
-            cama_codigo_uveh: Yup.string()
-                            .oneOf(['Sin_Aislamientos', 'Previamente_Acinetobacter', 'Previamente_Clostridium', 'Previamente_Enterobacterias_XDR', 'Previamente_Pseudomonas_Aeruginosa_XDR'], 'Opcion no válida'),
+            cama_codigo_uveh: Yup.string().oneOf([
+                'Sin_Definir',
+                'Sin_Aislamientos', 
+                'Previamente_Acinetobacter', 
+                'Previamente_Clostridium', 
+                'Previamente_Enterobacterias_XDR', 
+                'Previamente_Pseudomonas_Aeruginosa_XDR'
+            ]).required('Definido por UVEH'),
             cama_aislamiento: Yup.bool(),
             cama_dan: Yup.bool(),
-            cama_fecha_inicio: Yup.date(),
-            cama_fecha_fin: Yup.date()
         }), 
         onSubmit: async valores => {
 
@@ -120,14 +125,7 @@ const NuevaCama = () => {
                 cama_codigo_uveh,
                 cama_aislamiento,
                 cama_dan,
-                cama_fecha_inicio,
-                cama_fecha_fin
             } = valores;
-
-            // Verificar si las fechas son nulas o vacías
-            const fechaInicio = cama_fecha_inicio || undefined; // Establece un valor predeterminado si es nulo o vacío
-            const fechaFin = cama_fecha_fin || undefined; // Establece un valor predeterminado si es nulo o vacío
-
 
             try {
                 const { data } = await nuevaCama({
@@ -143,8 +141,6 @@ const NuevaCama = () => {
                             cama_codigo_uveh,
                             cama_aislamiento,
                             cama_dan,
-                            cama_fecha_inicio: fechaInicio,
-                            cama_fecha_fin: fechaFin
                         }
                     }
                 });
@@ -397,6 +393,7 @@ const NuevaCama = () => {
                                 name="cama_codigo_uveh" // El atributo name ya está configurado correctamente
                             >
                                 <option value="" label="Código UVEH" />
+                                <option value="Sin_Definir" label="Sin Definir" />
                                 <option value="Sin_Aislamientos" label="Sin Aislamientos" />
                                 <option value="Previamente_Acinetobacter" label="Previamente Acinetobacter" />
                                 <option value="Previamente_Clostridium" label="Previamente Clostridium" />
@@ -470,52 +467,7 @@ const NuevaCama = () => {
                                 <p>{formik.errors.cama_codigo_uveh}</p>
                             </div>
                         ) : null  }
-        
-        
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_fecha_inicio">
-                                Fecha de ingreso
-                            </label>
-
-                            <input
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="cama_fecha_inicio"
-                                type="date"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.cama_fecha_inicio}
-                            />
-                        </div>
-
-                        { formik.touched.cama_fecha_inicio && formik.errors.cama_fecha_inicio ? (
-                            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                <p className="font-bold">Error</p>
-                                <p>{formik.errors.cama_fecha_inicio}</p>
-                            </div>
-                        ) : null  }
-
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_fecha_fin">
-                                Fecha de Egreso
-                            </label>
-
-                            <input
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="cama_fecha_fin"
-                                type="date"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.cama_fecha_fin}
-                            />
-                        </div>
-
-                        { formik.touched.cama_fecha_fin && formik.errors.cama_fecha_fin ? (
-                            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                <p className="font-bold">Error</p>
-                                <p>{formik.errors.cama_fecha_fin}</p>
-                            </div>
-                        ) : null  }
-        
+                
                         <input
                             type="submit"
                             className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"

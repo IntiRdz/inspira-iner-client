@@ -100,7 +100,7 @@ const NuevoPaciente = () => {
             pac_hemodialisis: false,
             diagnostico1: [],
             diagnostico: '',
-            pac_codigo_uveh: 'Sin_Definir',
+            pac_codigo_uveh: ['SinDefinir'],
             fecha_ingreso: '',
             fecha_prealta: '',
             fecha_egreso: '',
@@ -121,7 +121,7 @@ const NuevoPaciente = () => {
                 'VM']).required('El dispositivo O2 del paciente es obligatorio'),
             pac_hemodialisis: Yup.boolean(),
             diagnostico1: Yup.array()
-            .min(1, 'Debe seleccionar al menos un diagnóstico')
+            .min(0, 'Debe seleccionar al menos un diagnóstico')
             .of(
                 Yup.string().oneOf([
                 'CodigoHemoptisis',
@@ -146,23 +146,26 @@ const NuevoPaciente = () => {
                 'InsuficienciaCaridiaca',
                 'CaPulmonarOSospecha',
                 ])
-            )
-            .required('Debe seleccionar al menos un diagnóstico'),
+            ),
             diagnostico: Yup.string(),
-            pac_codigo_uveh: Yup.string().required([
-                'Sin Definir',
-                'Sin Aislamientos',
+            pac_codigo_uveh:  Yup.array()
+            .min(0, 'Debe seleccionar al menos un diagnóstico')
+            .of(
+                Yup.string().oneOf([
+                'SinDefinir',
+                'SinAislamientos',
                 'Acinetobacter',
-                'Colonización Acinetobacter',
-                'Contacto Acinetobacter',
-                'Hisopado Rectal',
-                'Clostridium Difficile',
-                'Enterobacterias XDR MDR',
-                'Pseudomonas XDR MDR',
+                'ColonizaciónAcinetobacter',
+                'ContactoAcinetobacter',
+                'HisopadoRectal',
+                'ClostridiumDifficile',
+                'Enterobacterias-XDR-MDR',
+                'Pseudomonas-XDR-MDR',
                 'SAMR',
-                'Tuberculosisis o Sospecha',
+                'TuberculosisisOSospecha',
                 'SAMS'
-            ]).required('El Código es obligatorio'),
+                ])
+            ),
             fecha_ingreso: Yup.date().required('La fecha de ingreso es obligatoria'),
             fecha_prealta: Yup.date(),
             fecha_egreso: Yup.date(),
@@ -540,26 +543,26 @@ const NuevoPaciente = () => {
                                 </div>
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mb-4" hidden>
                                 <select 
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="pac_codigo_uveh"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.pac_codigo_uveh}
-                                    hidden
+                                    
                                 >
                                     <option value="SinDefinir" label="Sin Definir" />
-                                    <option value="Sin_Aislamientos" label="Sin Aislamientos" />
+                                    <option value="SinAislamientos" label="Sin Aislamientos" />
                                     <option value="Acinetobacter" label="Acinetobacter" />
-                                    <option value="Colonización_Acinetobacter" label="Colonización Acinetobacter" />
-                                    <option value="Contacto_Acinetobacter" label="Contacto Acinetobacter" />
-                                    <option value="Hisopado_Rectal" label="Hisopado Rectal" />
-                                    <option value="Clostridium_Difficile" label="Clostridium Difficile" />
-                                    <option value="Enterobacterias_XDR_MDR" label="Enterobacterias XDR MDR" />
-                                    <option value="Pseudomonas_XDR_MDR" label="Pseudomonas XDR MDR" />
+                                    <option value="ColonizaciónAcinetobacter" label="Colonización Acinetobacter" />
+                                    <option value="ContactoAcinetobacter" label="Contacto Acinetobacter" />
+                                    <option value="HisopadoRectal" label="Hisopado Rectal" />
+                                    <option value="ClostridiumDifficile" label="Clostridium Difficile" />
+                                    <option value="Enterobacterias-XDR-MDR" label="Enterobacterias XDR MDR" />
+                                    <option value="Pseudomonas-XDR-MDR" label="Pseudomonas XDR MDR" />
                                     <option value="SAMR" label="SAMR" />                                  
-                                    <option value="Tuberculosisis_o_Sospecha" label="Tuberculosisis o Sospecha" />
+                                    <option value="TuberculosisisOSospecha" label="Tuberculosisis o Sospecha" />
                                     <option value="SAMS" label="SAMS" />  
                                 </select>
                             </div>

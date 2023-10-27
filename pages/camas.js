@@ -19,8 +19,6 @@ query ObtenerCamas {
     cama_aislamiento
     cama_dan
     cama_codigo_uveh
-    cama_fecha_inicio
-    cama_fecha_fin
     creado
     paciente_relacionado {
       id
@@ -70,8 +68,6 @@ const Camas = () => {
                   <th className="w-1/5 py-2">Código UVEH</th>
                   <th className="w-1/5 py-2">Aislamiento</th>
                   <th className="w-1/5 py-2">DAN</th>
-                  <th className="w-1/5 py-2">Fecha_Ingreso</th>
-                  <th className="w-1/5 py-2">Fecha_Egreso</th>
                   <th className="w-1/5 py-2">Editar</th>
               </tr>
             </thead>

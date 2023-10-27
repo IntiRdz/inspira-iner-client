@@ -135,7 +135,7 @@ const EditarPaciente = () => {
             'VM']).required('El dispositivo O2 del paciente es obligatorio'),
         pac_hemodialisis: Yup.boolean(),
         diagnostico1: Yup.array()
-        .min(1, 'Debe seleccionar al menos un diagnóstico')
+        .min(0, 'Debe seleccionar al menos un diagnóstico')
         .of(
             Yup.string().oneOf([
             'CodigoHemoptisis',
@@ -160,23 +160,26 @@ const EditarPaciente = () => {
             'InsuficienciaCaridiaca',
             'CaPulmonarOSospecha',
             ])
-        )
-        .required('Debe seleccionar al menos un diagnóstico'),
+        ),
         diagnostico: Yup.string(),
-        pac_codigo_uveh: Yup.string().required([
-            'Sin Definir',
-            'Sin Aislamientos',
+        pac_codigo_uveh:  Yup.array()
+        .min(0, 'Debe seleccionar al menos un diagnóstico')
+        .of(
+            Yup.string().oneOf([
+            'SinDefinir',
+            'SinAislamientos',
             'Acinetobacter',
-            'Colonización Acinetobacter',
-            'Contacto Acinetobacter',
-            'Hisopado Rectal',
-            'Clostridium Difficile',
-            'Enterobacterias XDR MDR',
-            'Pseudomonas XDR MDR',
+            'ColonizaciónAcinetobacter',
+            'ContactoAcinetobacter',
+            'HisopadoRectal',
+            'ClostridiumDifficile',
+            'Enterobacterias-XDR-MDR',
+            'Pseudomonas-XDR-MDR',
             'SAMR',
-            'Tuberculosisis o Sospecha',
+            'TuberculosisisOSospecha',
             'SAMS'
-        ]).required('El Código es obligatorio'),
+            ])
+        ),
         fecha_ingreso: Yup.date(),
         fecha_prealta: Yup.date(),
         fecha_egreso: Yup.date(),
@@ -198,9 +201,9 @@ const EditarPaciente = () => {
         pac_FN: obtenerPaciente.pac_FN ? format(new Date(obtenerPaciente.pac_FN), 'yyyy-MM-dd') : '',
         pac_dispositivo_o2: obtenerPaciente.pac_dispositivo_o2,
         pac_hemodialisis: obtenerPaciente.pac_hemodialisis,
-        diagnostico1: obtenerPaciente.diagnostico1,
+        diagnostico1: obtenerPaciente.diagnostico1 || [] ,
         diagnostico: obtenerPaciente.diagnostico ,
-        pac_codigo_uveh: obtenerPaciente.pac_codigo_uveh  || '', 
+        pac_codigo_uveh: obtenerPaciente.pac_codigo_uveh  || [], 
         fecha_ingreso: obtenerPaciente.fecha_ingreso  ? format(new Date(obtenerPaciente.fecha_ingreso), 'yyyy-MM-dd') : '', // Si no hay fecha en las props, se establece como cadena vacía
         fecha_prealta: obtenerPaciente.fecha_prealta ? format(new Date(obtenerPaciente.fecha_prealta), 'yyyy-MM-dd') : '', // Si no hay fecha en las props, se establece como cadena vacía
         fecha_egreso: obtenerPaciente.fecha_egreso ? format(new Date(obtenerPaciente.fecha_egreso), 'yyyy-MM-dd') : '',
@@ -573,38 +576,50 @@ const EditarPaciente = () => {
                                 </div>
                             ) : null  }
 
-
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_codigo_uveh">
                                     Código UVEH
                                 </label>
-                                <select 
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="pac_codigo_uveh"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.pac_codigo_uveh}
-                                >
-                                    <option value="Sin_Aislamientos" label="Sin Aislamientos" />
-                                    <option value="Acinetobacter" label="Acinetobacter" />
-                                    <option value="Colonización_Acinetobacter" label="Colonización Acinetobacter" />
-                                    <option value="Contacto_Acinetobacter" label="Contacto Acinetobacter" />
-                                    <option value="Hisopado_Rectal" label="Hisopado Rectal" />
-                                    <option value="Clostridium_Difficile" label="Clostridium Difficile" />
-                                    <option value="Enterobacterias_XDR_MDR" label="Enterobacterias XDR MDR" />
-                                    <option value="Pseudomonas_XDR_MDR" label="Pseudomonas XDR MDR" />
-                                    <option value="SAMR" label="SAMR" />                                  
-                                    <option value="Tuberculosisis_o_Sospecha" label="Tuberculosisis o Sospecha" />
-                                    <option value="SAMS" label="SAMS" />  
-                                </select>
+                                {[
+                                    'SinDefinir',
+                                    'SinAislamientos',
+                                    'Acinetobacter',
+                                    'ColonizaciónAcinetobacter',
+                                    'ContactoAcinetobacter',
+                                    'HisopadoRectal',
+                                    'ClostridiumDifficile',
+                                    'Enterobacterias-XDR-MDR',
+                                    'Pseudomonas-XDR-MDR',
+                                    'SAMR',
+                                    'TuberculosisisOSospecha',
+                                    'SAMS',
+                                ].map((option) => (
+                                    <label key={option} className="block">
+                                        <input
+                                            type="checkbox"
+                                            name="pac_codigo_uveh"
+                                            value={option}
+                                            onChange={(e) => {
+                                                const isChecked = e.target.checked;
+                                                const value = e.target.value;
+
+                                                props.setFieldValue(
+                                                    'pac_codigo_uveh',
+                                                    isChecked
+                                                    ? [...props.values.pac_codigo_uveh, value]
+                                                    : props.values.pac_codigo_uveh.filter((val) => val !== value)
+                                                );
+                                            }}
+                                            onBlur={props.handleBlur}
+                                            checked={props.values.pac_codigo_uveh.includes(option)}
+                                            className="mr-2"
+                                        />
+                                        {option}
+                                    </label>
+                                ))}
                             </div>
 
-                            { props.touched.pac_codigo_uveh && props.errors.pac_codigo_uveh ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.pac_codigo_uveh}</p>
-                                </div>
-                            ) : null  }
+
 
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_ingreso">

@@ -20,8 +20,6 @@ const OBTENER_CAMAS = gql`
             cama_aislamiento
             cama_dan
             cama_codigo_uveh
-            cama_fecha_inicio
-            cama_fecha_fin
       }
   }
 `;
@@ -39,8 +37,6 @@ const OBTENER_CAMA = gql`
             cama_codigo_uveh
             cama_aislamiento
             cama_dan
-            cama_fecha_inicio
-            cama_fecha_fin
         }
     }
 `;
@@ -58,8 +54,6 @@ const ACTUALIZAR_CAMA = gql`
                 cama_codigo_uveh
                 cama_aislamiento
                 cama_dan
-                cama_fecha_inicio
-                cama_fecha_fin
             }
     }
 `;
@@ -110,15 +104,25 @@ const EditarCama = () => {
         cama_compartida: Yup.bool(),
         cama_disponible: Yup.bool(),
         cama_ocupada: Yup.bool(),
-        cama_genero: Yup.string().oneOf(['Hombre', 'Mujer', 'No_especificado']).required('El género es obligatorio'),
-        cama_dispositivo_o2: Yup.string().oneOf(['No_VM', 'VM']).required('El dispositivo O2 es obligatorio'),
+        cama_genero: Yup.string().oneOf([
+            'Hombre', 
+            'Mujer', 
+            'No_especificado'
+        ]).required('El género es obligatorio'),
+        cama_dispositivo_o2: Yup.string().oneOf([
+            'No_VM', 'VM'
+        ]).required('El dispositivo O2 es obligatorio'),
         cama_hemodialisis: Yup.bool(),
-        cama_codigo_uveh: Yup.string()
-                        .oneOf(['Sin_Aislamientos', 'Previamente_Acinetobacter', 'Previamente_Clostridium', 'Previamente_Enterobacterias_XDR', 'Previamente_Pseudomonas_Aeruginosa_XDR'], 'Opcion no válida'),
+        cama_codigo_uveh: Yup.string().oneOf([
+            'Sin_Definir', 
+            'Sin_Aislamientos', 
+            'Previamente_Acinetobacter', 
+            'Previamente_Clostridium', 
+            'Previamente_Enterobacterias_XDR', 
+            'Previamente_Pseudomonas_Aeruginosa_XDR'
+        ], 'Opcion no válida'),
         cama_aislamiento: Yup.bool(),
         cama_dan: Yup.bool(),
-        cama_fecha_inicio: Yup.date(),
-        cama_fecha_fin: Yup.date()
     });
 
     if(loading) return 'Cargando...';
@@ -138,9 +142,6 @@ const EditarCama = () => {
         cama_codigo_uveh: obtenerCama.cama_codigo_uveh  || '', 
         cama_aislamiento: obtenerCama.cama_aislamiento,
         cama_dan: obtenerCama.cama_dan,
-        cama_fecha_inicio: obtenerCama.cama_fecha_inicio  ? format(new Date(obtenerCama.cama_fecha_inicio), 'yyyy-MM-dd') : '', // Si no hay fecha en las props, se establece como cadena vacía
-        cama_fecha_fin: obtenerCama.cama_fecha_fin ? format(new Date(obtenerCama.cama_fecha_fin), 'yyyy-MM-dd') : '', // Si no hay fecha en las props, se establece como cadena vacía
-            //Si no hay fecha en las props, se establece como cadena vacía
     };
 
     // Modifica la cama en la BD
@@ -157,8 +158,6 @@ const EditarCama = () => {
             cama_codigo_uveh,
             cama_aislamiento,
             cama_dan,
-            cama_fecha_inicio,
-            cama_fecha_fin
         } = valores;
         try {
             const {data} =  await actualizarCama({
@@ -175,8 +174,6 @@ const EditarCama = () => {
                         cama_codigo_uveh,
                         cama_aislamiento,
                         cama_dan,
-                        cama_fecha_inicio: cama_fecha_inicio === '' ? undefined : cama_fecha_inicio, // Si es cadena vacía, se envía undefined
-                        cama_fecha_fin: cama_fecha_fin === '' ? undefined : cama_fecha_fin
                     }
                 }
             });
@@ -197,7 +194,7 @@ const EditarCama = () => {
 
             setTimeout(() => {
                 guardarMensaje(null);
-            }, 2000);
+            }, 5000);
         }
     }
 
@@ -430,6 +427,7 @@ const EditarCama = () => {
                                             value={props.values.cama_codigo_uveh}
                                         >
                                             <option value="" label="Código UVEH" />
+                                            <option value="Sin_Definir" label="Sin Asignar" />
                                             <option value="Sin_Aislamientos" label="Sin Aislamientos" />
                                             <option value="Previamente_Acinetobacter" label="Previamente Acinetobacter" />
                                             <option value="Previamente_Clostridium" label="Previamente Clostridium" />
@@ -498,51 +496,6 @@ const EditarCama = () => {
                                         <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
                                             <p className="font-bold">Error</p>
                                             <p>{props.errors.cama_codigo_uveh}</p>
-                                        </div>
-                                    ) : null  }
-
-
-                                    <div className="mb-4">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_fecha_inicio">
-                                            Fecha de ingreso
-                                        </label>
-
-                                        <input
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            id="cama_fecha_inicio"
-                                            type="date"
-                                            onChange={props.handleChange}
-                                            onBlur={props.handleBlur}
-                                            value={props.values.cama_fecha_inicio}
-                                        />
-                                    </div>
-
-                                    { props.touched.cama_fecha_inicio && props.errors.cama_fecha_inicio ? (
-                                        <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                            <p className="font-bold">Error</p>
-                                            <p>{props.errors.cama_fecha_inicio}</p>
-                                        </div>
-                                    ) : null  }
-
-                                    <div className="mb-4">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_fecha_fin">
-                                            Fecha de Egreso
-                                        </label>
-
-                                        <input
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            id="cama_fecha_fin"
-                                            type="date"
-                                            onChange={props.handleChange}
-                                            onBlur={props.handleBlur}
-                                            value={props.values.cama_fecha_fin}
-                                        />
-                                    </div>
-
-                                    { props.touched.cama_fecha_fin && props.errors.cama_fecha_fin ? (
-                                        <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                            <p className="font-bold">Error</p>
-                                            <p>{props.errors.cama_fecha_fin}</p>
                                         </div>
                                     ) : null  }
 
