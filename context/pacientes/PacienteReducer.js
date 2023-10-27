@@ -1,6 +1,7 @@
 import {
     SELECCIONAR_CAMA,
-    SELECCIONAR_DIAGNOSTICO
+    SELECCIONAR_DIAGNOSTICO,
+    SELECCIONAR_MICROORGANISMO
 } from '../../types'
 
 
@@ -16,6 +17,12 @@ export default ( state, action ) => {
             ...state,
             diagnostico: action.payload
         }
+        case SELECCIONAR_MICROORGANISMO: 
+        return {
+            ...state,
+            diagnostico: action.payload
+        }
+
         default: 
             return state
     }

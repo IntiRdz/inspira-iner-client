@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 
 import PacienteContext from '../../context/pacientes/PacienteContext';
 import { AsignarCamaTodas } from '../../components/pacientes/AsignarCamaTodas';
+import { AsignarMicroorganismo } from '../../components/microrganismos/AsignarMicroorganismo';
 
 const OBTENER_PACIENTES = gql`
     query obtenerPacientes {
@@ -43,26 +44,6 @@ const OBTENER_PACIENTE = gql`
   }
 `;
 
-const OBTENER_MICROORGANISMOS_PACIENTE = gql`
-  query obtenerMicroorganismosPatient($id: ID!) {
-    obtenerMicroorganismosPatient(id: $id) {
-      id
-      fecha_deteccion
-      metodo_deteccion
-      microorganismo_tipo
-      microorganismo_nombre
-      susceptibilidad
-      comentario_uveh
-      paciente_relacionado{
-        id
-      }
-      cama_relacionada{
-        id
-      }
-    }
-  }
-`;
-
 const NUEVO_MICROORGANISMO = gql`
   mutation nuevoMicroorganismo($input: MicroorganismoInput) {
     nuevoMicroorganismo(input: $input) {
@@ -91,8 +72,10 @@ const NuevoMicroorganismo = () => {
     const [mensaje, guardarMensaje] = useState(null);
 
 
-  const { cama } = useContext(PacienteContext);
-  //console.log("Valor de id.cama desde el contexto:", cama);
+  const { cama, diagnostico } = useContext(PacienteContext);
+
+    //console.log("Nombre del Microorganismo:", typeof diagnostico);     //no se por que el contex se guarda en diagnostico
+    //console.log("Contenido del Microorganismo:",  diagnostico);
 
 // Consulta para obtener todos los pacientes y actualizar el context de la consulta obtenerPacientes
   const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
@@ -104,36 +87,6 @@ const NuevoMicroorganismo = () => {
     },
   });
 
-  // Consulta para obtener los microorganismos asociados al paciente
-  const { data: microData, loading: microorganismosLoading, error: microorganismosError } = useQuery(OBTENER_MICROORGANISMOS_PACIENTE, {
-    variables: {
-      id,
-    },
-  });
-
-/*       // Mutation para asignar el microrganismo al paciente al paciente
-      const [nuevoMicroorganismo] = useMutation(NUEVO_MICROORGANISMO, {
-        update(cache, { data: { nuevoMicroorganismo } }) {
-            if (microorganismosLoading || microorganismosError) {
-                //console.log('Cargando o error en la consulta de microorganismos');
-                return;
-                
-            }
-          // Obtener el objeto de cache
-          const { obtenerMicroorganismosPatient } = cache.readQuery({ query: OBTENER_MICROORGANISMOS_PACIENTE, variables: { id } });
-    
-          // Reescribir ese objeto
-          cache.writeQuery({
-            query: OBTENER_MICROORGANISMOS_PACIENTE,
-            variables: {
-              id,
-            },
-            data: {
-              obtenerMicroorganismosPatient: [...obtenerMicroorganismosPatient, nuevoMicroorganismo],
-            },
-          });
-        },
-      }); */
 
     // Mutation para asignar el microrganismo al paciente al paciente
     const [nuevoMicroorganismo] = useMutation(NUEVO_MICROORGANISMO, {
@@ -167,7 +120,6 @@ const NuevoMicroorganismo = () => {
             fecha_deteccion: '',
             metodo_deteccion: '',
             microorganismo_tipo: '',
-            microorganismo_nombre: '',
             susceptibilidad: '',
             comentario_uveh: '',
             paciente_relacionado: id,
@@ -189,7 +141,6 @@ const NuevoMicroorganismo = () => {
                     'Hongo'
                 ])
                 .required('El tipo de microorganismo es obligatorio'),
-            microorganismo_nombre: Yup.string(),
             susceptibilidad: Yup.string().oneOf([
                 'BLEE', 
                 'MDR', 
@@ -212,20 +163,20 @@ const NuevoMicroorganismo = () => {
                 cama_relacionada,
             } = valores;
             
-            console.log("Valores Inciales:", valores)
+            //console.log("Valores Inciales:", valores)
 
             const valoresActualizados = {
                 fecha_deteccion,
                 metodo_deteccion,
                 microorganismo_tipo,
-                microorganismo_nombre,
+                microorganismo_nombre: diagnostico,
                 susceptibilidad,
                 comentario_uveh,
                 paciente_relacionado: id,
                 cama_relacionada: cama
             };
 
-            console.log("Valores actualizados:", valoresActualizados)
+            //console.log("Valores actualizados:", valoresActualizados)
 
             try {
                 const { data } = await nuevoMicroorganismo({
@@ -362,10 +313,23 @@ const NuevoMicroorganismo = () => {
                             </div>
                         ) : null  }
 
+
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="microorganismo_nombre">
                                 Nombre del Microorganismo
                             </label>
+
+                            < AsignarMicroorganismo/>
+                        </div>
+
+
+
+{/*                         <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="microorganismo_nombre">
+                                Nombre del Microorganismo
+                            </label>
+
+                            
 
                             <input
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -383,7 +347,7 @@ const NuevoMicroorganismo = () => {
                                 <p className="font-bold">Error</p>
                                 <p>{formik.errors.microorganismo_nombre}</p>
                             </div>
-                        ) : null  }
+                        ) : null  } */}
 
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="susceptibilidad">

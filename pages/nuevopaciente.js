@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Layout from '../components/Layout';
 import { gql, useMutation, useQuery  } from '@apollo/client';
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/router'
+
+import PacienteContext from '../context/pacientes/PacienteContext';
+import { AsignarCama } from '../components/pacientes/AsignarCama';
 
 const NUEVO_PACIENTE = gql`
     mutation nuevoPaciente($input: PacienteInput) {
@@ -54,12 +57,14 @@ const OBTENER_PACIENTES = gql`
 `;
 
 const NuevoPaciente = () => {
-
-    // Mensaje de alerta
-    const [mensaje, guardarMensaje] = useState(null);
     
     // routing
     const router = useRouter();
+
+    // Mensaje de alerta
+    const [mensaje, guardarMensaje] = useState(null);
+
+    const { cama, diagnostico } = useContext(PacienteContext);
 
 
     const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
@@ -190,7 +195,7 @@ const NuevoPaciente = () => {
                 hospitalizado,
             } = valores;
 
-            console.log("valores inciales del nuevo objeto", valores)
+            //console.log("valores inciales del nuevo objeto", valores)
 
             // Verificar si las fechas son nulas o vacías
             const fechaPrealta = fecha_prealta || undefined; // Establece un valor predeterminado si es nulo o vacío
@@ -212,9 +217,10 @@ const NuevoPaciente = () => {
                 fecha_prealta: fechaPrealta,
                 fecha_egreso: fechaEgreso,
                 hospitalizado,
+                cama_relacionada: cama,
             };
 
-            console.log("Valores actualizados:", valoresActualizados)
+            //console.log("Valores actualizados:", valoresActualizados)
 
 
         
@@ -496,7 +502,7 @@ const NuevoPaciente = () => {
                                     id="pac_dispositivo_o2"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    value={formik.values.pac_dispositivo_o2}
+                                    value={formik.values.pac_dispositivo_o2 || ''}
                                 >
                                     <option value="" label="Seleccione un dispositivo" />
                                     <option value="AA" label="AA" />
@@ -667,7 +673,8 @@ const NuevoPaciente = () => {
                                     />
                                     <label htmlFor="hospitalizado_false">No</label>
                                 </div>
-                            </div>               
+                            </div>  
+                            <AsignarCama />               
 
                             <input
                             type="submit"

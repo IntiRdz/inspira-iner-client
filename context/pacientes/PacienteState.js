@@ -6,6 +6,7 @@ import {
     SELECCIONAR_PACIENTE,
     SELECCIONAR_DIAGNOSTICO,
     SELECCIONAR_CAMA,
+    SELECCIONAR_MICROORGANISMO
 } from '../../types'
 
 const PacienteState = ({children}) => {
@@ -15,6 +16,7 @@ const PacienteState = ({children}) => {
         paciente: {},
         diagnostico: {},
         cama: {},
+        microorganismo:{}
     }
 
     const [ state, dispatch ] = useReducer(PacienteReducer, initialState);
@@ -23,19 +25,23 @@ const PacienteState = ({children}) => {
     // Modifica el Paciente
     const agregarCama = cama => {
         //console.log(cama);
-
         dispatch({
             type: SELECCIONAR_CAMA,
             payload: cama
         })
     }
-
     const agregarDiagnostico = diagnostico => {
         //console.log(cama);
-
         dispatch({
             type: SELECCIONAR_DIAGNOSTICO,
             payload: diagnostico
+        })
+    }
+    const agregarMicroorganismo = microorganismo => {
+        //console.log(cama);
+        dispatch({
+            type: SELECCIONAR_MICROORGANISMO,
+            payload: microorganismo
         })
     }
     
@@ -45,8 +51,10 @@ const PacienteState = ({children}) => {
                 paciente: state.paciente,
                 diagnostico: state.diagnostico,
                 cama: state.cama,
+                microorganismo: state.microorganismo,
                 agregarCama,
                 agregarDiagnostico,
+                agregarMicroorganismo
             }}
         > {children}
         </PacienteContext.Provider>

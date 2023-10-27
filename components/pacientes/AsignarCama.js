@@ -27,6 +27,7 @@ export const AsignarCama = () => {
 
     const { data, loading, error } = useQuery(OBTENER_CAMAS_DISPONIBLES)
     
+    
     useEffect(() => {
          agregarCama (cama.id);
      }, [cama.id])
@@ -34,7 +35,7 @@ export const AsignarCama = () => {
     const seleccionarCama = camas => {
         setCama(camas);
       }
-
+      
     if(loading) return 'cargando...';
 
     const { obtenerCamasDisponibles } = data;
