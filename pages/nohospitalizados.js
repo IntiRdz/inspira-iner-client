@@ -8,7 +8,7 @@ import Link from 'next/link'
 //De aquí con las busquedas reales
 const OBTENER_PACIENTES_NO_HOSPITALIZADOS = gql`
 query ObtenerPacientesNoHospitalizados {
-  ObtenerPacientesNoHospitalizados {
+  obtenerPacientesNoHospitalizados {
     id
     expediente
     pac_apellido_paterno
@@ -73,7 +73,7 @@ const Index = () => {
   
   if(loading) return 'Cargando....';
 
-  if( !data.ObtenerPacientesNoHospitalizados ) {
+  if( !data.obtenerPacientesNoHospitalizados ) {
     return router.push('/login');
   } 
 
@@ -114,7 +114,7 @@ const Index = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-            {data.ObtenerPacientesNoHospitalizados
+            {data.obtenerPacientesNoHospitalizados
                 .sort((a, b) => parseInt(b.cama_numero) - parseInt(a.cama_numero))
                 .map((paciente,) => (
                 <Paciente 
