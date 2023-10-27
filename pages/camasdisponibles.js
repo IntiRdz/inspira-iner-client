@@ -1,3 +1,4 @@
+import React from 'react';
 import Layout from '../components/Layout';
 import Cama from '../components/Cama';
 import { gql, useQuery } from '@apollo/client'
@@ -7,21 +8,29 @@ import Link from 'next/link'
 const OBTENER_CAMAS_DISPONIBLES = gql`
   query obtenerCamasDisponibles {
       obtenerCamasDisponibles {
-            id
-            cama_numero
-            cama_compartida
-            cama_disponible
-            cama_ocupada
-            cama_genero
-            cama_dispositivo_o2
-            cama_hemodialisis
-            cama_aislamiento
-            cama_dan
-            cama_codigo_uveh
-            cama_fecha_inicio
-            cama_fecha_fin
+        id
+        cama_numero
+        cama_compartida
+        cama_disponible
+        cama_ocupada
+        cama_genero
+        cama_dispositivo_o2
+        cama_hemodialisis
+        cama_aislamiento
+        cama_dan
+        cama_codigo_uveh
+        creado
+        paciente_relacionado {
+          id
+          pac_nombre
+        }
+        microorganismo_relacionado {
+          id
+          microorganismo_nombre
+        }
       }
   }
+   
 `;
 
 const Camas = () => {
@@ -41,9 +50,9 @@ const Camas = () => {
       <Layout>
           <h1 className="text-2xl text-gray-800 font-light">Camas</h1>
 
-          <Link href="/nuevacama">
+          <Link href="/camas">
             <a className="bg-blue-800 py-2 px-5 mt-3 inline-block text-white hover:bg-gray-800 hover:text-gray-200 mb-3 rounded uppercase font-bold text-sm">
-              Nueva Cama
+              Regresar
             </a>
           </Link>
 
@@ -60,9 +69,6 @@ const Camas = () => {
                   <th className="w-1/5 py-2">Código UVEH</th>
                   <th className="w-1/5 py-2">Aislamiento</th>
                   <th className="w-1/5 py-2">DAN</th>
-                  <th className="w-1/5 py-2">Fecha_Ingreso</th>
-                  <th className="w-1/5 py-2">Fecha_Egreso</th>
-                  <th className="w-1/5 py-2">Eliminar</th>
                   <th className="w-1/5 py-2">Editar</th>
               </tr>
             </thead>

@@ -19,15 +19,6 @@ query ObtenerCamas {
     cama_aislamiento
     cama_dan
     cama_codigo_uveh
-    creado
-    paciente_relacionado {
-      id
-      pac_nombre
-    }
-    microorganismo_relacionado {
-      id
-      microorganismo_nombre
-    }
   }
 }
 `;

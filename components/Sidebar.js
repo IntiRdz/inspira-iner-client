@@ -55,22 +55,15 @@ const Sidebar = () => {
                         </a>
                     </Link>
                 </li>
-                <li className={router.pathname === "/pacwobed" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/pacwobed">
-                        <a className="text-white block">
-                            Pacientes sin cama asignada 
-                        </a>
-                    </Link>
-                </li>
-                <li className={router.pathname === "/pacienteshospitalizados" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/pacienteshospitalizados">
+                <li className={router.pathname === "/hospitalizados" ? "bg-blue-800 p-2" : "p-2"}>
+                    <Link href="/hospitalizados">
                         <a className="text-white block">
                             Pacientes Hospitalizados
                         </a>
                     </Link>
                 </li>
-                <li className={router.pathname === "pacientesnoospitalizados" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/pacientesnoospitalizados">
+                <li className={router.pathname === "nohospitalizados" ? "bg-blue-800 p-2" : "p-2"}>
+                    <Link href="/nohospitalizados">
                         <a className="text-white block">
                             Pacientes no Hospitalizados
                         </a>

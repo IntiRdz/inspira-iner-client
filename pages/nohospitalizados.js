@@ -6,9 +6,9 @@ import Link from 'next/link'
 
 
 //De aquí con las busquedas reales
-const OBTENER_PACIENTES = gql`
-query ObtenerPacientes {
-  obtenerPacientes {
+const OBTENER_PACIENTES_NO_HOSPITALIZADOS = gql`
+query ObtenerPacientesNoHospitalizados {
+  ObtenerPacientesNoHospitalizados {
     id
     expediente
     pac_apellido_paterno
@@ -65,7 +65,7 @@ const Index = () => {
   const router = useRouter();
 
   // Consulta de Apollo
-  const { data, loading, error } = useQuery(OBTENER_PACIENTES);
+  const { data, loading, error } = useQuery(OBTENER_PACIENTES_NO_HOSPITALIZADOS);
 
   //console.log(data)
   // console.log(loading)
@@ -73,7 +73,7 @@ const Index = () => {
   
   if(loading) return 'Cargando....';
 
-  if( !data.obtenerPacientes ) {
+  if( !data.ObtenerPacientesNoHospitalizados ) {
     return router.push('/login');
   } 
 
@@ -114,7 +114,7 @@ const Index = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-            {data.obtenerPacientes
+            {data.ObtenerPacientesNoHospitalizados
                 .sort((a, b) => parseInt(b.cama_numero) - parseInt(a.cama_numero))
                 .map((paciente,) => (
                 <Paciente 
