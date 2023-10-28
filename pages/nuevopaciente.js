@@ -420,7 +420,6 @@ const NuevoPaciente = () => {
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico1">
                                 Diagnósticos Generales
                             </label>
-
                             {[
                                 'CodigoHemoptisis',
                                 'CodigoViaAerea',
@@ -556,7 +555,6 @@ const NuevoPaciente = () => {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.pac_codigo_uveh}
-                                    
                                 >
                                     <option value="SinDefinir" label="Sin Definir" />
                                     <option value="SinAislamientos" label="Sin Aislamientos" />
@@ -572,41 +570,37 @@ const NuevoPaciente = () => {
                                     <option value="SAMS" label="SAMS" />  
                                 </select>
                             </div>
-
                             { formik.touched.pac_codigo_uveh && formik.errors.pac_codigo_uveh ? (
                                 <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
                                     <p className="font-bold">Error</p>
                                     <p>{formik.errors.pac_codigo_uveh}</p>
                                 </div>
                             ) : null  }
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_ingreso">
-                                    Fecha de Ingreso
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="fecha_ingreso"
-                                    type="date-local"
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.fecha_ingreso}
-                                />
+                        <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_ingreso">
+                                Fecha de Ingreso
+                            </label>
+        
+                            <input
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="fecha_ingreso"
+                                type="datetime-local"
+                                placeholder="Fecha de Ingreso"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.fecha_ingreso}
+                            />
+                        </div>
+                        { formik.touched.fecha_ingreso && formik.errors.fecha_ingreso ? (
+                            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                <p className="font-bold">Error</p>
+                                <p>{formik.errors.fecha_ingreso}</p>
                             </div>
-
-                            { formik.touched.fecha_ingreso && formik.errors.fecha_ingreso ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{formik.errors.fecha_ingreso}</p>
-                                </div>
-                            ) : null  }
-
+                        ) : null  } 
                             <div className="mb-4" hidden>
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_prealta">
                                     Fecha de Prealta
                                 </label>
-
                                 <input
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="fecha_prealta"
@@ -616,15 +610,12 @@ const NuevoPaciente = () => {
                                     value={formik.values.fecha_prealta}
                                 />
                             </div>
-
                             { formik.touched.fecha_prealta && formik.errors.fecha_prealta ? (
                                 <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
                                     <p className="font-bold">Error</p>
                                     <p>{formik.errors.fecha_prealta}</p>
                                 </div>
                             ) : null  }
-
-
                             <div className="mb-4" hidden>
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_egreso">
                                     Fecha de Egreso

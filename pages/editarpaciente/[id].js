@@ -204,7 +204,7 @@ const EditarPaciente = () => {
         diagnostico1: obtenerPaciente.diagnostico1 || [] ,
         diagnostico: obtenerPaciente.diagnostico ,
         pac_codigo_uveh: obtenerPaciente.pac_codigo_uveh  || [], 
-        fecha_ingreso: obtenerPaciente.fecha_ingreso  ? format(new Date(obtenerPaciente.fecha_ingreso), 'yyyy-MM-dd') : '', // Si no hay fecha en las props, se establece como cadena vacía
+        fecha_ingreso: obtenerPaciente.fecha_ingreso  ? format(new Date(obtenerPaciente.fecha_ingreso), 'yyyy-MM-dd HH:mm') : '', // Si no hay fecha en las props, se establece como cadena vacía
         fecha_prealta: obtenerPaciente.fecha_prealta ? format(new Date(obtenerPaciente.fecha_prealta), 'yyyy-MM-dd') : '', // Si no hay fecha en las props, se establece como cadena vacía
         fecha_egreso: obtenerPaciente.fecha_egreso ? format(new Date(obtenerPaciente.fecha_egreso), 'yyyy-MM-dd') : '',
         hospitalizado: obtenerPaciente.hospitalizado,// Si no hay fecha en las props, se establece como cadena vacía
