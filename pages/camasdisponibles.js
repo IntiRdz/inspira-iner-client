@@ -58,7 +58,9 @@ const Camas = () => {
             </thead>
 
             <tbody className="bg-white">
-              {data.obtenerCamasDisponibles.map( cama => (
+              {data.obtenerCamasDisponibles
+              .sort((a, b) => parseInt(a.cama_numero) - parseInt(b.cama_numero))
+              .map( cama => (
                 <CamaVista 
                   key={cama.id}
                   cama={cama}
