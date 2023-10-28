@@ -247,7 +247,7 @@ const NuevoMicroorganismo = () => {
                             <input
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="fecha_deteccion"
-                                type="date-local"
+                                type="datetime-local"
                                 placeholder="Fecha de detección del Microorganismo"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}

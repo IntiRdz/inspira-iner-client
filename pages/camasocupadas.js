@@ -39,7 +39,6 @@ const Camas = () => {
               Regresar
             </a>
           </Link>
-
           <table className="table-auto shadow-md mt-10 w-full w-lg">
             <thead className="bg-gray-800">
               <tr className="text-white">
@@ -55,7 +54,6 @@ const Camas = () => {
                   <th className="w-1/5 py-2">DAN</th>
               </tr>
             </thead>
-
             <tbody className="bg-white">
               {data.obtenerCamasOcupadas
               .sort((a, b) => parseInt(a.cama_numero) - parseInt(b.cama_numero))
