@@ -89,7 +89,7 @@ const Index = () => {
           <table className="table-auto shadow-md mt-10 w-full w-lg">
             <thead className="bg-gray-800">
               <tr className="text-white">
-              <th className="border px-2 py-2">#</th>
+             {/*  <th className="border px-2 py-2">#</th> */}
                 <th className="border px-2 py-2">Expediente</th>
                 <th className="border px-2 py-2">Cama</th>
                 <th className="border px-2 py-2">Microorganismo</th>

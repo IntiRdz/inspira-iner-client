@@ -232,7 +232,7 @@ const Paciente = ({paciente}) => {
 
     return ( 
             <tr className="h-8">
-                <td className="border px-2 py-2">{contador++}</td> 
+                {/* <td className="border px-2 py-2">{contador++}</td>  */}
                 <td className="border px-2 py-2">{expediente}</td>
                 {/* <td className="border px-2 py-2">{cama_numero}</td> */}
                 <td className="border px-2 py-2">
