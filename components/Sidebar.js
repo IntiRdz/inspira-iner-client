@@ -72,13 +72,6 @@ const Sidebar = () => {
                 <div className="sm:mt-10">
                     <p className="text-white text-1xl font-black">Camas</p>
                 </div>
-                <li className={router.pathname === "/camas" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/camas">
-                        <a className="text-white block">
-                            Todas las Camas
-                        </a>
-                    </Link>
-                </li>
                 <li className={router.pathname === "/camasdisponibles" ? "bg-blue-800 p-2" : "p-2"}>
                     <Link href="/camasdisponibles">
                         <a className="text-white block">
@@ -93,8 +86,15 @@ const Sidebar = () => {
                         </a>
                     </Link>
                 </li>
-                <li className={router.pathname === "/camasocupadas" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/camasocupadas">
+                <li className={router.pathname === "/camas" ? "bg-blue-800 p-2" : "p-2"}>
+                    <Link href="/camas">
+                        <a className="text-white block">
+                            Todas las Camas
+                        </a>
+                    </Link>
+                </li>
+                <li className={router.pathname === "/tablero" ? "bg-blue-800 p-2" : "p-2"}>
+                    <Link href="/tableto">
                         <a className="text-white block">
                             Tablero
                         </a>

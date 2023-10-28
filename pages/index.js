@@ -104,6 +104,7 @@ const Index = () => {
                 <th className="border px-2 py-2">Diagnósticos Específicos</th>
                 <th className="border px-2 py-2">Código UVEH</th>
                 <th className="border px-2 py-2">Ingreso</th>
+                <th className="border px-2 py-2">DEH</th>
                 <th className="border px-2 py-2">Prealta</th>
                 <th className="border px-2 py-2">Egreso</th>
                 <th className="border px-2 py-2">Hospitalizado</th>

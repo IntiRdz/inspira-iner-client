@@ -64,7 +64,7 @@ const MicroorganismosPaciente = () => {
     });
 
 
-console.log(dataMicroorganismo)
+//console.log(dataMicroorganismo)
 
   if (loadingPaciente || loadingMicroorganismo) return 'Cargando...';
 

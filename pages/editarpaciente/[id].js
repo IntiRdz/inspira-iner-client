@@ -629,7 +629,7 @@ const EditarPaciente = () => {
                                 <input
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="fecha_ingreso"
-                                    type="date"
+                                    type="datetime-local"
                                     onChange={props.handleChange}
                                     onBlur={props.handleBlur}
                                     value={props.values.fecha_ingreso}
@@ -651,7 +651,7 @@ const EditarPaciente = () => {
                                 <input
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="fecha_prealta"
-                                    type="date"
+                                    type="datetime-local"
                                     onChange={props.handleChange}
                                     onBlur={props.handleBlur}
                                     value={props.values.fecha_prealta}
@@ -674,7 +674,7 @@ const EditarPaciente = () => {
                                 <input
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="fecha_egreso"
-                                    type="date"
+                                    type="datetime-local"
                                     onChange={props.handleChange}
                                     onBlur={props.handleBlur}
                                     value={props.values.fecha_egreso}

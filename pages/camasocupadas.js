@@ -1,5 +1,5 @@
 import Layout from '../components/Layout';
-import Cama from '../components/Cama';
+import CamaVista from '../components/camas/CamaVista';
 import { gql, useQuery } from '@apollo/client'
 import Link from 'next/link'
 
@@ -18,15 +18,6 @@ const OBTENER_CAMAS_OCUPADAS = gql`
         cama_aislamiento
         cama_dan
         cama_codigo_uveh
-        creado
-        paciente_relacionado {
-          id
-          pac_nombre
-        }
-        microorganismo_relacionado {
-          id
-          microorganismo_nombre
-        }
       }
   }
 `;
@@ -36,12 +27,7 @@ const Camas = () => {
   // Consultar los camas
   const { data, loading, error } = useQuery(OBTENER_CAMAS_OCUPADAS)
 
-  console.log(data)
-  // console.log(loading)
-  // console.log(error)
-
   if(loading) return 'cargando...';
-
 
   return (
     <div>
@@ -67,13 +53,12 @@ const Camas = () => {
                   <th className="w-1/5 py-2">Código UVEH</th>
                   <th className="w-1/5 py-2">Aislamiento</th>
                   <th className="w-1/5 py-2">DAN</th>
-                  <th className="w-1/5 py-2">Editar</th>
               </tr>
             </thead>
 
             <tbody className="bg-white">
               {data.obtenerCamasOcupadas.map( cama => (
-                <Cama 
+                <CamaVista 
                   key={cama.id}
                   cama={cama}
                 />

@@ -2,7 +2,7 @@ import React from 'react';
 import Swal from 'sweetalert2';
 import { gql, useMutation } from '@apollo/client';
 import Router from 'next/router';
-import { format, differenceInYears } from 'date-fns';
+import { format, differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
 
 //Esta busqueda es para modifcar al encotrado en el botón 
 //Utilizo el resolver de eliminar que modifiqué por dentro 
@@ -71,27 +71,29 @@ query ObtenerPacientes {
 let contador = 0
 
 const Paciente = ({paciente}) => {
-    console.log("Paciente del componente Paciente",paciente)
+    //console.log("Paciente del componente Paciente",paciente)
     
-    // Función para formatear una fecha en el formato deseado
-    const formatFecha = (fecha, formato) => {
-        return format(new Date(fecha), formato);
-    };
-    
-    // Uso de la función para formatear la fecha de ingreso
-    const fechaNac = formatFecha(paciente.pac_FN, 'dd-MM-yy');
-    const fechaIngreso = formatFecha(paciente.fecha_ingreso, 'dd-MM-yy');
-
-    //console.log('Fecha de nacimiento con formato:', fechaIngreso);
-
-
     const calcularEdad = (fechaNacimiento) => {
         const hoy = new Date();
         const fechaNac = new Date(fechaNacimiento);
         return differenceInYears(hoy, fechaNac);
     };  
 
-    const pac_edad = calcularEdad(paciente.pac_FN);
+    const calcularDias = (fechaIngreso) => {
+        const hoy = new Date();
+        const fechaIng = new Date(fechaIngreso);
+        return differenceInDays(hoy, fechaIng);
+    }; 
+    
+    // Verificar si la fecha recibida es mañana
+    const esManana = isTomorrow(new Date(paciente.fecha_prealta));
+
+    // Clases CSS condicionales para cambiar el fondo de la columna
+    let fechaPreAltaClasses = "border px-2 py-2";
+    if (esManana) {
+        fechaPreAltaClasses += " bg-blue-500"; // Cambia el color de fondo a azul si es mañana
+    }
+
 
     // Verificar si diagnostico1 contiene palabras clave para código rojo, amarillo o azul
     const isCodigoRojo = ["CodigoInfarto", "CodigoViaAerea", "CodigoHemoptisis"].some((keyword) =>
@@ -259,7 +261,7 @@ const Paciente = ({paciente}) => {
                 <td className="border px-2 py-2">{pac_apellido_materno}</td>
                 <td className="border px-2 py-2">{pac_nombre}</td>
                 <td className="border px-2 py-2">{pac_genero}</td>
-                <td className="border px-2 py-2">{pac_edad}</td>
+                <td className="border px-2 py-2">{calcularEdad(paciente.pac_FN)}</td>
                 <td className="border px-2 py-2">{pac_dispositivo_o2}</td>
                 <td className="border px-2 py-2">{pac_hemodialisis ? 'Sí' : 'No'}</td>
                 <td className={diagnostico1Classes}>
@@ -281,8 +283,9 @@ const Paciente = ({paciente}) => {
                         paciente.pac_codigo_uveh
                     )}
                 </td>
-                <td className="border px-2 py-2">{fechaIngreso !== null? fechaIngreso :''}</td>
-                <td className="border px-2 py-2">{fecha_prealta? format(new Date(paciente.fecha_prealta), 'dd-MM-yy') : ''}</td>
+                <td className="border px-2 py-2">{fecha_ingreso? format(new Date(paciente.fecha_ingreso), 'dd-MM-yy') : ''}</td>
+                <td className="border px-2 py-2">{calcularDias(paciente.fecha_ingreso)}</td>
+                <td className={fechaPreAltaClasses}>{fecha_prealta? format(new Date(paciente.fecha_prealta), 'dd-MM-yy') : ''}</td>
                 <td className="border px-2 py-2">{fecha_egreso? format(new Date(paciente.fecha_egreso), 'dd-MM-yy') : ''}</td>
                 <td className="border px-2 py-2">{hospitalizado ? 'Sí' : 'No'}</td>
                 <td className="border px-2 py-2">

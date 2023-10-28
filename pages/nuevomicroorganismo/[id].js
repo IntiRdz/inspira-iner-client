@@ -247,7 +247,7 @@ const NuevoMicroorganismo = () => {
                             <input
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="fecha_deteccion"
-                                type="date"
+                                type="date-local"
                                 placeholder="Fecha de detección del Microorganismo"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
@@ -321,33 +321,6 @@ const NuevoMicroorganismo = () => {
 
                             < AsignarMicroorganismo/>
                         </div>
-
-
-
-{/*                         <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="microorganismo_nombre">
-                                Nombre del Microorganismo
-                            </label>
-
-                            
-
-                            <input
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="microorganismo_nombre"
-                                type="text"
-                                placeholder="Nombre del Microorganismo"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.microorganismo_nombre}
-                            />
-                        </div>
-
-                        { formik.touched.microorganismo_nombre && formik.errors.microorganismo_nombre ? (
-                            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                <p className="font-bold">Error</p>
-                                <p>{formik.errors.microorganismo_nombre}</p>
-                            </div>
-                        ) : null  } */}
 
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="susceptibilidad">

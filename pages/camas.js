@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../components/Layout';
-import Cama from '../components/Cama';
+import Cama from '../components/camas/Cama';
 import { gql, useQuery } from '@apollo/client'
 import Link from 'next/link'
 
@@ -29,8 +29,6 @@ const Camas = () => {
   const { data, loading, error } = useQuery(OBTENER_CAMAS)
 
   console.log(data)
-  // console.log(loading)
-  // console.log(error)
 
   if(loading) return 'cargando...';
 
