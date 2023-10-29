@@ -79,7 +79,7 @@ const NuevaCama = () => {
             cama_compartida: true,
             cama_disponible: true,
             cama_ocupada: false,
-            cama_genero: 'No_especificado',
+            cama_genero: 'Indeterminado',
             cama_dispositivo_o2: 'VM',
             cama_hemodialisis: true,
             cama_aislamiento: false,
@@ -94,7 +94,7 @@ const NuevaCama = () => {
             cama_genero: Yup.string().oneOf([
                 'Hombre', 
                 'Mujer', 
-                'No_especificado'
+                'Indeterminado'
             ]).required('El género es obligatorio'),
             cama_dispositivo_o2: Yup.string().oneOf([
                 'No_VM', 
@@ -161,7 +161,7 @@ const NuevaCama = () => {
                 guardarMensaje(error.message.replace('GraphQL error: ', ''));
                 setTimeout(() => {
                     guardarMensaje(null);
-                }, 2000);
+                }, 5000);
             }
         }
     })
@@ -315,7 +315,7 @@ const NuevaCama = () => {
                                 <option value="" label="Seleccione un género" />
                                 <option value="Hombre" label="Hombre" />
                                 <option value="Mujer" label="Mujer" />
-                                <option value="No_especificado" label="No especificado" />
+                                <option value="Indeterminado" label="Indeterminado" />
                             </select>
                         </div>
 

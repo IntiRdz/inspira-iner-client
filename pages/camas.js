@@ -48,9 +48,9 @@ const Camas = () => {
             <thead className="bg-gray-800">
               <tr className="text-white">
                   <th className="w-1/7 py-2"> # </th>
-                  <th className="w-1/6 py-2">Compartida</th>
-                  <th className="w-1/7 py-2">Disponible</th>
-                  <th className="w-1/7 py-2">Ocupada</th>
+                  <th className="w-1/6 py-2">Cubículo</th>
+                  <th className="w-1/7 py-2">Estado</th>
+                  <th className="w-1/7 py-2">Disponibilidad</th>
                   <th className="w-1/7 py-2">Género</th>
                   <th className="w-1/6 py-2">Dispositivo O2</th>
                   <th className="w-1/6 py-2">Hemodialisis</th>

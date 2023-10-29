@@ -78,12 +78,12 @@ const Cama = ({cama}) => {
     return ( 
         <tr>
             <td className="border px-4 py-2">{cama_numero} </td>
-            <td className="border px-4 py-2">{cama_compartida ? 'Sí' : 'No'} </td>
-            <td className="border px-4 py-2">{cama_disponible ? 'Sí' : 'No'} </td>
-            <td className="border px-4 py-2">{cama_ocupada ? 'Sí' : 'No'} </td>
+            <td className="border px-4 py-2">{cama_compartida ? 'Compartido' : 'Asilado'} </td>
+            <td className="border px-4 py-2">{cama_disponible ? 'Disponible' : 'No disponible'} </td>
+            <td className="border px-4 py-2">{cama_ocupada ? 'Ocupada' : 'Libre'} </td>
             <td className="border px-4 py-2">{cama_genero} </td>
             <td className="border px-4 py-2">{cama_dispositivo_o2} </td>
-            <td className="border px-4 py-2">{cama_hemodialisis ? 'Sí' : 'No'} </td>
+            <td className="border px-4 py-2">{cama_hemodialisis ? 'HD' : 'No HD'} </td>
             {/* <td className="border px-4 py-2">{cama_codigo_uveh} </td> */}
             <td
                 className={`border px-4 py-2 ${
