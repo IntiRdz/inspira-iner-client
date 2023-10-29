@@ -52,11 +52,12 @@ export const AsignarCama = () => {
                 getOptionValue={ opciones => opciones.id }
                 getOptionLabel={ opciones => opciones.cama_numero }
                 placeholder="Busque o Seleccione la Cama"
+                /* isClearable={true} */ // Esto permite que la opción sea opcional
                 noOptionsMessage={() => "No se encuentra esa cama disponible"}
             />
-              {cama.id && (
+{/*               {cama.id && (
                 <p className="text-sm text-gray-600">Cama seleccionada: {cama.id}</p>
-            )}
+            )} */}
         </>
      );
 }

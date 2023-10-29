@@ -1,238 +1,245 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
+import { useRouter } from 'next/router';
+import Layout from '../../components/Layout';
+import { useQuery, gql, useMutation } from '@apollo/client';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import Swal from 'sweetalert2';
-import { gql, useMutation } from '@apollo/client';
-import Router from 'next/router';
-import { format, differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
+import { format } from 'date-fns';
+import PacienteContext from '../../context/pacientes/PacienteContext';
+import { AsignarCama } from '../../components/pacientes/AsignarCama';
 
-//Esta busqueda es para modifcar al encotrado en el botón 
-//Utilizo el resolver de eliminar que modifiqué por dentro 
-const ELIMINAR_PACIENTE = gql`
-    mutation eliminarPaciente($id: ID!) {
-        eliminarPaciente(id:$id) 
+
+
+const ACTUALIZAR_PACIENTE = gql`
+    mutation actualizarPaciente($id: ID!, $input: PacienteInput) {
+        actualizarPaciente(id: $id, input: $input) {
+            expediente
+            pac_apellido_paterno
+            pac_apellido_materno
+
+        }
     }
 `;
 
-//Esta busqueda es para modifcar al encotrado en el botón 
-const OBTENER_PACIENTES = gql`
-query ObtenerPacientes {
-  obtenerPacientes {
-    id
-    expediente
-    pac_apellido_paterno
-    pac_apellido_materno
-    pac_nombre
-    pac_genero
-    pac_FN
-    pac_dispositivo_o2
-    pac_hemodialisis
-    diagnostico
-    diagnostico1
-    pac_codigo_uveh
-    fecha_ingreso
-    fecha_prealta
-    fecha_egreso
-    hospitalizado
-    cama_relacionada {
-      id
-      cama_numero
-      cama_compartida
-      cama_disponible
-      cama_ocupada
-      cama_genero
-      cama_dispositivo_o2
-      cama_hemodialisis
-      cama_aislamiento
-      cama_dan
-      cama_codigo_uveh
-    }
-    microorganismo_relacionado {
-      id
-      fecha_deteccion
-      metodo_deteccion
-      microorganismo_tipo
-      microorganismo_nombre
-      susceptibilidad
-      comentario_uveh
-    }
-    antibiotico_relacionado {
-      id
-      antibiotico_nombre
-      antibiotico_comentario
-      antibiotico_inicio
-      antibiotico_fin
-    }
-  }
-}
-`;
+const EditarPaciente = () => {
 
-
-//Esta busqueda es para modifcar al encotrado en el botón 
-
-let contador = 0
-
-const Paciente = ({paciente}) => {
-    //console.log("Paciente del componente Paciente",paciente)
+    const router = useRouter();
+    const { query: { id } } = router;
     
-    const calcularEdad = (fechaNacimiento) => {
-        const hoy = new Date();
-        const fechaNac = new Date(fechaNacimiento);
-        return differenceInYears(hoy, fechaNac);
-    };  
+    // Mensaje de alerta
+    const [mensajeError, setMensajeError] = useState(null);
 
-    const calcularDias = (fechaIngreso) => {
-        const hoy = new Date();
-        const fechaIng = new Date(fechaIngreso);
-        return differenceInDays(hoy, fechaIng);
-    }; 
+    // Consultar para obtener el paciente
+    const { data, loading, error } = useQuery(OBTENER_PACIENTE, {
+        variables: {
+            id:id
+        }
+    });
+
+    const { cama } = useContext(PacienteContext);
+    //console.log("Valor de id.cama desde el contexto:", cama);
     
-    // Verificar si la fecha recibida es mañana
-    const esManana = isTomorrow(new Date(paciente.fecha_prealta));
-
-    // Clases CSS condicionales para cambiar el fondo de la columna
-    let fechaPreAltaClasses = "border px-2 py-2";
-    if (esManana) {
-        fechaPreAltaClasses += " bg-blue-500"; // Cambia el color de fondo a azul si es mañana
-    }
-
-
-    // Verificar si diagnostico1 contiene palabras clave para código rojo, amarillo o azul
-    const isCodigoRojo = ["CodigoInfarto", "CodigoViaAerea", "CodigoHemoptisis"].some((keyword) =>
-    paciente.diagnostico1.includes(keyword));
-
-    const isCodigoAmarillo = ["COVID", "Influenza", "Parainfluenza", "Adenovirus", "VirusSincialRespiratorio"].some((keyword) =>
-    paciente.diagnostico1.includes(keyword));
-
-    const isCodigoAzul = ["TuberculosisSensible", "TuberculosisResistente", "B24"].some((keyword) =>
-    paciente.diagnostico1.includes(keyword));
-
-    // Clases CSS condicionales para cambiar el fondo de la columna
-    let diagnostico1Classes = "border px-4 py-2";
-
-    switch (true) {
-    case isCodigoRojo:
-        diagnostico1Classes += " bg-amber-400";
-        break;
-    case isCodigoAmarillo:
-        diagnostico1Classes += " bg-yellow-400";
-        break;
-    case isCodigoAzul:
-        diagnostico1Classes += " bg-blue-400";
-        break;
-    default:
-        // Puedes manejar un caso predeterminado aquí si es necesario
-        break;
-    }
-
-
-    // Verificar si diagnostico1 contiene palabras clave para código rojo, amarillo o azul
-    const isCodigoUve1 = ["Acinetobacter"].some((keyword) =>  paciente.pac_codigo_uveh.includes(keyword));
-    const isCodigoUve2 = ["ColonizacionAcinetobacter"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
-    const isCodigoUve3 = ["ContactoAcinetobacter"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
-    const isCodigoUve4 = ["HisopadoRectal"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
-    const isCodigoUve5 = ["ClostridiumDifficile"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
-    const isCodigoUve6 = ["Enterobacterias_XDR_MDR"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
-    const isCodigoUve7 = ["Pseudomonas_XDR_MDR"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
-    const isCodigoUve8 = ["SAMR"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
-    const isCodigoUve9 = ["TuberculosisisOSospecha"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
-    const isCodigoUve10 = ["SAMS"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
+    const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
     
-    let codigoUvehClasses = "px-2 py-2";
-
-    switch (true) {
-        case  isCodigoUve1:
-            codigoUvehClasses += ' bg-pink-300';
-            break;
-        case isCodigoUve2:
-            codigoUvehClasses += ' bg-yellow-200';
-            break;
-        case isCodigoUve3:
-            codigoUvehClasses += ' bg-yellow-200';
-            break;
-        case isCodigoUve4:
-            codigoUvehClasses += ' bg-yellow-200'; // Te faltó el prefijo 'bg-'
-            break;
-        case isCodigoUve5:
-            codigoUvehClasses += ' bg-emerald-300';
-            break;
-        case isCodigoUve6:
-            codigoUvehClasses += ' bg-violet-300';
-            break;
-        case isCodigoUve7:
-            codigoUvehClasses += ' bg-amber-400';
-            break;
-        case isCodigoUve8:
-            codigoUvehClasses += ' bg-rose-500';
-            break;
-        case isCodigoUve9:
-            codigoUvehClasses += ' bg-cyan-600';
-            break;
-        case isCodigoUve10:
-            codigoUvehClasses += ' bg-blue-500';
-            break;
-        default:
-            // Sin color predeterminado
-            break;
-    }
     
-    // mutation para eliminar paciente
-    const [ eliminarPaciente ] = useMutation( ELIMINAR_PACIENTE, {
-        update(cache) {
-            // obtener una copia del objeto de cache
-            const { obtenerPacientes } = cache.readQuery({ query: OBTENER_PACIENTES });
-
-            // Reescribir el cache
+    // Mutation para modificar al paceinte
+    const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
+        update(cache, { data: { actualizarPaciente } }) {
+            // Obtener el objeto de cache directamente desde la consulta anterior
+            const { obtenerPacientes } = pacientesData;
+    
+            // Verificar si hay errores o está cargando en la consulta original
+            if (pacientesLoading || pacientesError) {
+                console.log('Cargando o error en la consulta de pacientes');
+                return;
+            }
+    
+            // Reescribir ese objeto
             cache.writeQuery({
                 query: OBTENER_PACIENTES,
                 data: {
-                    obtenerPacientes : obtenerPacientes.filter( pacienteActual => pacienteActual.id !== paciente.id )
+                    obtenerPacientes: [...obtenerPacientes, actualizarPaciente]
                 }
-            })
+            });
+        },
+    });
+
+    // Schema de validacion
+    const schemaValidacion = Yup.object({
+        expediente: Yup.string().required('El expediente del paciente es obligatorio'),
+        pac_apellido_paterno: Yup.string().required('El apellido paterno del paciente es obligatorio'),
+        pac_apellido_materno: Yup.string().required('El apellido materno del paciente es obligatorio'),
+    });
+
+    if(loading) return 'Cargando...';
+    
+    const { obtenerPaciente } = data;
+    //console.log("Data de Obtener Paciente",obtenerPaciente)
+
+    const valoresIniciales = {
+        expediente: obtenerPaciente.expediente ,
+        pac_apellido_paterno: obtenerPaciente.pac_apellido_paterno,
+        pac_apellido_materno: obtenerPaciente.pac_apellido_materno,
+
+    };
+
+
+    // Modifica el paciente en la BD
+    const actualizarInfoPaciente = async valores => {
+        const { 
+            expediente,
+            pac_apellido_paterno,
+            pac_apellido_materno,
+        } = valores;
+
+        //console.log("Valores Inciales:", valores)
+
+        const valoresActualizados = {
+            expediente,
+            pac_apellido_paterno,
+            pac_apellido_materno,
+        };
+
+        console.log("Valores actualizados:", valoresActualizados)
+
+        try {
+            const { data} = await actualizarPaciente({
+                variables: {
+                    id,
+                    input: valoresActualizados
+                }
+            });
+
+            console.log("Después de la llamada a actualizarPaciente");
+
+            // Mostrar Alerta
+            Swal.fire(
+                'Actualizado',
+                'El paciente se actualizó correctamente',
+                'success'
+            )
+
+            // Redireccionar
+            router.push('/');
+            
+        } catch (error) {
+            console.error("Error durante la llamada a actualizarPaciente:", error);
+
+            setMensajeError(error.message.replace('GraphQL error: ', ''));
+            setTimeout(() => {
+                setMensajeError(null);
+            }, 5000);
         }
-    }  );
-
-    console.log("el ID del paciente es",paciente.id)
-    const { 
-        expediente,
-        cama_numero,
-        pac_apellido_paterno,
-        pac_apellido_materno,
-        pac_nombre,
-        pac_genero,
-        pac_FN,
-        pac_dispositivo_o2,
-        pac_hemodialisis,
-        diagnostico1,
-        diagnostico,
-        pac_codigo_uveh,
-        fecha_ingreso,
-        fecha_prealta,
-        fecha_egreso,
-        hospitalizado,
-        id,
-    } = paciente;
-
-    const editarPaciente = () => {
-        //console.log("el ID del paciente es en el botón",paciente.id)
-        Router.push({
-            pathname: `/editarpaciente/${paciente.id}`,         
-        })
     }
-     const asignarMicroorganismo = () => {
-        Router.push({
-            pathname: `/nuevomicroorganismo/${paciente.id}`,
-        })
-    } 
-    const verMicroorganismo = () => {
-        Router.push({
-            pathname: `/microorganismospaciente/${paciente.id}`,
-        })
-    }
-
-    console.log("paciente recibido",paciente)
 
     return ( 
-        ... demás código...
+        <Layout>
+            <h1 className="text-2xl text-gray-800 font-light">Editar Paciente</h1>
+
+            <div className="flex justify-center mt-5">
+                <div className="w-full max-w-lg">
+
+                    <Formik
+                        validationSchema={ schemaValidacion }
+                        enableReinitialize
+                        initialValues={ valoresIniciales }
+                        onSubmit={ ( valores ) => {
+                            actualizarInfoPaciente(valores)
+                        }}
+                    >
+
+                    {props => {
+                    // console.log(props);
+                    return (
+                        <form
+                        className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"
+                        onSubmit={props.handleSubmit}
+                        >
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="expediente">
+                                    Expediente
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="expediente"
+                                    type="text"
+                                    placeholder="Expediente"
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                    value={props.values.expediente}
+                                />
+                            </div>
+
+                            { props.touched.expediente && props.errors.expediente ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{props.errors.expediente}</p>
+                                </div>
+                            ) : null  }
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_apellido_paterno">
+                                    Apellido Paterno
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="pac_apellido_paterno"
+                                    type="text"
+                                    placeholder="Apellido Paterno"
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                    value={props.values.pac_apellido_paterno}
+                                />
+                            </div>
+
+                            { props.touched.pac_apellido_paterno && props.errors.pac_apellido_paterno ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{props.errors.pac_apellido_paterno}</p>
+                                </div>
+                            ) : null  }
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_apellido_materno">
+                                    Apellido Materno
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="pac_apellido_materno"
+                                    type="text"
+                                    placeholder="Apellido Materno"
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                    value={props.values.pac_apellido_materno}
+                                />
+                            </div>
+
+                            { props.touched.pac_apellido_materno && props.errors.pac_apellido_materno ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{props.errors.pac_apellido_materno}</p>
+                                </div>
+                            ) : null  }
+
+                            <AsignarCama />   
+
+                            <input
+                            type="submit"
+                            className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
+                            value="Registrar Paciente"
+                        />
+                        </form>
+                        )
+                    }}
+                    </Formik>
+                </div>
+            </div>
+        </Layout>
      );
 }
  
-export default Paciente;
+export default EditarPaciente;
