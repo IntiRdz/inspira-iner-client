@@ -55,14 +55,16 @@ const Camas = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {data.obtenerCamasOcupadas
-              .sort((a, b) => parseInt(a.cama_numero) - parseInt(b.cama_numero))
-              .map( cama => (
-                <CamaVista 
-                  key={cama.id}
-                  cama={cama}
-                />
+              {Array.from(data.obtenerCamasOcupadas)
+                .sort((a, b) => parseInt(b.cama_numero) - parseInt(a.cama_numero))
+                .map((cama) => (
+                  <CamaVista 
+                    key={cama.id} 
+                    cama={cama}
+                  />
               ))}
+
+
             </tbody>
           </table>
 

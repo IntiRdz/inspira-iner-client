@@ -114,7 +114,7 @@ const Index = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-            {data.obtenerPacientesHospitalizados
+            {Array.from(data.obtenerPacientesHospitalizados)
                 .sort((a, b) => parseInt(b.cama_numero) - parseInt(a.cama_numero))
                 .map((paciente,) => (
                 <Paciente 
