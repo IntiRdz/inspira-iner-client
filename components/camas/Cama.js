@@ -78,13 +78,25 @@ const Cama = ({cama}) => {
     return ( 
         <tr>
             <td className="border px-4 py-2">{cama_numero} </td>
-            <td className="border px-4 py-2">{cama_compartida ? 'Compartido' : 'Asilado'} </td>
+            <td
+                className={`border px-4 py-2 ${
+                    (() => {
+                    switch (cama_compartida) {
+                        case true:
+                        return 'bg-indigo-100';
+                        default:
+                        return ''; 
+                    }
+                    })()
+                }`}
+                >
+                {cama_compartida ? 'Compartido' : 'Asilado'}
+            </td>
             <td className="border px-4 py-2">{cama_disponible ? 'Disponible' : 'No disponible'} </td>
             <td className="border px-4 py-2">{cama_ocupada ? 'Ocupada' : 'Libre'} </td>
             <td className="border px-4 py-2">{cama_genero} </td>
             <td className="border px-4 py-2">{cama_dispositivo_o2} </td>
             <td className="border px-4 py-2">{cama_hemodialisis ? 'HD' : 'No HD'} </td>
-            {/* <td className="border px-4 py-2">{cama_codigo_uveh} </td> */}
             <td
                 className={`border px-4 py-2 ${
                     (() => {
@@ -105,7 +117,6 @@ const Cama = ({cama}) => {
                 >
                 {cama_codigo_uveh}
             </td>
-           {/*  <td className="border px-4 py-2">{cama_aislamiento ? 'Sí' : 'No'} </td> */}
             <td
                 className={`border px-4 py-2 ${
                     (() => {
@@ -118,7 +129,7 @@ const Cama = ({cama}) => {
                     })()
                 }`}
                 >
-                {cama_aislamiento ? 'Sí' : 'No'}
+                {cama_aislamiento ? 'Asilamiento' : 'No Aislamiento'}
             </td>
             {/* <td className="border px-4 py-2">{cama_dan ? 'Sí' : 'No'} </td> */}
             <td
@@ -133,7 +144,7 @@ const Cama = ({cama}) => {
                     })()
                 }`}
                 >
-                {cama_dan ? 'Sí' : 'No'}
+                {cama_dan ? 'DAN' : 'No DAN'}
             </td>
             <td className="border px-4 py-2">
                      <button

@@ -17,7 +17,20 @@ const CamaVista = ({cama}) => {
     return ( 
         <tr>
             <td className="border px-4 py-2">{cama_numero} </td>
-            <td className="border px-4 py-2">{cama_compartida ? 'Compartido' : 'Asilado'} </td>
+            <td
+                className={`border px-4 py-2 ${
+                    (() => {
+                    switch (cama_compartida) {
+                        case true:
+                        return 'bg-indigo-100';
+                        default:
+                        return ''; 
+                    }
+                    })()
+                }`}
+                >
+                {cama_compartida ? 'Compartido' : 'Asilado'}
+            </td>
             <td className="border px-4 py-2">{cama_disponible ? 'Disponible' : 'No disponible'} </td>
             <td className="border px-4 py-2">{cama_ocupada ? 'Ocupada' : 'Libre'} </td>
             <td className="border px-4 py-2">{cama_genero} </td>
@@ -56,7 +69,7 @@ const CamaVista = ({cama}) => {
                     })()
                 }`}
                 >
-                {cama_aislamiento ? 'Sí' : 'No'}
+                {cama_aislamiento ? 'Aislamiento' : 'No Aislamiento'}
             </td>
             {/* <td className="border px-4 py-2">{cama_dan ? 'Sí' : 'No'} </td> */}
             <td
@@ -71,7 +84,7 @@ const CamaVista = ({cama}) => {
                     })()
                 }`}
                 >
-                {cama_dan ? 'Sí' : 'No'}
+                {cama_dan ? 'DAN' : 'No DAN'}
             </td>
         </tr>
      );
