@@ -2,6 +2,8 @@ import { ApolloProvider } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import '../styles/globals.css';
 import PacienteState from '../context/pacientes/PacienteState';
+import { AuthProvider } from '../context/usuarios/AuthContext';
+
 
 function MyApp({ Component, pageProps }) {
   const [apolloClient, setApolloClient] = useState(null);
@@ -18,9 +20,11 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <PacienteState>
-      <Component {...pageProps} />
-      </PacienteState>
+      <AuthProvider>
+          <PacienteState>
+            <Component {...pageProps} />
+          </PacienteState>
+      </AuthProvider>
     </ApolloProvider>
   );
 }

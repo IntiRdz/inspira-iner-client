@@ -20,6 +20,7 @@ query ObtenerPacientes {
     pac_hemodialisis
     diagnostico
     diagnostico1
+    caracteristicas_especiales
     pac_codigo_uveh
     fecha_ingreso
     fecha_prealta
@@ -67,7 +68,7 @@ const Index = () => {
   // Consulta de Apollo
   const { data, loading, error } = useQuery(OBTENER_PACIENTES);
 
-  //console.log(data)
+  console.log(data)
   // console.log(loading)
   // console.log(error)
   
@@ -80,11 +81,7 @@ const Index = () => {
   return (
     <div>
       <Layout>
-        <h1 className="text-xl text-gray-800 font-light">Pacientes</h1>
-        <Link href="/nuevopaciente">
-          <a className="bg-blue-800 py-2 px-4 mt-3 inline-block text-white rounded text-xs hover:bg-gray-800 mb-3 uppercase font-bold w-full lg:w-auto text-center">Nuevo Paciente</a>
-        </Link>
-
+        <h2 className="text-xl text-gray-800 font-light">Pacientes</h2>
         <div className="overflow-x-scroll">
           <table className="table-auto shadow-md mt-10 w-full w-lg">
             <thead className="bg-gray-800">
@@ -92,17 +89,18 @@ const Index = () => {
              {/*  <th className="border px-2 py-2">#</th> */}
                 <th className="border px-2 py-2">Expediente</th>
                 <th className="border px-2 py-2">Cama</th>
-                <th className="border px-2 py-2">Microorganismo</th>
                 <th className="border px-2 py-2">Apellido Paterno</th>
                 <th className="border px-2 py-2">Apellido Materno</th>
                 <th className="border px-2 py-2">Nombre</th>
-                <th className="border px-2 py-2">Genero</th>
                 <th className="border px-2 py-2">Edad</th>
+                <th className="border px-2 py-2">Genero</th>
                 <th className="border px-2 py-2">Dispositivo O2</th>
                 <th className="border px-2 py-2">Hemodialisis</th>
+                <th className="border px-2 py-2">Caracteristicas Especiales</th>
+                <th className="border px-2 py-2">Código UVEH</th>
+                <th className="border px-2 py-2">Microorganismo</th>
                 <th className="border px-2 py-2">Diagnósticos Generales</th>
                 <th className="border px-2 py-2">Diagnósticos Específicos</th>
-                <th className="border px-2 py-2">Código UVEH</th>
                 <th className="border px-2 py-2">Ingreso</th>
                 <th className="border px-2 py-2">DEH</th>
                 <th className="border px-2 py-2">Prealta</th>

@@ -16,6 +16,7 @@
     "formik": "^2.4.5",
     "graphql": "^16.8.1",
     "jwt-decode": "^3.1.2",
+    "lucide-react": "^0.291.0",
     "next": "^12.2.6",
     "postcss": ">=8.4.31",
     "react": "18.2.0",

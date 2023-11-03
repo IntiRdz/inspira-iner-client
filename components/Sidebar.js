@@ -1,109 +1,59 @@
-import React from 'react';
-import Link from 'next/link'
-import { useRouter } from 'next/router';
+import React, { createContext, useState, useEffect, useContext  } from 'react';
+import SidebarContext from "../context/sidebar/SidebarContext";
+import { MoreVertical, ChevronLast, ChevronFirst, UserCircle2 } from "lucide-react"
 
-const Sidebar = () => {
+import { AuthContext } from '../context/usuarios/AuthContext';
 
-    // routing de next
-    const router = useRouter();
+const Sidebar = ({ children }) => {
+  const [expanded, setExpanded] = useState(true);
 
-    // console.log(router.pathname)
+  const { user, cerrarSesion } = useContext(AuthContext);
+  if (!user) return <div>Cargando...</div>; // O cualquier otra señal de carga que prefieras
 
-    return ( 
-        <aside className="bg-gray-800 sm:w-1/3 xl:w-1/6 sm:min-h-screen p-5" >
-            <div>
-                <p className="text-white text-2xl font-black">Perfiles</p>
-            </div>
-
-            <nav className="mt-5 list-none">
-                <li className={router.pathname === "/nuevopaciente" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/nuevopaciente">
-                        <a className="text-white block">
-                            Ingresar Paciente
-                        </a>
-                    </Link>
-                </li>
-                <li className={router.pathname === "/pacientes" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/">
-                        <a className="text-white block">
-                            Editar Paciente
-                        </a>
-                    </Link>
-                </li>
-                <li className={router.pathname === "/camas" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/camas">
-                        <a className="text-white block">
-                            Editar Cama
-                        </a>
-                    </Link>
-                </li>
-            </nav>
-
-            <div className="sm:mt-10">
-                <p className="text-white text-2xl font-black">Busquedas</p>
-            </div>
-
-            <div className="sm:mt-10">
-                <p className="text-white text-1xl font-black">Pacientes</p>
-            </div>
-
-            <nav className="mt-5 list-none">
-                <li className={router.pathname === "/" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/">
-                        <a className="text-white block">
-                            Todos los Pacientes 
-                        </a>
-                    </Link>
-                </li>
-                <li className={router.pathname === "/hospitalizados" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/hospitalizados">
-                        <a className="text-white block">
-                            Pacientes Hospitalizados
-                        </a>
-                    </Link>
-                </li>
-                <li className={router.pathname === "nohospitalizados" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/nohospitalizados">
-                        <a className="text-white block">
-                            Pacientes no Hospitalizados
-                        </a>
-                    </Link>
-                </li>
-                <div className="sm:mt-10">
-                    <p className="text-white text-1xl font-black">Camas</p>
+  
+  return (
+    <SidebarContext.Provider value={{ expanded, setExpanded }}>
+        <aside className="h-screen">
+            <nav className="h-full flex flex-col bg-slate-800 border-r shadow-sm">
+                <div className="p-4 pb-2 flex justify-between items-center">
+{/*                 <img
+                    src="https://img.logoipsum.com/243.svg"
+                    className={`overflow-hidden transition-all ${
+                    expanded ? "w-32" : "w-0"
+                    }`}
+                    alt=""
+                /> */}
+                <button
+                    onClick={() => setExpanded((curr) => !curr)}
+                    className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100"
+                >
+                    {expanded ? <ChevronFirst /> : <ChevronLast />}
+                </button>
                 </div>
-                <li className={router.pathname === "/camasdisponibles" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/camasdisponibles">
-                        <a className="text-white block">
-                            Camas Disponibles
-                        </a>
-                    </Link>
-                </li>
-                <li className={router.pathname === "/camasocupadas" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/camasocupadas">
-                        <a className="text-white block">
-                            Camas Ocupadas
-                        </a>
-                    </Link>
-                </li>
-                <li className={router.pathname === "/camas" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/camas">
-                        <a className="text-white block">
-                            Todas las Camas
-                        </a>
-                    </Link>
-                </li>
-                <li className={router.pathname === "/tablero" ? "bg-blue-800 p-2" : "p-2"}>
-                    <Link href="/tableto">
-                        <a className="text-white block">
-                            Tablero
-                        </a>
-                    </Link>
-                </li>
-            </nav>
 
+                <SidebarContext.Provider value={{ expanded }}>
+                <ul className="flex-1 px-3">{children}</ul>
+                </SidebarContext.Provider>
+
+                <div className="border-t flex p-3 text-white">
+                    <UserCircle2/>
+                <div
+                    className={`
+                    flex justify-between items-center
+                    overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}
+                `}
+                >
+                    <div className="leading-4">
+                    <h4 className="font-semibold">Bienvenido</h4>
+                    <span className="text-xs text-white font-semibold">{user.nombre} {user.apellido}</span>
+                    </div>
+                    <MoreVertical size={20} />
+                </div>
+                </div>
+            </nav>
         </aside>
-     );
-}
- 
+    </SidebarContext.Provider>
+  );
+};
+
 export default Sidebar;

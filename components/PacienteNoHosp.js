@@ -3,7 +3,6 @@ import Swal from 'sweetalert2';
 import { gql, useMutation } from '@apollo/client';
 import Router from 'next/router';
 import { format, differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
-import { Bug, Eye } from "lucide-react";
 
 //Esta busqueda es para modifcar al encotrado en el botón 
 //Utilizo el resolver de eliminar que modifiqué por dentro 
@@ -31,7 +30,7 @@ query ObtenerPacientes {
     caracteristicas_especiales
     pac_codigo_uveh
     fecha_ingreso
-    fecha_prealta
+
     fecha_egreso
     hospitalizado
     cama_relacionada {
@@ -72,7 +71,7 @@ query ObtenerPacientes {
 
 let contador = 0
 
-const Paciente = ({paciente}) => {
+const PacienteNoHosp = ({paciente}) => {
     //console.log("Paciente del componente Paciente",paciente)
     
     const calcularEdad = (fechaNacimiento) => {
@@ -84,7 +83,7 @@ const Paciente = ({paciente}) => {
     const calcularDias = (fechaIngreso) => {
         const hoy = new Date();
         const fechaIng = new Date(fechaIngreso);
-        return differenceInDays(hoy, fechaIng);
+        return differenceInDays(fecha_egreso, fechaIng);
     }; 
     
     // Verificar si la fecha recibida es mañana
@@ -208,7 +207,6 @@ const Paciente = ({paciente}) => {
         caracteristicas_especiales,
         pac_codigo_uveh,
         fecha_ingreso,
-        fecha_prealta,
         fecha_egreso,
         hospitalizado,
         id,
@@ -253,7 +251,7 @@ const Paciente = ({paciente}) => {
                 <td className="border px-2 py-2">{pac_apellido_materno}</td>
                 <td className="border px-2 py-2">{pac_nombre}</td>
                 <td className="border px-2 py-2">{calcularEdad(paciente.pac_FN)}</td>
-                <td className="border border-l-4 border-l-sky-700 px-2 py-2">{pac_genero}</td>
+                <td className="border px-2 py-2">{pac_genero}</td>
                 <td className="border px-2 py-2">{pac_dispositivo_o2}</td>
                 <td className="border px-2 py-2">{pac_hemodialisis ? 'Sí' : 'No'}</td>
                 <td className="border px-2 py-2">{caracteristicas_especiales}</td>
@@ -287,11 +285,9 @@ const Paciente = ({paciente}) => {
                     )}
                 </td>
                 <td className="border px-2 py-2">{diagnostico}</td>
-                <td className="border border-l-4 border-l-sky-700 px-2 py-2">{fecha_ingreso? format(new Date(paciente.fecha_ingreso), 'dd-MM-yy') : ''}</td>
+                <td className="border px-2 py-2">{fecha_ingreso? format(new Date(paciente.fecha_ingreso), 'dd-MM-yy') : ''}</td>
                 <td className="border px-2 py-2">{calcularDias(paciente.fecha_ingreso)}</td>
-                <td className={fechaPreAltaClasses}>{fecha_prealta? format(new Date(paciente.fecha_prealta), 'dd-MM-yy') : ''}</td>
                 <td className="border px-2 py-2">{fecha_egreso? format(new Date(paciente.fecha_egreso), 'dd-MM-yy') : ''}</td>
-                <td className="border px-2 py-2">{hospitalizado ? 'Sí' : 'No'}</td>
                 <td className="border px-2 py-2">
                     <button
                         type="button"
@@ -309,7 +305,8 @@ const Paciente = ({paciente}) => {
                         className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
                         onClick={() => asignarMicroorganismo() }
                     >
-                        <Bug/>
+                        + Microorganismo
+
                         <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </button>
                 </td>           
@@ -320,12 +317,13 @@ const Paciente = ({paciente}) => {
                         className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
                         onClick={() => verMicroorganismo() }
                     >
-                        <Bug/>
-                        <Eye/>
+                        Microorganismos
+
+                        <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </button>
                 </td>
             </tr>
      );
 }
  
-export default Paciente;
+export default PacienteNoHosp;

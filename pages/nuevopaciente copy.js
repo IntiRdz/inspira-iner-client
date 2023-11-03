@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { useRouter } from 'next/router'
 
 import PacienteContext from '../context/pacientes/PacienteContext';
-import { AsignarCama } from '../components/pacientes/AsignarCama';
+import FormNuevoPaciente from '../components/pacientes/FormNuevoPaciente';
 
 const NUEVO_PACIENTE = gql`
     mutation nuevoPaciente($input: PacienteInput) {
@@ -64,8 +64,8 @@ const NuevoPaciente = () => {
     // Mensaje de alerta
     const [mensaje, guardarMensaje] = useState(null);
 
-    const { cama,  } = useContext(PacienteContext);
-
+    const { cama } = useContext(PacienteContext);
+console.log("Valor de la cama", cama)
 
     const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
  
@@ -195,7 +195,7 @@ const NuevoPaciente = () => {
                 hospitalizado,
             } = valores;
 
-            //console.log("valores inciales del nuevo objeto", valores)
+            console.log("valores inciales del nuevo objeto", valores)
 
             // Verificar si las fechas son nulas o vacías
             const fechaPrealta = fecha_prealta || undefined; // Establece un valor predeterminado si es nulo o vacío
@@ -220,7 +220,7 @@ const NuevoPaciente = () => {
                 cama_relacionada: cama,
             };
 
-            //console.log("Valores actualizados:", valoresActualizados)
+            console.log("Valores actualizados:", valoresActualizados)
 
 
         
@@ -272,44 +272,7 @@ const NuevoPaciente = () => {
                 Hola Paciente   
             <div className="flex justify-center mt-5">
                 <div className="w-full max-w-lg">
-                    <form
-                        className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"
-                        onSubmit={formik.handleSubmit}
-                    >
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="expediente">
-                                    Expediente
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="expediente"
-                                    type="text"
-                                    placeholder="Expediente"
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.expediente}
-                                />
-                            </div>
-
-                            { formik.touched.expediente && formik.errors.expediente ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{formik.errors.expediente}</p>
-                                </div>
-                            ) : null  }
-
-
-              
-
-                            <input
-                            type="submit"
-                            className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
-                            value="Registrar Paciente"
-
-                            
-                        />
-                    </form>
+                    <FormNuevoPaciente />
                 </div>
             </div>
             {mensaje && mostrarMensaje()}

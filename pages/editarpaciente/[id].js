@@ -5,8 +5,8 @@ import { useQuery, gql, useMutation } from '@apollo/client';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
+
 import PacienteContext from '../../context/pacientes/PacienteContext';
-import { AsignarCama } from '../../components/pacientes/AsignarCama';
 import FormEditPaciente from '../../components/pacientes/FormEditPaciente';
 
 const OBTENER_PACIENTES = gql`
@@ -121,7 +121,9 @@ const EditarPaciente = () => {
 
     // Schema de validacion
     const schemaValidacion = Yup.object({
-        expediente: Yup.string().required('El expediente del paciente es obligatorio'),
+        expediente: Yup.string()
+        .required('El expediente del paciente es obligatorio')
+        .matches(/^[a-zA-Z0-9]{6,8}$/, 'El expediente debe tener entre 6 y 8 caracteres alfanuméricos'),
         pac_apellido_paterno: Yup.string().required('El apellido paterno del paciente es obligatorio'),
         pac_apellido_materno: Yup.string().required('El apellido materno del paciente es obligatorio'),
         pac_nombre: Yup.string().required('El nombre del paciente es obligatorio'),
@@ -162,6 +164,16 @@ const EditarPaciente = () => {
             ])
         ),
         diagnostico: Yup.string(),
+        caracteristicas_especiales:  Yup.array()
+        .min(0, 'Seleccione una catecteristica especial del paciente')
+        .of(
+            Yup.string().oneOf([
+            'TrasladoDeHospital',
+            'InfeccionReciente',
+            'Embarazo',
+            'Inmunosupresion',
+            ])
+        ),
         pac_codigo_uveh:  Yup.array()
         .min(0, 'Debe seleccionar al menos un diagnóstico')
         .of(
@@ -203,6 +215,7 @@ const EditarPaciente = () => {
         pac_hemodialisis: obtenerPaciente.pac_hemodialisis,
         diagnostico1: obtenerPaciente.diagnostico1 || [] ,
         diagnostico: obtenerPaciente.diagnostico ,
+        caracteristicas_especiales: obtenerPaciente.caracteristicas_especiales || [] ,
         pac_codigo_uveh: obtenerPaciente.pac_codigo_uveh  || [], 
         fecha_ingreso: obtenerPaciente.fecha_ingreso  ? format(new Date(obtenerPaciente.fecha_ingreso), 'yyyy-MM-dd HH:mm') : '', // Si no hay fecha en las props, se establece como cadena vacía
         fecha_prealta: obtenerPaciente.fecha_prealta ? format(new Date(obtenerPaciente.fecha_prealta), 'yyyy-MM-dd') : '', // Si no hay fecha en las props, se establece como cadena vacía
@@ -225,6 +238,7 @@ const EditarPaciente = () => {
             pac_hemodialisis,
             diagnostico1,
             diagnostico,
+            caracteristicas_especiales,
             pac_codigo_uveh,
             fecha_ingreso,
             fecha_prealta,
@@ -246,6 +260,7 @@ const EditarPaciente = () => {
             pac_hemodialisis,
             diagnostico1,
             diagnostico,
+            caracteristicas_especiales,
             pac_codigo_uveh,
             fecha_ingreso: fecha_ingreso === '' ? undefined : fecha_ingreso, // Si es cadena vacía, se envía undefined
             fecha_prealta: fecha_prealta === '' ? undefined : fecha_prealta, // Si es cadena vacía, se envía undefined
@@ -292,7 +307,6 @@ const EditarPaciente = () => {
 
             <div className="flex justify-center mt-5">
                 <div className="w-full max-w-lg">
-                    {/* Utiliza el componente del formulario aquí */}
                     <FormEditPaciente
                         valoresIniciales={valoresIniciales}
                         onSubmit={actualizarInfoPaciente}

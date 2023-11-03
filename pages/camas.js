@@ -11,6 +11,7 @@ query ObtenerCamas {
     id
     cama_numero
     cama_compartida
+    cama_prioridad
     cama_disponible
     cama_ocupada
     cama_genero
@@ -49,6 +50,7 @@ const Camas = () => {
               <tr className="text-white">
                   <th className="w-1/7 py-2"> # </th>
                   <th className="w-1/6 py-2">Cubículo</th>
+                  <th className="w-1/6 py-2">Prioridad</th>
                   <th className="w-1/7 py-2">Estado</th>
                   <th className="w-1/7 py-2">Disponibilidad</th>
                   <th className="w-1/7 py-2">Género</th>

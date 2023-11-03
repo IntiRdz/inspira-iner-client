@@ -1,10 +1,11 @@
-// FormularioPaciente.js
 import React from 'react';
 import { Formik } from 'formik';
 import { AsignarCama } from './AsignarCama';
 
 const FormPaciente = ({ valoresIniciales, onSubmit, schemaValidacion }) => {
     return (
+
+        
         <Formik
             validationSchema={schemaValidacion}
             enableReinitialize
@@ -12,6 +13,8 @@ const FormPaciente = ({ valoresIniciales, onSubmit, schemaValidacion }) => {
             onSubmit={onSubmit}
         >
             {(props) => (
+
+
             <form
             className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"
             onSubmit={props.handleSubmit}
@@ -282,6 +285,42 @@ const FormPaciente = ({ valoresIniciales, onSubmit, schemaValidacion }) => {
                         <p>{props.errors.diagnostico}</p>
                     </div>
                 ) : null  }
+
+                <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="caracteristicas_especiales">
+                    Caracteristicas Especiales 
+                </label>
+                {[
+                    'TrasladoDeHospital',
+                    'InfeccionReciente',
+                    'Embarazo',
+                    'Inmunosupresion',
+                ].map((option) => (
+                    <label key={option} className="block">
+                    <input
+                        type="checkbox"
+                        name="caracteristicas_especiales"
+                        value={option}
+                        onChange={(e) => {
+                        const isChecked = e.target.checked;
+                        const value = e.target.value;
+
+                        props.setFieldValue(
+                            'caracteristicas_especiales',
+                            isChecked
+                            ? [...props.values.caracteristicas_especiales, value]
+                            : props.values.caracteristicas_especiales.filter((val) => val !== value)
+                        );
+                        }}
+                        onBlur={props.handleBlur}
+                        checked={props.values.caracteristicas_especiales.includes(option)}
+                        className="mr-2"
+                    />
+                    {option}
+                    </label>
+                ))}
+                </div>
+
 
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_codigo_uveh">

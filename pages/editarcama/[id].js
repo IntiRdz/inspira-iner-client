@@ -13,6 +13,7 @@ const OBTENER_CAMAS = gql`
             id
             cama_numero
             cama_compartida
+            cama_prioridad
             cama_disponible
             cama_genero
             cama_dispositivo_o2
@@ -29,6 +30,7 @@ const OBTENER_CAMA = gql`
         obtenerCama(id: $id) {
             cama_numero
             cama_compartida
+            cama_prioridad
             cama_disponible
             cama_ocupada
             cama_genero
@@ -46,6 +48,7 @@ const ACTUALIZAR_CAMA = gql`
             actualizarCama(id:$id, input:$input) {
                 cama_numero
                 cama_compartida
+                cama_prioridad
                 cama_disponible
                 cama_ocupada
                 cama_genero
@@ -281,6 +284,33 @@ const EditarCama = () => {
                                             <span className="ml-2">No</span>
                                         </label>
                                     </div>
+
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_prioridad">
+                                            Prioridad
+                                        </label>
+                                        <select 
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="cama_prioridad"
+                                            onChange={props.handleChange}
+                                            onBlur={props.handleBlur}
+                                            value={props.values.cama_prioridad}
+                                        >
+                                            <option value="" label="Seleccione una Prioridad" />
+                                            <option value="COVID" label="COVID" />
+                                            <option value="VirusRespiratorios" label="Virus Respiratorios" />
+                                            <option value="B24" label="B24" />
+                                            <option value="TuberculosisSensible" label="Tuberculosis Sensible" />
+                                            <option value="TuberculosisResistente" label="Tuberculosis Resistente" />
+                                        </select>
+                                    </div>
+
+                                    { props.touched.cama_genero && props.errors.cama_genero ? (
+                                        <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                            <p className="font-bold">Error</p>
+                                            <p>{props.errors.cama_genero}</p>
+                                        </div>
+                                    ) : null  }
 
                                     <div>
                                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_disponible">

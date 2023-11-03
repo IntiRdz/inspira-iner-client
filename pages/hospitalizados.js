@@ -1,5 +1,5 @@
 import Layout from '../components/Layout';
-import Paciente from '../components/Paciente';
+import PacienteHosp from '../components/PacienteHosp';
 import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router';
 import Link from 'next/link'
@@ -89,24 +89,26 @@ const Index = () => {
           <table className="table-auto shadow-md mt-10 w-full w-lg">
             <thead className="bg-gray-800">
               <tr className="text-white">
-              <th className="border px-2 py-2">#</th>
+              {/* <th className="border px-2 py-2">#</th> */}
                 <th className="border px-2 py-2">Expediente</th>
                 <th className="border px-2 py-2">Cama</th>
-                <th className="border px-2 py-2">Microorganismo</th>
                 <th className="border px-2 py-2">Apellido Paterno</th>
                 <th className="border px-2 py-2">Apellido Materno</th>
                 <th className="border px-2 py-2">Nombre</th>
-                <th className="border px-2 py-2">Genero</th>
                 <th className="border px-2 py-2">Edad</th>
+                <th className="border px-2 py-2">Genero</th>
                 <th className="border px-2 py-2">Dispositivo O2</th>
                 <th className="border px-2 py-2">Hemodialisis</th>
+                <th className="border px-2 py-2">Caracteristicas Especiales</th>
+                <th className="border px-2 py-2">Código UVEH</th>
+                <th className="border px-2 py-2">Microorganismo</th>
                 <th className="border px-2 py-2">Diagnósticos Generales</th>
                 <th className="border px-2 py-2">Diagnósticos Específicos</th>
-                <th className="border px-2 py-2">Código UVEH</th>
                 <th className="border px-2 py-2">Ingreso</th>
+                <th className="border px-2 py-2">DEH</th>
                 <th className="border px-2 py-2">Prealta</th>
-                <th className="border px-2 py-2">Egreso</th>
-                <th className="border px-2 py-2">Hospitalizado</th>
+                {/* <th className="border px-2 py-2">Egreso</th> */}
+                {/* <th className="border px-2 py-2">Hospitalizado</th> */}
                 {/* <th className="w-1/6 py-2 text-xs">Eliminar</th> */}
                 <th className="border px-2 py-2">Editar</th>
                 <th className="border px-2 py-2">Asignar Micro</th>
@@ -117,7 +119,7 @@ const Index = () => {
             {Array.from(data.obtenerPacientesHospitalizados)
                 .sort((a, b) => parseInt(b.cama_numero) - parseInt(a.cama_numero))
                 .map((paciente,) => (
-                <Paciente 
+                <PacienteHosp 
                   key={paciente.id} 
                   paciente={paciente}
                 />

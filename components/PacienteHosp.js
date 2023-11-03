@@ -72,7 +72,7 @@ query ObtenerPacientes {
 
 let contador = 0
 
-const Paciente = ({paciente}) => {
+const PacienteHosp = ({paciente}) => {
     //console.log("Paciente del componente Paciente",paciente)
     
     const calcularEdad = (fechaNacimiento) => {
@@ -253,7 +253,7 @@ const Paciente = ({paciente}) => {
                 <td className="border px-2 py-2">{pac_apellido_materno}</td>
                 <td className="border px-2 py-2">{pac_nombre}</td>
                 <td className="border px-2 py-2">{calcularEdad(paciente.pac_FN)}</td>
-                <td className="border border-l-4 border-l-sky-700 px-2 py-2">{pac_genero}</td>
+                <td className="border px-2 py-2">{pac_genero}</td>
                 <td className="border px-2 py-2">{pac_dispositivo_o2}</td>
                 <td className="border px-2 py-2">{pac_hemodialisis ? 'Sí' : 'No'}</td>
                 <td className="border px-2 py-2">{caracteristicas_especiales}</td>
@@ -287,11 +287,9 @@ const Paciente = ({paciente}) => {
                     )}
                 </td>
                 <td className="border px-2 py-2">{diagnostico}</td>
-                <td className="border border-l-4 border-l-sky-700 px-2 py-2">{fecha_ingreso? format(new Date(paciente.fecha_ingreso), 'dd-MM-yy') : ''}</td>
+                <td className="border px-2 py-2">{fecha_ingreso? format(new Date(paciente.fecha_ingreso), 'dd-MM-yy') : ''}</td>
                 <td className="border px-2 py-2">{calcularDias(paciente.fecha_ingreso)}</td>
                 <td className={fechaPreAltaClasses}>{fecha_prealta? format(new Date(paciente.fecha_prealta), 'dd-MM-yy') : ''}</td>
-                <td className="border px-2 py-2">{fecha_egreso? format(new Date(paciente.fecha_egreso), 'dd-MM-yy') : ''}</td>
-                <td className="border px-2 py-2">{hospitalizado ? 'Sí' : 'No'}</td>
                 <td className="border px-2 py-2">
                     <button
                         type="button"
@@ -310,6 +308,7 @@ const Paciente = ({paciente}) => {
                         onClick={() => asignarMicroorganismo() }
                     >
                         <Bug/>
+
                         <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </button>
                 </td>           
@@ -320,7 +319,7 @@ const Paciente = ({paciente}) => {
                         className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
                         onClick={() => verMicroorganismo() }
                     >
-                        <Bug/>
+                        <Bug/>  
                         <Eye/>
                     </button>
                 </td>
@@ -328,4 +327,4 @@ const Paciente = ({paciente}) => {
      );
 }
  
-export default Paciente;
+export default PacienteHosp;

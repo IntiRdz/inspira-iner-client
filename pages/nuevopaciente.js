@@ -64,7 +64,7 @@ const NuevoPaciente = () => {
     // Mensaje de alerta
     const [mensaje, guardarMensaje] = useState(null);
 
-    const { cama, diagnostico } = useContext(PacienteContext);
+    const { cama } = useContext(PacienteContext);
 
 
     const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
@@ -105,6 +105,7 @@ const NuevoPaciente = () => {
             pac_hemodialisis: false,
             diagnostico1: [],
             diagnostico: '',
+            caracteristicas_especiales: [],
             pac_codigo_uveh: ['SinDefinir'],
             fecha_ingreso: '',
             fecha_prealta: '',
@@ -112,8 +113,9 @@ const NuevoPaciente = () => {
             hospitalizado: true,
         },
         validationSchema: Yup.object({
-            expediente: Yup.string().required('El expediente del paciente es obligatorio'),
-            pac_apellido_paterno: Yup.string().required('El apellido paterno del paciente es obligatorio'),
+            expediente: Yup.string()
+            .required('El expediente del paciente es obligatorio')
+            .matches(/^[a-zA-Z0-9]{6,8}$/, 'El expediente debe tener entre 6 y 8 caracteres alfanuméricos'),            pac_apellido_paterno: Yup.string().required('El apellido paterno del paciente es obligatorio'),
             pac_apellido_materno: Yup.string().required('El apellido materno del paciente es obligatorio'),
             pac_nombre: Yup.string().required('El nombre del paciente es obligatorio'),
             pac_genero: Yup.string().oneOf(['Hombre', 'Mujer']).required('El género del paciente es obligatorio'),
@@ -153,6 +155,16 @@ const NuevoPaciente = () => {
                 ])
             ),
             diagnostico: Yup.string(),
+            caracteristicas_especiales:  Yup.array()
+            .min(0, 'Seleccione una catecteristica especial del paciente')
+            .of(
+                Yup.string().oneOf([
+                'TrasladoDeHospital',
+                'InfeccionReciente',
+                'Embarazo',
+                'Inmunosupresion',
+                ])
+            ),
             pac_codigo_uveh:  Yup.array()
             .min(0, 'Debe seleccionar al menos un diagnóstico')
             .of(
@@ -188,6 +200,7 @@ const NuevoPaciente = () => {
                 pac_hemodialisis,
                 diagnostico1,
                 diagnostico,
+                caracteristicas_especiales,
                 pac_codigo_uveh,
                 fecha_ingreso,
                 fecha_prealta,
@@ -212,6 +225,7 @@ const NuevoPaciente = () => {
                 pac_hemodialisis,
                 diagnostico,
                 diagnostico1,
+                caracteristicas_especiales,
                 pac_codigo_uveh,
                 fecha_ingreso,
                 fecha_prealta: fechaPrealta,
@@ -268,8 +282,8 @@ const NuevoPaciente = () => {
 
     return (
         <Layout>
-            <h1 className="text-2xl text-gray-800 font-light">Nuevo Paciente</h1>
-                Hola Paciente   
+            <h2 className="text-2xl text-gray-800 font-light">Nuevo Paciente</h2>
+                 
             <div className="flex justify-center mt-5">
                 <div className="w-full max-w-lg">
                     <form
@@ -492,6 +506,8 @@ const NuevoPaciente = () => {
                                 </div>
                             ) : null  }
 
+
+
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_dispositivo_o2">
                                     Dispositivo O2
@@ -546,6 +562,41 @@ const NuevoPaciente = () => {
                                     />
                                     <label htmlFor="pac_hemodialisis_false">No</label>
                                 </div>
+                            </div>
+
+                            <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="caracteristicas_especiales">
+                                Caracteristicas Especiales 
+                            </label>
+                            {[
+                                'TrasladoDeHospital',
+                                'InfeccionReciente',
+                                'Embarazo',
+                                'Inmunosupresion',
+                            ].map((option) => (
+                                <label key={option} className="block">
+                                <input
+                                    type="checkbox"
+                                    name="caracteristicas_especiales"
+                                    value={option}
+                                    onChange={(e) => {
+                                    const isChecked = e.target.checked;
+                                    const value = e.target.value;
+
+                                    formik.setFieldValue(
+                                        'caracteristicas_especiales',
+                                        isChecked
+                                        ? [...formik.values.caracteristicas_especiales, value]
+                                        : formik.values.caracteristicas_especiales.filter((val) => val !== value)
+                                    );
+                                    }}
+                                    onBlur={formik.handleBlur}
+                                    checked={formik.values.caracteristicas_especiales.includes(option)}
+                                    className="mr-2"
+                                />
+                                {option}
+                                </label>
+                            ))}
                             </div>
 
                             <div className="mb-4" hidden>

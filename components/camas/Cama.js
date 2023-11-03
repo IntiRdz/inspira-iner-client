@@ -17,6 +17,7 @@ query ObtenerCamas {
     id
     cama_numero
     cama_compartida
+    cama_prioridad
     cama_disponible
     cama_ocupada
     cama_genero
@@ -42,6 +43,7 @@ const Cama = ({cama}) => {
     const { 
         cama_numero,
         cama_compartida,
+        cama_prioridad,
         cama_disponible,
         cama_ocupada,
         cama_genero,
@@ -92,6 +94,7 @@ const Cama = ({cama}) => {
                 >
                 {cama_compartida ? 'Compartido' : 'Asilado'}
             </td>
+            <td className="border px-4 py-2">{cama_prioridad} </td>
             <td className="border px-4 py-2">{cama_disponible ? 'Disponible' : 'No disponible'} </td>
             <td className="border px-4 py-2">{cama_ocupada ? 'Ocupada' : 'Libre'} </td>
             <td className="border px-4 py-2">{cama_genero} </td>
