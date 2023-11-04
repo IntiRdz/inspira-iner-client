@@ -249,7 +249,7 @@ const PacienteNoHosp = ({paciente}) => {
                 <td className="border px-1 py-1">{pac_apellido_materno}</td>
                 <td className="border px-1 py-1">{pac_nombre}</td>
                 <td className="border px-1 py-1">{calcularEdad(paciente.pac_FN)}</td>
-                <td className="border px-1 py-1">{pac_genero}</td>
+                <td className="border border-l-4 border-l-sky-700 px-1 py-1">{pac_genero}</td>
                 <td className="border px-1 py-1">{pac_dispositivo_o2}</td>
                 <td className="border px-1 py-1">{pac_hemodialisis ? 'Sí' : 'No'}</td>
                 <td className="border px-1 py-1">{caracteristicas_especiales}</td>
@@ -283,7 +283,7 @@ const PacienteNoHosp = ({paciente}) => {
                     )}
                 </td>
                 <td className="border px-1 py-1">{diagnostico}</td>
-                <td className="border px-1 py-1">{fecha_ingreso? format(new Date(paciente.fecha_ingreso), 'dd-MM-yy') : ''}</td>
+                <td className="border border-l-4 border-l-sky-700 px-1 py-1">{fecha_ingreso? format(new Date(paciente.fecha_ingreso), 'dd-MM-yy') : ''}</td>
                 <td className="border px-1 py-1">{calcularDias(paciente.fecha_ingreso)}</td>
                 <td className="border px-1 py-1">{fecha_egreso? format(new Date(paciente.fecha_egreso), 'dd-MM-yy') : ''}</td>
                 <td className="border px-1 py-1">

@@ -81,9 +81,6 @@ const NoHospitalizados = () => {
     <div>
       <Layout>
         <h1 className="text-xl text-gray-800 font-light">Pacientes</h1>
-        <Link href="/nuevopaciente">
-          <a className="bg-blue-800 py-2 px-4 mt-3 inline-block text-white rounded text-xs hover:bg-gray-800 mb-3 uppercase font-bold w-full lg:w-auto text-center">Nuevo Paciente</a>
-        </Link>
 
           <table className="table-auto shadow-md mt-10 w-full w-lg">
             <thead className="bg-gray-800">
