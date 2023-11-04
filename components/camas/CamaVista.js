@@ -2,9 +2,8 @@
 const CamaVista = ({cama}) => {
     const { 
         cama_numero,
+        cama_prioridad,
         cama_compartida,
-        cama_disponible,
-        cama_ocupada,
         cama_genero,
         cama_dispositivo_o2,
         cama_hemodialisis,
@@ -16,7 +15,8 @@ const CamaVista = ({cama}) => {
 
     return ( 
         <tr>
-            <td className="border px-4 py-2">{cama_numero} </td>
+            <td className="border px-1 py-1">{cama_numero} </td>
+            <td className="border px-1 py-1">{cama_prioridad} </td>
             <td
                 className={`border px-4 py-2 ${
                     (() => {
@@ -31,13 +31,11 @@ const CamaVista = ({cama}) => {
                 >
                 {cama_compartida ? 'Compartido' : 'Asilado'}
             </td>
-            <td className="border px-4 py-2">{cama_disponible ? 'Disponible' : 'No disponible'} </td>
-            <td className="border px-4 py-2">{cama_ocupada ? 'Ocupada' : 'Libre'} </td>
-            <td className="border px-4 py-2">{cama_genero} </td>
-            <td className="border px-4 py-2">{cama_dispositivo_o2} </td>
-            <td className="border px-4 py-2">{cama_hemodialisis ? 'HD' : 'No HD'} </td>
+            <td className="border px-1 py-1">{cama_genero} </td>
+            <td className="border px-1 py-1">{cama_dispositivo_o2} </td>
+            <td className="border px-1 py-1">{cama_hemodialisis ? 'HD' : 'No HD'} </td>
             <td
-                className={`border px-4 py-2 ${
+                className={`border px-1 py-1 ${
                     (() => {
                     switch (cama_codigo_uveh) {
                         case 'Previamente_Acinetobacter':
@@ -58,7 +56,7 @@ const CamaVista = ({cama}) => {
             </td>
            {/*  <td className="border px-4 py-2">{cama_aislamiento ? 'Sí' : 'No'} </td> */}
             <td
-                className={`border px-4 py-2 ${
+                className={`border px-1 py-1 ${
                     (() => {
                     switch (cama_aislamiento) {
                         case true:
@@ -73,7 +71,7 @@ const CamaVista = ({cama}) => {
             </td>
             {/* <td className="border px-4 py-2">{cama_dan ? 'Sí' : 'No'} </td> */}
             <td
-                className={`border px-4 py-2 ${
+                className={`border px-1 py-1 ${
                     (() => {
                     switch (cama_dan) {
                         case true:

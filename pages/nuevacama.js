@@ -91,7 +91,6 @@ const NuevaCama = () => {
         },
         validationSchema: Yup.object({
             cama_numero: Yup.number().required('El número de la cama es obligatorio').positive('No se aceptan números negativos'),
-            cama_compartida: Yup.bool(),
             cama_prioridad: Yup.string().oneOf([
                 'COVID', 
                 'VirusRespiratorios', 
@@ -99,6 +98,7 @@ const NuevaCama = () => {
                 'TuberculosisSensible',
                 'TuberculosisResistente'
             ]),
+            cama_compartida: Yup.bool(),
             cama_disponible: Yup.bool(),
             cama_ocupada: Yup.bool(),
             cama_genero: Yup.string().oneOf([

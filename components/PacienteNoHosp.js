@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import { gql, useMutation } from '@apollo/client';
 import Router from 'next/router';
 import { format, differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
+import { Bug, Eye } from "lucide-react";
 
 //Esta busqueda es para modifcar al encotrado en el botón 
 //Utilizo el resolver de eliminar que modifiqué por dentro 
@@ -66,9 +67,6 @@ query ObtenerPacientes {
 }
 `;
 
-
-//Esta busqueda es para modifcar al encotrado en el botón 
-
 let contador = 0
 
 const PacienteNoHosp = ({paciente}) => {
@@ -90,7 +88,7 @@ const PacienteNoHosp = ({paciente}) => {
     const esManana = isTomorrow(new Date(paciente.fecha_prealta));
 
     // Clases CSS condicionales para cambiar el fondo de la columna
-    let fechaPreAltaClasses = "border px-2 py-2";
+    let fechaPreAltaClasses = "border px-1 py-1";
     if (esManana) {
         fechaPreAltaClasses += " bg-blue-500"; // Cambia el color de fondo a azul si es mañana
     }
@@ -107,7 +105,7 @@ const PacienteNoHosp = ({paciente}) => {
     paciente.diagnostico1.includes(keyword));
 
     // Clases CSS condicionales para cambiar el fondo de la columna
-    let diagnostico1Classes = "border px-4 py-2";
+    let diagnostico1Classes = "border px-1 py-1";
 
     switch (true) {
     case isCodigoRojo:
@@ -137,7 +135,7 @@ const PacienteNoHosp = ({paciente}) => {
     const isCodigoUve9 = ["TuberculosisisOSospecha"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
     const isCodigoUve10 = ["SAMS"].some((keyword) =>paciente.pac_codigo_uveh.includes(keyword));
     
-    let codigoUvehClasses = "px-2 py-2";
+    let codigoUvehClasses = "px-1 py-1";
 
     switch (true) {
         case  isCodigoUve1:
@@ -232,11 +230,11 @@ const PacienteNoHosp = ({paciente}) => {
     console.log("paciente recibido",paciente)
 
     return ( 
-            <tr className="h-8">
+            <tr>
                 {/* <td className="border px-2 py-2">{contador++}</td>  */}
-                <td className="border px-2 py-2">{expediente}</td>
+                <td className="border px-1 py-1">{expediente}</td>
                 {/* <td className="border px-2 py-2">{cama_numero}</td> */}
-                <td className="border px-2 py-2">
+                <td className="border px-1 py-1">
                     {Array.isArray(paciente.cama_relacionada) ? (
                         paciente.cama_relacionada.map((cama, index) => (
                         <div key={index}>{cama.cama_numero}</div>
@@ -247,14 +245,14 @@ const PacienteNoHosp = ({paciente}) => {
                         ))
                     )}
                 </td>
-                <td className="border px-2 py-2">{pac_apellido_paterno}</td>
-                <td className="border px-2 py-2">{pac_apellido_materno}</td>
-                <td className="border px-2 py-2">{pac_nombre}</td>
-                <td className="border px-2 py-2">{calcularEdad(paciente.pac_FN)}</td>
-                <td className="border px-2 py-2">{pac_genero}</td>
-                <td className="border px-2 py-2">{pac_dispositivo_o2}</td>
-                <td className="border px-2 py-2">{pac_hemodialisis ? 'Sí' : 'No'}</td>
-                <td className="border px-2 py-2">{caracteristicas_especiales}</td>
+                <td className="border px-1 py-1">{pac_apellido_paterno}</td>
+                <td className="border px-1 py-1">{pac_apellido_materno}</td>
+                <td className="border px-1 py-1">{pac_nombre}</td>
+                <td className="border px-1 py-1">{calcularEdad(paciente.pac_FN)}</td>
+                <td className="border px-1 py-1">{pac_genero}</td>
+                <td className="border px-1 py-1">{pac_dispositivo_o2}</td>
+                <td className="border px-1 py-1">{pac_hemodialisis ? 'Sí' : 'No'}</td>
+                <td className="border px-1 py-1">{caracteristicas_especiales}</td>
                 <td className={codigoUvehClasses}>
                     {Array.isArray(paciente.pac_codigo_uveh) ? (
                         paciente.pac_codigo_uveh.map((codigo_uveh, index) => (
@@ -264,7 +262,7 @@ const PacienteNoHosp = ({paciente}) => {
                         paciente.pac_codigo_uveh
                     )}
                 </td>
-                <td className="border px-2 py-2">
+                <td className="border px-1 py-1">
                     {Array.isArray(paciente.microorganismo_relacionado) ? (
                         paciente.microorganismo_relacionado.map((microorganismo, index) => (
                         <div key={index}>{microorganismo.microorganismo_nombre}</div>
@@ -284,11 +282,11 @@ const PacienteNoHosp = ({paciente}) => {
                         paciente.diagnostico1 // Si no es un array, muestra el valor tal cual
                     )}
                 </td>
-                <td className="border px-2 py-2">{diagnostico}</td>
-                <td className="border px-2 py-2">{fecha_ingreso? format(new Date(paciente.fecha_ingreso), 'dd-MM-yy') : ''}</td>
-                <td className="border px-2 py-2">{calcularDias(paciente.fecha_ingreso)}</td>
-                <td className="border px-2 py-2">{fecha_egreso? format(new Date(paciente.fecha_egreso), 'dd-MM-yy') : ''}</td>
-                <td className="border px-2 py-2">
+                <td className="border px-1 py-1">{diagnostico}</td>
+                <td className="border px-1 py-1">{fecha_ingreso? format(new Date(paciente.fecha_ingreso), 'dd-MM-yy') : ''}</td>
+                <td className="border px-1 py-1">{calcularDias(paciente.fecha_ingreso)}</td>
+                <td className="border px-1 py-1">{fecha_egreso? format(new Date(paciente.fecha_egreso), 'dd-MM-yy') : ''}</td>
+                <td className="border px-1 py-1">
                     <button
                         type="button"
                         className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
@@ -299,27 +297,27 @@ const PacienteNoHosp = ({paciente}) => {
                         <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </button>
                 </td>
-                <td className="border px-4 py-2">
+                <td className="border px-1 py-1">
                     <button
                         type="button"
                         className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
                         onClick={() => asignarMicroorganismo() }
                     >
-                        + Microorganismo
+                        <Bug/>
 
                         <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </button>
                 </td>           
 
-                <td className="border px-4 py-2">
+                <td className="border px-1 py-1">
                     <button
                         type="button"
                         className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
                         onClick={() => verMicroorganismo() }
                     >
-                        Microorganismos
+                    <Bug/>  
+                    <Eye/>
 
-                        <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </button>
                 </td>
             </tr>

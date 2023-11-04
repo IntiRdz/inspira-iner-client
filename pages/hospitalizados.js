@@ -84,35 +84,34 @@ const Index = () => {
         <Link href="/nuevopaciente">
           <a className="bg-blue-800 py-2 px-4 mt-3 inline-block text-white rounded text-xs hover:bg-gray-800 mb-3 uppercase font-bold w-full lg:w-auto text-center">Nuevo Paciente</a>
         </Link>
-
-        <div className="overflow-x-scroll">
+        
           <table className="table-auto shadow-md mt-10 w-full w-lg">
             <thead className="bg-gray-800">
               <tr className="text-white">
               {/* <th className="border px-2 py-2">#</th> */}
-                <th className="border px-2 py-2">Expediente</th>
-                <th className="border px-2 py-2">Cama</th>
-                <th className="border px-2 py-2">Apellido Paterno</th>
-                <th className="border px-2 py-2">Apellido Materno</th>
-                <th className="border px-2 py-2">Nombre</th>
-                <th className="border px-2 py-2">Edad</th>
-                <th className="border px-2 py-2">Genero</th>
-                <th className="border px-2 py-2">Dispositivo O2</th>
-                <th className="border px-2 py-2">Hemodialisis</th>
-                <th className="border px-2 py-2">Caracteristicas Especiales</th>
-                <th className="border px-2 py-2">Código UVEH</th>
-                <th className="border px-2 py-2">Microorganismo</th>
-                <th className="border px-2 py-2">Diagnósticos Generales</th>
-                <th className="border px-2 py-2">Diagnósticos Específicos</th>
-                <th className="border px-2 py-2">Ingreso</th>
-                <th className="border px-2 py-2">DEH</th>
-                <th className="border px-2 py-2">Prealta</th>
+                <th className="w-1/20 border px-1 py-1">Expediente</th>
+                <th className="w-1/20 border px-1 py-1">Cama</th>
+                <th className="w-1/20 border px-1 py-1">Apellido Paterno</th>
+                <th className="w-1/20 border px-1 py-1">Apellido Materno</th>
+                <th className="w-1/20 border px-1 py-1">Nombre</th>
+                <th className="w-1/20 border px-1 py-1">Edad</th>
+                <th className="w-1/20 border px-1 py-1">Genero</th>
+                <th className="w-1/20 border px-1 py-1">Dispositivo O2</th>
+                <th className="w-1/20 border px-1 py-1">Hemodialisis</th>
+                <th className="w-1/20 border px-1 py-1">Caracteristicas Especiales</th>
+                <th className="w-1/20 border px-1 py-1">Código UVEH</th>
+                <th className="w-1/20 border px-1 py-1">Microorganismo</th>
+                <th className="w-1/20 border px-1 py-1">Diagnósticos Generales</th>
+                <th className="w-1/20 border px-1 py-1">Diagnósticos Específicos</th>
+                <th className="w-1/20 border px-1 py-1">Ingreso</th>
+                <th className="w-1/20 border px-1 py-1">DEH</th>
+                <th className="w-1/20 border px-1 py-1">Prealta</th>
                 {/* <th className="border px-2 py-2">Egreso</th> */}
                 {/* <th className="border px-2 py-2">Hospitalizado</th> */}
                 {/* <th className="w-1/6 py-2 text-xs">Eliminar</th> */}
-                <th className="border px-2 py-2">Editar</th>
-                <th className="border px-2 py-2">Asignar Micro</th>
-                <th className="border px-2 py-2">Ver Micro</th>
+                <th className="w-1/20 border px-1 py-1">Editar</th>
+                <th className="w-1/20 border px-1 py-1">Asignar Micro</th>
+                <th className="w-1/20 border px-1 py-1">Ver Micro</th>
               </tr>
             </thead>
             <tbody className="bg-white">
@@ -126,7 +125,6 @@ const Index = () => {
               ))}
             </tbody>
           </table>
-        </div>
       </Layout>
     </div>
   )

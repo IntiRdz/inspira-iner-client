@@ -48,23 +48,23 @@ const Camas = () => {
           <table className="table-auto shadow-md mt-10 w-full w-lg">
             <thead className="bg-gray-800">
               <tr className="text-white">
-                  <th className="w-1/7 py-2"> # </th>
-                  <th className="w-1/6 py-2">Cubículo</th>
-                  <th className="w-1/6 py-2">Prioridad</th>
-                  <th className="w-1/7 py-2">Estado</th>
-                  <th className="w-1/7 py-2">Disponibilidad</th>
-                  <th className="w-1/7 py-2">Género</th>
-                  <th className="w-1/6 py-2">Dispositivo O2</th>
-                  <th className="w-1/6 py-2">Hemodialisis</th>
-                  <th className="w-1/5 py-2">Código UVEH</th>
-                  <th className="w-1/5 py-2">Aislamiento</th>
-                  <th className="w-1/5 py-2">DAN</th>
-                  <th className="w-1/5 py-2">Editar</th>
+                  <th className="w-1/14 px-1 py-1"> # </th>
+                  <th className="w-1/12 px-1 py-1">Cubículo</th>
+                  <th className="w-1/12 px-1 py-1">Prioridad</th>
+                  <th className="w-1/12 px-1 py-1">Estado</th>
+                  <th className="w-1/12 px-1 py-1">Disponibilidad</th>
+                  <th className="w-1/12 px-1 py-1">Género</th>
+                  <th className="w-1/12 px-1 py-1">Dispositivo O2</th>
+                  <th className="w-1/12 px-1 py-1">Hemodialisis</th>
+                  <th className="w-1/11 px-1 py-1">Código UVEH</th>
+                  <th className="w-1/12 px-1 py-1">Aislamiento</th>
+                  <th className="w-1/12 px-1 py-1">DAN</th>
+                  <th className="w-1/12 px-1 py-1">Editar</th>
               </tr>
             </thead>
             <tbody className="bg-white">
             {Array.from(data.obtenerCamas)
-              .sort((a, b) => parseInt(b.cama_numero) - parseInt(a.cama_numero))
+              .sort((a, b) => parseInt(a.cama_numero) - parseInt(b.cama_numero))
               .map((cama) => (
                 <Cama 
                   key={cama.id} 
