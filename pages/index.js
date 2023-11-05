@@ -57,7 +57,6 @@ query ObtenerPacientes {
 }
 `;
 
-
 const Index = () => {
 
   const router = useRouter();
@@ -110,10 +109,11 @@ const Index = () => {
             <tbody className="bg-white">
             {Array.from(data.obtenerPacientes)
               .sort((a, b) => parseInt(a.cama_numero) - parseInt(b.cama_numero))
-              .map((paciente) => (
+              .map((paciente, index) => (
                 <Paciente 
                   key={paciente.id} 
                   paciente={paciente}
+                  contador={index + 1}
                 />
             ))}
             </tbody>

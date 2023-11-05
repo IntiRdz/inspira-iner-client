@@ -2,8 +2,6 @@ import Layout from '../components/Layout';
 import PacienteNoHosp from '../components/PacienteNoHosp';
 import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router';
-import Link from 'next/link'
-
 
 //De aquí con las busquedas reales
 const OBTENER_PACIENTES_NO_HOSPITALIZADOS = gql`
@@ -20,6 +18,7 @@ query ObtenerPacientesNoHospitalizados {
     pac_hemodialisis
     diagnostico
     diagnostico1
+    caracteristicas_especiales
     pac_codigo_uveh
     fecha_ingreso
     fecha_prealta
@@ -58,12 +57,9 @@ query ObtenerPacientesNoHospitalizados {
 }
 `;
 
-
-
 const NoHospitalizados = () => {
 
   const router = useRouter();
-
   // Consulta de Apollo
   const { data, loading, error } = useQuery(OBTENER_PACIENTES_NO_HOSPITALIZADOS);
 
@@ -85,7 +81,7 @@ const NoHospitalizados = () => {
           <table className="table-auto shadow-md mt-10 w-full w-lg">
             <thead className="bg-gray-800">
               <tr className="text-white">
-              {/* <th className="border px-2 py-2">#</th> */}
+                <th className="border px-2 py-2">#</th>
                 <th className="w-1/20 border px-1 py-1">Expediente</th>
                 <th className="w-1/20 border px-1 py-1">Cama</th>
                 <th className="w-1/20 border px-1 py-1">Apellido Paterno</th>
@@ -113,10 +109,11 @@ const NoHospitalizados = () => {
             <tbody className="bg-white">
             {Array.from(data.obtenerPacientesNoHospitalizados)
                 .sort((a, b) => parseInt(b.cama_numero) - parseInt(a.cama_numero))
-                .map((paciente,) => (
+                .map((paciente, index) => (
                 <PacienteNoHosp 
                   key={paciente.id} 
                   paciente={paciente}
+                  contador={index + 1}
                 />
               ))}
             </tbody>

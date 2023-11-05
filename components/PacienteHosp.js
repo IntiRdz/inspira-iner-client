@@ -1,5 +1,4 @@
 import React from 'react';
-import Swal from 'sweetalert2';
 import { gql, useMutation } from '@apollo/client';
 import Router from 'next/router';
 import { format, differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
@@ -67,9 +66,7 @@ query ObtenerPacientes {
 }
 `;
 
-let contador = 0
-
-const PacienteHosp = ({paciente}) => {
+const PacienteHosp = ({paciente, contador}) => {
     //console.log("Paciente del componente Paciente",paciente)
     
     const calcularEdad = (fechaNacimiento) => {
@@ -189,7 +186,7 @@ const PacienteHosp = ({paciente}) => {
         }
     }  );
 
-    console.log("el ID del paciente es",paciente.id)
+    //console.log("el ID del paciente es",paciente.id)
     const { 
         expediente,
         cama_numero,
@@ -232,17 +229,17 @@ const PacienteHosp = ({paciente}) => {
 
     return ( 
             <tr>
-                {/* <td className="border px-2 py-2">{contador++}</td>  */}
+                <td className="border px-2 py-2">{contador}</td>
                 <td className="border px-1 py-1">{expediente}</td>
                 {/* <td className="border px-2 py-2">{cama_numero}</td> */}
                 <td className="border px-1 py-1">
                     {Array.isArray(paciente.cama_relacionada) ? (
-                        paciente.cama_relacionada.map((cama, index) => (
-                        <div key={index}>{cama.cama_numero}</div>
+                        [...paciente.cama_relacionada].reverse().map((cama, index) => (
+                            <div key={index}>{cama.cama_numero}</div>
                         ))
                     ) : (
-                        paciente.cama_relacionada.map((cama, index) => (
-                        <div key={index}>{cama.cama_numero}</div>
+                        [...paciente.cama_relacionada].reverse().map((cama, index) => (
+                            <div key={index}>{cama.cama_numero}</div>
                         ))
                     )}
                 </td>
