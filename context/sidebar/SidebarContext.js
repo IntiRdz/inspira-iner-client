@@ -2,7 +2,7 @@
 import { createContext } from "react";
 
 const SidebarContext = createContext({
-  expanded: true,
+  expanded: false,
   setExpanded: () => {}
 });
 

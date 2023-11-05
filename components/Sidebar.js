@@ -5,7 +5,7 @@ import { MoreVertical, ChevronLast, ChevronFirst, UserCircle2 } from "lucide-rea
 import { AuthContext } from '../context/usuarios/AuthContext';
 
 const Sidebar = ({ children }) => {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   const { user, cerrarSesion } = useContext(AuthContext);
   if (!user) return <div>Cargando...</div>; // O cualquier otra señal de carga que prefieras
@@ -48,6 +48,13 @@ const Sidebar = ({ children }) => {
                     <span className="text-xs text-white font-semibold">{user.nombre} {user.apellido}</span>
                     </div>
                     <MoreVertical size={20} />
+                    <button 
+                        onClick={() => cerrarSesion() }
+                        type="button"
+                        className="bg-blue-800 w-full sm:w-auto font-bold uppercase text-xs rounded py-1 px-2 text-white shadow-md"    
+                    >
+                        Cerrar Sesión
+                    </button>
                 </div>
                 </div>
             </nav>
