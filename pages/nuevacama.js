@@ -81,7 +81,7 @@ const NuevaCama = () => {
             cama_compartida: true,
             cama_prioridad: 'SinPrioridad',
             cama_disponible: true,
-            cama_ocupada: false,
+            cama_ocupada: true,
             cama_genero: 'Indeterminado',
             cama_dispositivo_o2: 'VM',
             cama_hemodialisis: true,
