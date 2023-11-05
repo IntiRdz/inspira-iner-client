@@ -105,6 +105,7 @@ const EditarCama = () => {
     const schemaValidacion = Yup.object({
         cama_numero: Yup.number().required('El número de la cama es obligatorio').positive('No se aceptan números negativos'),
         cama_prioridad: Yup.string().oneOf([
+            'SinPrioridad',
             'COVID', 
             'VirusRespiratorios', 
             'B24',

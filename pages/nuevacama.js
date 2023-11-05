@@ -79,7 +79,7 @@ const NuevaCama = () => {
         initialValues: {
             cama_numero: '',
             cama_compartida: true,
-            cama_prioridad: '',
+            cama_prioridad: 'SinPrioridad',
             cama_disponible: true,
             cama_ocupada: false,
             cama_genero: 'Indeterminado',
@@ -92,6 +92,7 @@ const NuevaCama = () => {
         validationSchema: Yup.object({
             cama_numero: Yup.number().required('El número de la cama es obligatorio').positive('No se aceptan números negativos'),
             cama_prioridad: Yup.string().oneOf([
+                'SinPrioridad',
                 'COVID', 
                 'VirusRespiratorios', 
                 'B24',
@@ -264,7 +265,8 @@ const NuevaCama = () => {
                                 value={formik.values.cama_prioridad}
                                 name="cama_prioridad" // Agrega el atributo name para que Formik pueda rastrear el campo
                             >
-                                <option value="" label="Seleccione un género" />
+                                <option value="" label="Seleccione un género"/>
+                                <option value="SinPrioridad" label="Sin Prioridad" />
                                 <option value="COVID" label="COVID" />
                                 <option value="VirusRespiratorios" label="Virus Respiratorios" />
                                 <option value="B24" label="B24" />
