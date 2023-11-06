@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { gql, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router'
+import { InspiraLetter } from '../components/icons/InspiraLetter';
 
 const AUTENTICAR_USUARIO = gql`
     mutation autenticarUsuario($input: AutenticarInput) {
@@ -89,12 +90,16 @@ const Login = () => {
 
         <>
             <Layout>
-                <h1 className="text-center text-2xl text-white font-light">Login</h1>
 
                 {mensaje && mostrarMensaje() }
 
+                <div className="flex justify-center">
+                    <InspiraLetter className="text-center" fill="#FFFFFF" width="270px" height="120px" />
+                </div>
+
                 <div className="flex justify-center mt-5">
                     <div className="w-full max-w-sm">
+
                         <form
                             className="bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4"
                             onSubmit={formik.handleSubmit}
