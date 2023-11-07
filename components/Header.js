@@ -16,7 +16,7 @@ const OBTENER_USUARIO = gql`
 const Header = () => {
     const router = useRouter();
 
-/*     const isTokenExpired = (token) => {
+     const isTokenExpired = (token) => {
         const decodedToken = jwtDecode(token);
         const currentTime = Date.now() / 1000; 
         return decodedToken.exp < currentTime;
@@ -41,7 +41,7 @@ const Header = () => {
     const cerrarSesion = () => {
         localStorage.removeItem('token');
         router.push('/login');
-    } */
+    }
 
     
 

@@ -1,4 +1,3 @@
-// AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -38,7 +37,10 @@ export const AuthProvider = ({ children }) => {
                 }
             }
         } else {
-            router.replace('/login');
+            // Verifica si la ruta actual no es 'nuevacuenta' para redirigir
+            if (router.pathname !== '/nuevacuenta') {
+                router.replace('/login');
+            }
         }
     }, [authToken, data, router]);
 
