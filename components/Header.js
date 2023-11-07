@@ -36,13 +36,13 @@ const Header = () => {
 
     if (loading) return null;
 
-    const { nombre, apellido } = data.obtenerUsuario;
+/*     const { nombre, apellido } = data.obtenerUsuario; 
 
     const cerrarSesion = () => {
         localStorage.removeItem('token');
         router.push('/login');
     }
-
+*/
     
 
     return ( 

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import CamaVista from '../components/camas/CamaVista';
 import { gql, useQuery } from '@apollo/client'
@@ -26,9 +27,18 @@ const OBTENER_CAMAS_DISPONIBLES = gql`
 const CamasDisponibles = () => {
 
   // Consultar los camas
+  const [camas, setCamas] = useState(null);
   const { data, loading, error } = useQuery(OBTENER_CAMAS_DISPONIBLES)
 
-  if(loading) return 'cargando...';
+  useEffect(() => {
+    if (data && data.obtenerCamasDisponibles) {
+      setCamas(data.obtenerCamasDisponibles);
+    }
+  }, [data]);
+
+  if (loading) return 'Cargando...';
+  if (error) return `Error: ${error.message}`;
+  if (!camas) return 'No hay datos disponibles';
 
   return (
     <div>

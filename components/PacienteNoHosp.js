@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import Router from 'next/router';
-import { format, differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
 import { Bug, Eye } from "lucide-react";
+import { format, parseISO, differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
 
 //Esta busqueda es para modifcar al encotrado en el botón 
 //Utilizo el resolver de eliminar que modifiqué por dentro 
@@ -70,16 +70,24 @@ const PacienteNoHosp = ({paciente, contador}) => {
     //console.log("Paciente del componente Paciente",paciente)
     
     const calcularEdad = (fechaNacimiento) => {
+        if (!fechaNacimiento) return ''; // Verifica si la fecha de nacimiento es proporcionada
+    
         const hoy = new Date();
-        const fechaNac = new Date(fechaNacimiento);
-        return differenceInYears(hoy, fechaNac);
-    };  
-
-    const calcularDias = (fechaIngreso) => {
-        const hoy = new Date();
-        const fechaIng = new Date(fechaIngreso);
-        return differenceInDays(fecha_egreso, fechaIng);
-    }; 
+        const fechaNac = parseISO(fechaNacimiento);
+        const edad = differenceInYears(hoy, fechaNac);
+    
+        return isNaN(edad) ? '' : edad; // Maneja NaN
+    };
+    
+    const calcularDias = (fechaIngreso, fechaEgreso) => {
+        if (!fechaIngreso) return ''; // Verifica si la fecha de ingreso es proporcionada
+    
+        const fechaIng = parseISO(fechaIngreso);
+        const fechaEgr = fechaEgreso ? parseISO(fechaEgreso) : new Date(); // Usa la fecha actual si no se proporciona fechaEgreso
+        const dias = differenceInDays(fechaEgr, fechaIng);
+    
+        return isNaN(dias) ? '' : dias; // Maneja NaN
+    };
     
     // Verificar si la fecha recibida es mañana
     const esManana = isTomorrow(new Date(paciente.fecha_prealta));
@@ -280,7 +288,7 @@ const PacienteNoHosp = ({paciente, contador}) => {
                 </td>
                 <td className="border px-1 py-1">{diagnostico}</td>
                 <td className="border border-l-4 border-l-sky-700 px-1 py-1">{fecha_ingreso? format(new Date(paciente.fecha_ingreso), 'dd-MM-yy') : ''}</td>
-                <td className="border px-1 py-1">{calcularDias(paciente.fecha_ingreso)}</td>
+                <td className="border px-1 py-1">{calcularDias(paciente.fecha_ingreso, paciente.fecha_egreso)}</td>
                 <td className="border px-1 py-1">{fecha_egreso? format(new Date(paciente.fecha_egreso), 'dd-MM-yy') : ''}</td>
                 <td className="border px-1 py-1">
                     <button
