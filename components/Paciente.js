@@ -232,7 +232,7 @@ const Paciente = ({paciente, contador }) => {
             <tr>
                 <td className="border px-1 py-1">{contador}</td>
                 <td className="border px-1 py-1">{expediente}</td>
-                <td className="border px-1 py-1">
+{/*                 <td className="border px-1 py-1">
                     {Array.isArray(paciente.cama_relacionada) ? (
                         [...paciente.cama_relacionada].reverse().map((cama, index) => (
                             <div key={index}>{cama.cama_numero}</div>
@@ -241,6 +241,13 @@ const Paciente = ({paciente, contador }) => {
                         [...paciente.cama_relacionada].reverse().map((cama, index) => (
                             <div key={index}>{cama.cama_numero}</div>
                         ))
+                    )}
+                </td> */}
+                <td className="border px-1 py-1">
+                    {Array.isArray(paciente.cama_relacionada) && paciente.cama_relacionada.length > 0 ? (
+                        <div>{paciente.cama_relacionada[paciente.cama_relacionada.length - 1].cama_numero}</div>
+                    ) : (
+                        <div>No hay cama relacionada</div>
                     )}
                 </td>
                 <td className="border px-1 py-1">{pac_apellido_paterno}</td>

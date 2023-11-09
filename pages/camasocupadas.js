@@ -43,13 +43,7 @@ const CamasOcupadas = () => {
   return (
     <div>
       <Layout>
-          <h1 className="text-2xl text-gray-800 font-light">Camas</h1>
-
-          <Link href="/camas">
-            <a className="bg-blue-800 py-2 px-5 mt-3 inline-block text-white hover:bg-gray-800 hover:text-gray-200 mb-3 rounded uppercase font-bold text-sm">
-              Regresar
-            </a>
-          </Link>
+          <h2 className="text-2xl text-gray-800 font-light">Camas</h2>
 
           <table className="table-auto shadow-md mt-10 w-full w-lg">
             <thead className="bg-gray-800">

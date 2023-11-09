@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.8.6",
+    "@material-tailwind/react": "^2.1.4",
     "autoprefixer": "^10.4.16",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",

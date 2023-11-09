@@ -12,29 +12,27 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+
+.form-row {
+    display: flex;
+    width: 100%; /* Asegura que la fila ocupe todo el ancho disponible */
+    justify-content: stretch; /* Estira los elementos hijos para que llenen el espacio disponible */
 }
 
-* {
-  box-sizing: border-box;
+.form-column {
+    flex: 1; /* Cada columna ocupa una fracción igual del espacio disponible */
+    padding: 10px; /* Espacio alrededor de cada columna */
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
-}
 
-.bg-red-800 {
-  background-color: #e53e3e;
-}
+@media screen and (max-width: 768px) {
+    .form-row {
+        display: block; /* Cambia a un diseño de bloque para apilar los elementos verticalmente */
+    }
 
-.bg-green-800 {
-  background-color: #48bb78;
+    .form-column {
+        flex: none; /* Deshabilita el comportamiento de flexbox */
+        width: 100%; /* Hace que cada columna ocupe el ancho completo */
+        padding: 10px 0; /* Ajusta el relleno para una mejor visualización en dispositivos móviles */
+    }
 }

@@ -1,12 +1,12 @@
 import Layout from '../components/Layout';
-import PacienteHosp from '../components/PacienteHosp';
+import Paciente from '../components/Paciente';
 import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router';
 
 //De aquí con las busquedas reales
-const OBTENER_PACIENTES_HOSPITALIZADOS = gql`
-query ObtenerPacientesHospitalizados {
-  obtenerPacientesHospitalizados {
+const OBTENER_PACIENTES = gql`
+query ObtenerPacientes {
+  obtenerPacientes {
     id
     expediente
     pac_apellido_paterno
@@ -57,11 +57,11 @@ query ObtenerPacientesHospitalizados {
 }
 `;
 
-const Hospitalizados = () => {
+const Index = () => {
 
   const router = useRouter();
   // Consulta de Apollo
-  const { data, loading, error } = useQuery(OBTENER_PACIENTES_HOSPITALIZADOS);
+  const { data, loading, error } = useQuery(OBTENER_PACIENTES);
 
   //console.log(data)
   // console.log(loading)
@@ -69,18 +69,18 @@ const Hospitalizados = () => {
   
   if(loading) return 'Cargando....';
 
-  if( !data.obtenerPacientesHospitalizados ) {
+  if( !data.obtenerPacientes ) {
     return router.push('/login');
   } 
 
   return (
     <div>
       <Layout>
-        <h1 className="text-xl text-gray-800 font-light">Pacientes</h1>
-        
+        <h2 className="text-xl text-gray-800 font-light">Pacientes</h2>
+
           <table className="table-auto shadow-md mt-10 w-full w-lg">
             <thead className="bg-gray-800">
-            <tr className="text-white">
+              <tr className="text-white">
                 <th className="w-1/23 border px-1 py-1">#</th>
                 <th className="w-1/23 border px-1 py-1">Expediente</th>
                 <th className="w-1/23 border px-1 py-1">Cama</th>
@@ -99,32 +99,33 @@ const Hospitalizados = () => {
                 <th className="w-1/23 border px-1 py-1">Ingreso</th>
                 <th className="w-1/23 border px-1 py-1">DEH</th>
                 <th className="w-1/23 border px-1 py-1">Prealta</th>
-                {/* <th className="w-1/23 border px-1 py-1">Egreso</th>
-                <th className="w-1/23 border px-1 py-1">Hospitalizado</th> */}
+                <th className="w-1/23 border px-1 py-1">Egreso</th>
+                <th className="w-1/23 border px-1 py-1">Hospitalizado</th>
                 <th className="w-1/23 border px-1 py-1">Editar</th>
                 <th className="w-1/23 border px-1 py-1">Asignar Micro</th>
                 <th className="w-1/23 border px-1 py-1">Ver Micro</th>
               </tr>
             </thead>
             <tbody className="bg-white">
-            {Array.from(data.obtenerPacientesHospitalizados)
+            {Array.from(data.obtenerPacientes)
               .sort((b, a) => {
                 const lastCamaA = a.cama_relacionada.length > 0 ? a.cama_relacionada[a.cama_relacionada.length - 1].cama_numero : 0;
                 const lastCamaB = b.cama_relacionada.length > 0 ? b.cama_relacionada[b.cama_relacionada.length - 1].cama_numero : 0;
                 return parseInt(lastCamaB) - parseInt(lastCamaA);
               })
               .map((paciente, index) => (
-                <PacienteHosp 
+                <Paciente 
                   key={paciente.id} 
                   paciente={paciente}
                   contador={index + 1}
                 />
-              ))}
+            ))}
             </tbody>
           </table>
+        
       </Layout>
     </div>
   )
 }
 
-export default Hospitalizados
+export default Index

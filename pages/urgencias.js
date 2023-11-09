@@ -4,9 +4,9 @@ import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router';
 
 //De aquí con las busquedas reales
-const OBTENER_PACIENTES_HOSPITALIZADOS = gql`
-query ObtenerPacientesHospitalizados {
-  obtenerPacientesHospitalizados {
+const OBTENER_PACIENTES_URGENCIAS = gql`
+query ObtenerPacientesUrgencias {
+  obtenerPacientesUrgencias {
     id
     expediente
     pac_apellido_paterno
@@ -57,11 +57,11 @@ query ObtenerPacientesHospitalizados {
 }
 `;
 
-const Hospitalizados = () => {
+const Urgencias = () => {
 
   const router = useRouter();
   // Consulta de Apollo
-  const { data, loading, error } = useQuery(OBTENER_PACIENTES_HOSPITALIZADOS);
+  const { data, loading, error } = useQuery(OBTENER_PACIENTES_URGENCIAS);
 
   //console.log(data)
   // console.log(loading)
@@ -69,7 +69,7 @@ const Hospitalizados = () => {
   
   if(loading) return 'Cargando....';
 
-  if( !data.obtenerPacientesHospitalizados ) {
+  if( !data.obtenerPacientesUrgencias ) {
     return router.push('/login');
   } 
 
@@ -107,7 +107,7 @@ const Hospitalizados = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-            {Array.from(data.obtenerPacientesHospitalizados)
+            {Array.from(data.obtenerPacientesUrgencias)
                 .sort((a, b) => parseInt(a.cama_numero) - parseInt(b.cama_numero))
                 .map((paciente, index) => (
                 <PacienteHosp 
@@ -123,4 +123,4 @@ const Hospitalizados = () => {
   )
 }
 
-export default Hospitalizados
+export default Urgencias

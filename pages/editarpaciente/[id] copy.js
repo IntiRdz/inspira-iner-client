@@ -297,7 +297,7 @@ const EditarPaciente = () => {
             setMensajeError(error.message.replace('GraphQL error: ', ''));
             setTimeout(() => {
                 setMensajeError(null);
-            }, 5000);
+            }, 3000);
         }
     }
 

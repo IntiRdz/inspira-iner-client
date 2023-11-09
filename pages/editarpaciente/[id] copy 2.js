@@ -97,8 +97,6 @@ const EditarPaciente = () => {
     //console.log("Valor de id.cama desde el contexto:", cama);
     
     const [mostrarAsignarCama, setMostrarAsignarCama] = useState(false);
-    const [mostrarCamasMujeres, setMostrarCamasMujeres] = useState(false);
-    const [mostrarCamasHombres, setMostrarCamasHombres] = useState(false);
 
     const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
     
@@ -309,11 +307,9 @@ const EditarPaciente = () => {
 
     return ( 
         <Layout>
-            <h1 className="text-2xl text-gray-800 font-light">Editar Paciente</h1>
-
+            <h1 className="text-2xl text-gray-800 font-light">Editar Paciente</h1>      
             <div className="flex justify-center mt-5">
-                <div className="w-full max-w-4xl">
-
+            <div className="w-full max-w-3xl">
 
                     <Formik
                         validationSchema={ schemaValidacion }
@@ -327,12 +323,17 @@ const EditarPaciente = () => {
                     {props => {
                     // console.log(props);
                     return (
+
                         <form
-                        className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"
+                        className="bg-white shadow-md w-full max-w-lg px-8 pt-6 pb-8 mb-4"
                         onSubmit={props.handleSubmit}
                         >
-                        <div className="form-row p-4"> 
-                            <div className="form-column p-4 mr-4">
+
+
+                            <div className="form-row">
+                            <div className="form-column"> 
+
+
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="expediente">
                                     Expediente
@@ -499,6 +500,8 @@ const EditarPaciente = () => {
                                     <p>{props.errors.pac_dispositivo_o2}</p>
                                 </div>
                             ) : null  }
+
+
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_hemodialisis">
                                     Hemodialisis
@@ -578,11 +581,8 @@ const EditarPaciente = () => {
                             ))}
                             </div>
 
-
-
                             </div>
-                            <div className="form-column p-4">
-
+                            <div className="form-column">
 
 
                             <div className="mb-4">
@@ -751,7 +751,6 @@ const EditarPaciente = () => {
                                     <label htmlFor="hospitalizado_false">No</label>
                                 </div>
                             </div>
-                            
                             {/* Botón para mostrar/ocultar AsignarCama */}
                             <button
                                 type="button"
@@ -768,49 +767,19 @@ const EditarPaciente = () => {
                             type="submit"
                             className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
                             value="Registrar Paciente"
-                        />
-                    </div>
-                    </div>
+                            />
+                            </div>
+                        </div>
+
+                        
                         </form>
                         )
                     }}
                     </Formik>
-
                 </div>
             </div>
-
-
-            <div className="flex justify-center mt-5">        
-                <div className="w-full max-w-4xl">
-                    <div className="flex justify-center"> {/* Contenedor para centrar el botón */}
-                        <button
-                            type="button"
-                            onClick={() => setMostrarCamasMujeres(!mostrarCamasMujeres)}
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
-                        >
-                            {mostrarCamasMujeres ? 'Ocultar Camas Mujeres' : 'Camas Disponibles Mujeres'}
-                        </button>
-
-
-                   
-
-
-                        <button
-                            type="button"
-                            onClick={() => setMostrarCamasHombres(!mostrarCamasHombres)}
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
-                            >
-                            {mostrarCamasHombres ? 'Ocultar Camas Hombres' : 'Camas Disponibles Hombres'}
-                        </button>
-                    </div>
-
-                    {/* Renderizar AsignarCama si el estado es true */}
-                </div>
-            </div>
-                    {mostrarCamasMujeres && <CamasDisponiblesMujer />}  
-                    {mostrarCamasHombres && <CamasDisponiblesHombre />}  
-
-            
+                <CamasDisponiblesHombre />
+                <CamasDisponiblesMujer />
         </Layout>
      );
 }
