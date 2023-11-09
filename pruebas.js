@@ -1,130 +1,61 @@
-import Layout from '../components/Layout';
-import PacienteHosp from '../components/PacienteHosp';
-import { gql, useQuery } from '@apollo/client'
+import React, { useState } from 'react';
+import { AstronautIcon } from './icons/AstronautIcon';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-//De aquí con las busquedas reales
-const OBTENER_PACIENTES_HOSPITALIZADOS = gql`
-query ObtenerPacientesHospitalizados {
-  obtenerPacientesHospitalizados {
-    id
-    expediente
-    pac_apellido_paterno
-    pac_apellido_materno
-    pac_nombre
-    pac_genero
-    pac_FN
-    pac_dispositivo_o2
-    pac_hemodialisis
-    diagnostico
-    diagnostico1
-    caracteristicas_especiales
-    pac_codigo_uveh
-    fecha_ingreso
-    fecha_prealta
-    fecha_egreso
-    hospitalizado
-    cama_relacionada {
-      id
-      cama_numero
-      cama_compartida
-      cama_disponible
-      cama_ocupada
-      cama_genero
-      cama_dispositivo_o2
-      cama_hemodialisis
-      cama_aislamiento
-      cama_dan
-      cama_codigo_uveh
-    }
-    microorganismo_relacionado {
-      id
-      fecha_deteccion
-      metodo_deteccion
-      microorganismo_tipo
-      microorganismo_nombre
-      susceptibilidad
-      comentario_uveh
-    }
-    antibiotico_relacionado {
-      id
-      antibiotico_nombre
-      antibiotico_comentario
-      antibiotico_inicio
-      antibiotico_fin
-    }
-  }
-}
-`;
-
-const Hospitalizados = () => {
-
-  const router = useRouter();
-  // Consulta de Apollo
-  const { data, loading, error } = useQuery(OBTENER_PACIENTES_HOSPITALIZADOS);
-
-  //console.log(data)
-  // console.log(loading)
-  // console.log(error)
+export const Navbar = ({ usuario, onCerrarSesion }) => {
   
-  if(loading) return 'Cargando....';
+    const router = useRouter();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  if( !data.obtenerPacientesHospitalizados ) {
-    return router.push('/login');
-  } 
+    const toggleDropdown = () => {
+      setIsDropdownOpen(!isDropdownOpen);
+    };
 
-  return (
-    <div>
-      <Layout>
-        <h1 className="text-xl text-gray-800 font-light">Pacientes</h1>
-        
-          <table className="table-auto shadow-md mt-10 w-full w-lg">
-            <thead className="bg-gray-800">
-            <tr className="text-white">
-                <th className="w-1/23 border px-1 py-1">#</th>
-                <th className="w-1/23 border px-1 py-1">Expediente</th>
-                <th className="w-1/23 border px-1 py-1">Cama</th>
-                <th className="w-1/23 border px-1 py-1">Apellido Paterno</th>
-                <th className="w-1/23 border px-1 py-1">Apellido Materno</th>
-                <th className="w-1/23 border px-1 py-1">Nombre</th>
-                <th className="w-1/23 border px-1 py-1">Edad</th>
-                <th className="w-1/23 border px-1 py-1">Genero</th>
-                <th className="w-1/23 border px-1 py-1">Dispositivo O2</th>
-                <th className="w-1/23 border px-1 py-1">Hemodialisis</th>
-                <th className="w-1/23 border px-1 py-1">Caracteristicas Especiales</th>
-                <th className="w-1/23 border px-1 py-1">Código UVEH</th>
-                <th className="w-1/23 border px-1 py-1">Microorganismo</th>
-                <th className="w-1/23 border px-1 py-1">Diagnósticos Generales</th>
-                <th className="w-1/23 border px-1 py-1">Diagnósticos Específicos</th>
-                <th className="w-1/23 border px-1 py-1">Ingreso</th>
-                <th className="w-1/23 border px-1 py-1">DEH</th>
-                <th className="w-1/23 border px-1 py-1">Prealta</th>
-                {/* <th className="w-1/23 border px-1 py-1">Egreso</th>
-                <th className="w-1/23 border px-1 py-1">Hospitalizado</th> */}
-                <th className="w-1/23 border px-1 py-1">Editar</th>
-                <th className="w-1/23 border px-1 py-1">Asignar Micro</th>
-                <th className="w-1/23 border px-1 py-1">Ver Micro</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-            {Array.from(data.obtenerPacientesHospitalizados)
-              .sort((b, a) => {
-                const lastCamaA = a.cama_relacionada.length > 0 ? a.cama_relacionada[a.cama_relacionada.length - 1].cama_numero : 0;
-                const lastCamaB = b.cama_relacionada.length > 0 ? b.cama_relacionada[b.cama_relacionada.length - 1].cama_numero : 0;
-                return parseInt(lastCamaB) - parseInt(lastCamaA);
-              })
-              .map((paciente, index) => (
-                <PacienteHosp 
-                  key={paciente.id} 
-                  paciente={paciente}
-                  contador={index + 1}
-                />
-              ))}
-            </tbody>
-          </table>
-      </Layout>
-    </div>
-  )
-}
+    return (
+        <nav className="bg-gray-800 fixed top-0 w-full z-10">
+            <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                <div className="relative flex h-16 items-center justify-between">
+                    {/* Botón para abrir/cerrar el menú móvil */}
+                    <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                        <button type="button" onClick={toggleDropdown} className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                            <span className="sr-only">Menú</span>
+                            {/* Icono que cambia dependiendo del estado del menú */}
+                            <svg className={`${isDropdownOpen ? 'hidden' : 'block'} h-6 w-6`} fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            </svg>
+                            <svg className={`${isDropdownOpen ? 'block' : 'hidden'} h-6 w-6`} fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    {/* Resto de la barra de navegación */}
+                    {/* ...Resto del código para la barra de navegación... */}
 
-export default Hospitalizados
+                    {/* Menú desplegable para el usuario */}
+                    <div className="relative ml-3">
+                        <button onClick={toggleDropdown} type="button" className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded={isDropdownOpen} aria-haspopup="true">
+                            <span className="sr-only">Open user menu</span>
+                            <AstronautIcon color='white' />
+                        </button>
+
+                        {isDropdownOpen && (
+                            {/* Menú desplegable */}
+                            {/* ...Menú desplegable... */}
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Menú móvil, se muestra u oculta según el estado */}
+            {isDropdownOpen && (
+                <div className="sm:hidden" id="mobile-menu">
+                    <div className="space-y-1 px-2 pb-3 pt-2">
+                        {/* Enlaces del menú móvil */}
+                        {/* ...Enlaces... */}
+                    </div>
+                </div>
+            )}
+        </nav>
+    );
+};
