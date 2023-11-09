@@ -29,7 +29,7 @@ const Header = () => {
         const authToken = localStorage.getItem('token');
     
         if (!authToken || isTokenExpired(authToken)) {
-            router.replace('/login');
+            router.replace('/nuevacuenta');
         }
     }, [router]);
 
