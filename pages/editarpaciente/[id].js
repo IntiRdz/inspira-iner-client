@@ -52,9 +52,14 @@ const OBTENER_PACIENTE = gql`
             fecha_prealta
             fecha_egreso
             hospitalizado
+            cama_relacionada {
+                cama_numero
+            }
         }
     }
 `;
+
+
 
 const ACTUALIZAR_PACIENTE = gql`
     mutation actualizarPaciente($id: ID!, $input: PacienteInput) {
@@ -208,7 +213,9 @@ const EditarPaciente = () => {
     if(loading) return 'Cargando...';
     
     const { obtenerPaciente } = data;
-    //console.log("Data de Obtener Paciente",obtenerPaciente)
+    const camaActual = obtenerPaciente.cama_relacionada[obtenerPaciente.cama_relacionada.length - 1].cama_numero
+
+
 
     const valoresIniciales = {
         expediente: obtenerPaciente.expediente ,
@@ -312,7 +319,7 @@ const EditarPaciente = () => {
             <h1 className="text-2xl text-gray-800 font-light">Editar Paciente</h1>
 
             <div className="flex justify-center mt-5">
-                <div className="w-full max-w-4xl">
+                <div className="w-full max-w-6xl">
 
 
                     <Formik
@@ -328,11 +335,11 @@ const EditarPaciente = () => {
                     // console.log(props);
                     return (
                         <form
-                        className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"
+                        className="bg-white shadow-md mt-2"
                         onSubmit={props.handleSubmit}
                         >
                         <div className="form-row p-4"> 
-                            <div className="form-column p-4 mr-4">
+{/* divisor de  form */}   <div className="form-column p-4 mr-4">  
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="expediente">
                                     Expediente
@@ -353,6 +360,51 @@ const EditarPaciente = () => {
                                 <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
                                     <p className="font-bold">Error</p>
                                     <p>{props.errors.expediente}</p>
+                                </div>
+                            ) : null  }
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_FN">
+                                    Fecha de Nacimiento
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="pac_FN"
+                                    type="date"
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                    value={props.values.pac_FN}
+                                />
+                            </div>
+
+                            { props.touched.pac_FN && props.errors.pac_FN ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{props.errors.pac_FN}</p>
+                                </div>
+                            ) : null  }
+
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_ingreso">
+                                    Fecha de Ingreso
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="fecha_ingreso"
+                                    type="datetime-local"
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                    value={props.values.fecha_ingreso}
+                                />
+                            </div>
+
+                            { props.touched.fecha_ingreso && props.errors.fecha_ingreso ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{props.errors.fecha_ingreso}</p>
                                 </div>
                             ) : null  }
 
@@ -451,27 +503,7 @@ const EditarPaciente = () => {
                                 </div>
                             ) : null  }
 
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_FN">
-                                    Fecha de Nacimiento
-                                </label>
 
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="pac_FN"
-                                    type="date"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.pac_FN}
-                                />
-                            </div>
-
-                            { props.touched.pac_FN && props.errors.pac_FN ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.pac_FN}</p>
-                                </div>
-                            ) : null  }
 
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_dispositivo_o2">
@@ -499,6 +531,12 @@ const EditarPaciente = () => {
                                     <p>{props.errors.pac_dispositivo_o2}</p>
                                 </div>
                             ) : null  }
+
+
+
+                        </div>
+{/* divisor de  form */}<div className="form-column p-4">
+
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_hemodialisis">
                                     Hemodialisis
@@ -526,6 +564,7 @@ const EditarPaciente = () => {
                                     <label htmlFor="pac_hemodialisis_false">No</label>
                                 </div>
                             </div>
+
                             <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico1">
                                 Diagnósticos Generales
@@ -580,8 +619,7 @@ const EditarPaciente = () => {
 
 
 
-                            </div>
-                            <div className="form-column p-4">
+
 
 
 
@@ -610,6 +648,9 @@ const EditarPaciente = () => {
                                 </div>
                             ) : null  }
 
+
+</div>
+{/* divisor de  form */}<div className="form-column p-4">
 
 
                             <div className="mb-4">
@@ -655,29 +696,6 @@ const EditarPaciente = () => {
                                 ))}
                             </div>
 
-
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_ingreso">
-                                    Fecha de Ingreso
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="fecha_ingreso"
-                                    type="datetime-local"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.fecha_ingreso}
-                                />
-                            </div>
-
-                            { props.touched.fecha_ingreso && props.errors.fecha_ingreso ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.fecha_ingreso}</p>
-                                </div>
-                            ) : null  }
 
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_prealta">
@@ -760,14 +778,14 @@ const EditarPaciente = () => {
                             >
                                 {mostrarAsignarCama ? 'Misma Cama' : 'Cambiar Cama'}
                             </button>
-
+                            <a>  Cama Actual:  {camaActual} </a>
                             {/* Renderizar AsignarCama si el estado es true */}
                             {mostrarAsignarCama && <AsignarCama />}  
 
                             <input
                             type="submit"
                             className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
-                            value="Registrar Paciente"
+                            value="Actualizar Paciente"
                         />
                     </div>
                     </div>

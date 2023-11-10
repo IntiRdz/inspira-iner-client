@@ -286,11 +286,13 @@ const NuevoPaciente = () => {
             <h2 className="text-2xl text-gray-800 font-light">Nuevo Paciente</h2>
                  
             <div className="flex justify-center mt-5">
-                <div className="w-full max-w-lg">
+                <div className="w-full max-w-5xl">
                     <form
-                        className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"
+                        className="bg-white shadow-md mt-2"
                         onSubmit={formik.handleSubmit}
                     >
+                        <div className="form-row p-4"> 
+{/* divisor de  form */}   <div className="form-column p-4 mr-4">
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="expediente">
                                     Expediente
@@ -431,85 +433,10 @@ const NuevoPaciente = () => {
                                 </div>
                             ) : null  }
 
-                            <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico1">
-                                Diagnósticos Generales
-                            </label>
-                            {[
-                                'CodigoHemoptisis',
-                                'CodigoViaAerea',
-                                'CodigoInfarto',
-                                'COVID',
-                                'Influenza',
-                                'Parainfluenza',
-                                'Adenovirus',
-                                'VirusSincialRespiratorio',
-                                'TuberculosisSensible',
-                                'TuberculosisResistente',
-                                'B24',
-                                'SIRA',
-                                'NeumoniaBacteriana',
-                                'EPOC',
-                                'Asma',
-                                'TromboembiaPulmonar',
-                                'DerramePleural',
-                                'Neumotorax',
-                                'NeumoniaIntersticialDifusa',
-                                'InsuficienciaCaridiaca',
-                                'CaPulmonarOSospecha',
-                            ].map((option) => (
-                                <label key={option} className="block">
-                                <input
-                                    type="checkbox"
-                                    name="diagnostico1"
-                                    value={option}
-                                    onChange={(e) => {
-                                    const isChecked = e.target.checked;
-                                    const value = e.target.value;
-
-                                    formik.setFieldValue(
-                                        'diagnostico1',
-                                        isChecked
-                                        ? [...formik.values.diagnostico1, value]
-                                        : formik.values.diagnostico1.filter((val) => val !== value)
-                                    );
-                                    }}
-                                    onBlur={formik.handleBlur}
-                                    checked={formik.values.diagnostico1.includes(option)}
-                                    className="mr-2"
-                                />
-                                {option}
-                                </label>
-                            ))}
-                            </div>
 
 
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico">
-                                    Diagnósticos Específicos
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="diagnostico"
-                                    type="text"
-                                    placeholder="Diagnóstico"
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.diagnostico}
-                                />
-                            </div>
-
-                            { formik.touched.diagnostico && formik.errors.diagnostico ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{formik.errors.diagnostico}</p>
-                                </div>
-                            ) : null  }
-
-
-
-                            <div className="mb-4">
+                            
+<div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_dispositivo_o2">
                                     Dispositivo O2
                                 </label>
@@ -599,6 +526,92 @@ const NuevoPaciente = () => {
                                 </label>
                             ))}
                             </div>
+
+
+
+
+
+                            </div>
+{/* divisor de  form */}<div className="form-column p-4">
+
+<div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico1">
+                                Diagnósticos Generales
+                            </label>
+                            {[
+                                'CodigoHemoptisis',
+                                'CodigoViaAerea',
+                                'CodigoInfarto',
+                                'COVID',
+                                'Influenza',
+                                'Parainfluenza',
+                                'Adenovirus',
+                                'VirusSincialRespiratorio',
+                                'TuberculosisSensible',
+                                'TuberculosisResistente',
+                                'B24',
+                                'SIRA',
+                                'NeumoniaBacteriana',
+                                'EPOC',
+                                'Asma',
+                                'TromboembiaPulmonar',
+                                'DerramePleural',
+                                'Neumotorax',
+                                'NeumoniaIntersticialDifusa',
+                                'InsuficienciaCaridiaca',
+                                'CaPulmonarOSospecha',
+                            ].map((option) => (
+                                <label key={option} className="block">
+                                <input
+                                    type="checkbox"
+                                    name="diagnostico1"
+                                    value={option}
+                                    onChange={(e) => {
+                                    const isChecked = e.target.checked;
+                                    const value = e.target.value;
+
+                                    formik.setFieldValue(
+                                        'diagnostico1',
+                                        isChecked
+                                        ? [...formik.values.diagnostico1, value]
+                                        : formik.values.diagnostico1.filter((val) => val !== value)
+                                    );
+                                    }}
+                                    onBlur={formik.handleBlur}
+                                    checked={formik.values.diagnostico1.includes(option)}
+                                    className="mr-2"
+                                />
+                                {option}
+                                </label>
+                            ))}
+                            </div>
+
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico">
+                                    Diagnósticos Específicos
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="diagnostico"
+                                    type="text"
+                                    placeholder="Diagnóstico"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.diagnostico}
+                                />
+                            </div>
+
+                            { formik.touched.diagnostico && formik.errors.diagnostico ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{formik.errors.diagnostico}</p>
+                                </div>
+                            ) : null  }
+
+
+
 
                             <div className="mb-4" hidden>
                                 <select 
@@ -726,6 +739,8 @@ const NuevoPaciente = () => {
 
                             
                         />
+                    </div>
+                    </div>
                     </form>
                 </div>
             </div>
