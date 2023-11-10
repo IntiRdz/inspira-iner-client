@@ -7,10 +7,10 @@ import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 
 import PacienteContext from '../../context/pacientes/PacienteContext';
-import { AsignarCamaTodas } from '../../components/pacientes/AsignarCamaTodas';
+/* import { AsignarCamaTodas } from '../../components/pacientes/AsignarCamaTodas'; */
 import { AsignarMicroorganismo } from '../../components/microrganismos/AsignarMicroorganismo';
 
-const OBTENER_PACIENTES = gql`
+ const OBTENER_PACIENTES = gql`
     query obtenerPacientes {
         obtenerPacientes {
             id
@@ -31,7 +31,7 @@ const OBTENER_PACIENTES = gql`
             hospitalizado
         }
     }
-`;
+`; 
 
 const OBTENER_PACIENTE = gql`
   query obtenerPaciente($id: ID!) {
@@ -40,6 +40,10 @@ const OBTENER_PACIENTE = gql`
       pac_apellido_paterno
       pac_apellido_materno
       pac_nombre
+      cama_relacionada{
+        id
+      }
+    
     }
   }
 `;
@@ -111,7 +115,7 @@ const NuevoMicroorganismo = () => {
         },
     });
 
-  //console.log('datos paciente', pacienteData);
+  console.log('datos paciente', pacienteData);
   //console.log('datos micro', microData);
             
     // Formulario para nuevos microorganismos
@@ -123,6 +127,7 @@ const NuevoMicroorganismo = () => {
             susceptibilidad: '',
             comentario_uveh: '',
             paciente_relacionado: id,
+
         },
         validationSchema: Yup.object({
             fecha_deteccion: Yup.date().required('La fecha de detección es obligatoria'),
@@ -173,7 +178,7 @@ const NuevoMicroorganismo = () => {
                 susceptibilidad,
                 comentario_uveh,
                 paciente_relacionado: id,
-                cama_relacionada: cama
+                cama_relacionada: pacienteData.pacienteData.cama_relacionada[pacienteData.pacienteData.cama_relacionada.length - 1].id
             };
 
             //console.log("Valores actualizados:", valoresActualizados)
@@ -223,12 +228,14 @@ const NuevoMicroorganismo = () => {
         <Layout>
 
             
-            <h1 className="text-2xl text-gray-800 font-light">Asignar Microorganismo</h1>
-            {pacienteData && (
-                    <div>
-                        Paciente :{pacienteData.pacienteData.pac_apellido_paterno} {pacienteData.pacienteData.pac_apellido_materno} {pacienteData.pacienteData.pac_nombre}.
-                    </div>
-                )}
+            <h2 className=" pt-20 text-2xl text-gray-800 font-light">Asignar Microorganismo</h2>
+            {pacienteData && pacienteData.pacienteData.cama_relacionada && pacienteData.pacienteData.cama_relacionada.length > 0 && (
+                <div>
+                    <p>Paciente: {pacienteData.pacienteData.pac_apellido_paterno} {pacienteData.pacienteData.pac_apellido_materno} {pacienteData.pacienteData.pac_nombre}</p>
+                    <p>Cama Relacionada: {pacienteData.pacienteData.cama_relacionada[pacienteData.pacienteData.cama_relacionada.length - 1].id} </p>
+                </div>
+            )}
+
 
                 <div className="flex justify-center mt-5">
 
@@ -371,7 +378,7 @@ const NuevoMicroorganismo = () => {
                             </div>
                         ) : null  }
 
-                        <AsignarCamaTodas />      
+                        {/* <AsignarCamaTodas />  */}     
                         <input
                             type="submit"
                             className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"

@@ -5,6 +5,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/router'
+import { format, differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
 
 import PacienteContext from '../context/pacientes/PacienteContext';
 import { AsignarCama } from '../components/pacientes/AsignarCama';
@@ -107,7 +108,7 @@ const NuevoPaciente = () => {
             diagnostico: '',
             caracteristicas_especiales: [],
             pac_codigo_uveh: ['SinDefinir'],
-            fecha_ingreso: '',
+            fecha_ingreso: format(new Date(), 'yyyy-MM-dd\'T\'HH:mm:ss'),
             fecha_prealta: '',
             fecha_egreso: '',
             hospitalizado: true,
@@ -485,7 +486,7 @@ const NuevoPaciente = () => {
 
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico">
-                                    Diagnósticos Epecíficos
+                                    Diagnósticos Específicos
                                 </label>
 
                                 <input
@@ -627,7 +628,7 @@ const NuevoPaciente = () => {
                                     <p>{formik.errors.pac_codigo_uveh}</p>
                                 </div>
                             ) : null  }
-                        <div className="mb-4">
+                        <div className="mb-4" hidden>
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_ingreso">
                                 Fecha de Ingreso
                             </label>
