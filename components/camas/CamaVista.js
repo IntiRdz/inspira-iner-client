@@ -29,7 +29,7 @@ const CamaVista = ({cama}) => {
                     })()
                 }`}
                 >
-                {cama_compartida ? 'Compartido' : 'Asilado'}
+                {cama_compartida ? 'Compartido' : 'Aislado'}
             </td>
             <td className="border px-1 py-1">{cama_genero} </td>
             <td className="border px-1 py-1">{cama_dispositivo_o2} </td>

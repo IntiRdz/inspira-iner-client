@@ -125,7 +125,8 @@ const NuevoPaciente = () => {
                 'AA', 
                 'PN', 
                 'PNAF', 
-                'VMNI', 
+                'VMNI',
+                'VMNI_Intermiente',  
                 'VM']).required('El dispositivo O2 del paciente es obligatorio'),
             pac_hemodialisis: Yup.boolean(),
             diagnostico1: Yup.array()
@@ -140,6 +141,7 @@ const NuevoPaciente = () => {
                 'Parainfluenza',
                 'Adenovirus',
                 'VirusSincialRespiratorio',
+                'Metaneumovirus',
                 'TuberculosisSensible',
                 'TuberculosisResistente',
                 'B24',
@@ -436,7 +438,7 @@ const NuevoPaciente = () => {
 
 
                             
-<div className="mb-4">
+                            <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_dispositivo_o2">
                                     Dispositivo O2
                                 </label>
@@ -452,6 +454,7 @@ const NuevoPaciente = () => {
                                     <option value="PN" label="PN" />
                                     <option value="PNAF" label="PNAF" />
                                     <option value="VMNI" label="VMNI" />
+                                    <option value="VMNI_Intermitente" label="VMNI Intermiente" />
                                     <option value="VM" label="VM" />
                                 </select>
                             </div>

@@ -17,6 +17,7 @@ query ObtenerCamas {
     id
     cama_numero
     cama_compartida
+    cama_lado
     cama_prioridad
     cama_disponible
     cama_ocupada
@@ -43,6 +44,7 @@ const Cama = ({cama}) => {
     const { 
         cama_numero,
         cama_compartida,
+        cama_lado,
         cama_prioridad,
         cama_disponible,
         cama_ocupada,
@@ -77,8 +79,17 @@ const Cama = ({cama}) => {
         })
     }
 
+    function getRowClass(camaLado) {
+        if (camaLado === 'Pasillo') {
+            return 'border-inferior-verde';
+        } else if (camaLado === 'Ventana') {
+            return 'border-superior-verde';
+        }
+        return '';
+    }
+
     return ( 
-        <tr>
+        <tr className={getRowClass(cama_lado)}>
             <td className="border px-4 py-2">{cama_numero} </td>
             <td
                 className={`border px-4 py-2 ${
@@ -92,8 +103,10 @@ const Cama = ({cama}) => {
                     })()
                 }`}
                 >
-                {cama_compartida ? 'Compartido' : 'Asilado'}
+                {cama_compartida ? 'Compartido' : 'Aislado'}
             </td>
+            
+            {/* <td className="border px-4 py-2">{cama_lado} </td> */}
             <td className="border px-4 py-2">{cama_prioridad} </td>
             <td className="border px-4 py-2">{cama_disponible ? 'Disponible' : 'No disponible'} </td>
             <td className="border px-4 py-2">{cama_ocupada ? 'Ocupada' : 'Libre'} </td>

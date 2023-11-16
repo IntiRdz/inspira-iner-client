@@ -106,7 +106,8 @@ const EditarCama = () => {
         cama_numero: Yup.number().required('El número de la cama es obligatorio').positive('No se aceptan números negativos'),
         cama_prioridad: Yup.string().oneOf([
             'SinPrioridad',
-            'COVID', 
+            'COVID',
+            'Influenza',
             'VirusRespiratorios', 
             'B24',
             'TuberculosisSensible',
@@ -121,7 +122,8 @@ const EditarCama = () => {
             'Indeterminado'
         ]).required('El género es obligatorio'),
         cama_dispositivo_o2: Yup.string().oneOf([
-            'No_VM', 'VM'
+            'No_VM', 
+            'VM'
         ]).required('El dispositivo O2 es obligatorio'),
         cama_hemodialisis: Yup.bool(),
         cama_codigo_uveh: Yup.string().oneOf([
@@ -279,7 +281,9 @@ const EditarCama = () => {
                                             value={props.values.cama_prioridad}
                                         >
                                             <option value="" label="Seleccione una Prioridad" />
+                                            <option value="SinPrioridad" label="Sin Prioridad" />
                                             <option value="COVID" label="COVID" />
+                                            <option value="Influenza" label="Influenza" />
                                             <option value="VirusRespiratorios" label="Virus Respiratorios" />
                                             <option value="B24" label="B24" />
                                             <option value="TuberculosisSensible" label="Tuberculosis Sensible" />

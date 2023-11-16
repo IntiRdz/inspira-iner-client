@@ -79,6 +79,7 @@ const NuevaCama = () => {
         initialValues: {
             cama_numero: '',
             cama_compartida: true,
+            cama_lado: 'Pasillo',
             cama_prioridad: 'SinPrioridad',
             cama_disponible: true,
             cama_ocupada: true,
@@ -91,15 +92,23 @@ const NuevaCama = () => {
         },
         validationSchema: Yup.object({
             cama_numero: Yup.number().required('El número de la cama es obligatorio').positive('No se aceptan números negativos'),
+            cama_compartida: Yup.bool(),
+            cama_lado: Yup.string().oneOf([
+                'Pasillo',
+                'Medio',
+                'Ventana',
+                'Ninguno'
+            ]),           
             cama_prioridad: Yup.string().oneOf([
                 'SinPrioridad',
-                'COVID', 
+                'COVID',
+                'Influenza', 
                 'VirusRespiratorios', 
                 'B24',
                 'TuberculosisSensible',
                 'TuberculosisResistente'
             ]),
-            cama_compartida: Yup.bool(),
+
             cama_disponible: Yup.bool(),
             cama_ocupada: Yup.bool(),
             cama_genero: Yup.string().oneOf([
@@ -128,6 +137,7 @@ const NuevaCama = () => {
             const { 
                 cama_numero,
                 cama_compartida,
+                cama_lado,
                 cama_prioridad,
                 cama_disponible,
                 cama_ocupada,
@@ -145,6 +155,7 @@ const NuevaCama = () => {
                         input: {
                             cama_numero,
                             cama_compartida,
+                            cama_lado,
                             cama_prioridad,
                             cama_disponible,
                             cama_ocupada,
@@ -252,6 +263,32 @@ const NuevaCama = () => {
                                 <span className="ml-2">No</span>
                             </label>
                         </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_lado">
+                                Lado
+                            </label>
+                            <select 
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="cama_lado" // Este es el id del select
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.cama_lado}
+                                name="cama_lado" // Agrega el atributo name para que Formik pueda rastrear el campo
+                            >
+                                <option value="" label="Seleccione con quien comparte"/>
+                                <option value="Pasillo" label="Pasillo" />
+                                <option value="Medio" label="Medio" />
+                                <option value="Ventana" label="Ventana" />
+                                <option value="Ninguno" label="Ninguno" />
+                            </select>
+                        </div>
+
+                        {formik.touched.cama_prioridad && formik.errors.cama_lado ? (
+                            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                <p className="font-bold">Error</p>
+                                <p>{formik.errors.cama_lado}</p>
+                            </div>
+                        ) : null}
 
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_prioridad">
@@ -268,6 +305,7 @@ const NuevaCama = () => {
                                 <option value="" label="Seleccione un género"/>
                                 <option value="SinPrioridad" label="Sin Prioridad" />
                                 <option value="COVID" label="COVID" />
+                                <option value="Influenza" label="Influenza" />
                                 <option value="VirusRespiratorios" label="Virus Respiratorios" />
                                 <option value="B24" label="B24" />
                                 <option value="TuberculosisSensible" label="Tuberculosis Sensible" />

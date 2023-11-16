@@ -24,6 +24,13 @@ body {
     padding: 10px; /* Espacio alrededor de cada columna */
 }
 
+.border-inferior-verde {
+    border-bottom: 2px solid green;
+}
+
+.border-superior-verde {
+    border-top: 2px solid green;
+}
 
 @media screen and (max-width: 768px) {
     .form-row {

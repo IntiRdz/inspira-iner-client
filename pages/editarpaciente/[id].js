@@ -8,8 +8,13 @@ import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 import { AsignarCama } from '../../components/pacientes/AsignarCama';
-import CamasDisponiblesHombre from '../../components/camas/CamasDisponiblesHom';
-import CamasDisponiblesMujer from '../../components/camas/CamasDisponiblesMujer';
+import ReactCamaDispHombre from '../../components/tablas/ReactCamaDispHombre';
+import ReactPacientesHosp from '../../components/tablas/ReactPacientesHosp';
+import ReactCamaDispMujer from '../../components/tablas/ReactCamaDispMujer';
+
+//import CamasDisponiblesHombre from '../../components/camas/CamasDisponiblesHom';
+//import CamasDisponiblesMujer from '../../components/camas/CamasDisponiblesMujer';
+
 
 const OBTENER_PACIENTES = gql`
     query obtenerPacientes {
@@ -104,6 +109,7 @@ const EditarPaciente = () => {
     const [mostrarAsignarCama, setMostrarAsignarCama] = useState(false);
     const [mostrarCamasMujeres, setMostrarCamasMujeres] = useState(false);
     const [mostrarCamasHombres, setMostrarCamasHombres] = useState(false);
+    const [mostrarPacientes, setMostrarPacientes] = useState(false);
 
     const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
     
@@ -159,6 +165,7 @@ const EditarPaciente = () => {
             'Parainfluenza',
             'Adenovirus',
             'VirusSincialRespiratorio',
+            'Metaneumovirus',
             'TuberculosisSensible',
             'TuberculosisResistente',
             'B24',
@@ -279,8 +286,11 @@ const EditarPaciente = () => {
             fecha_prealta: fecha_prealta === '' ? undefined : fecha_prealta, // Si es cadena vacía, se envía undefined
             fecha_egreso: fecha_egreso === '' ? undefined : fecha_egreso,
             hospitalizado,
-            cama_relacionada: cama,
         };
+        // Si se muestra el componente AsignarCama y hay una cama asignada, incluir en los valores actualizados
+        if (mostrarAsignarCama && cama) {
+            valoresActualizados.cama_relacionada = cama;
+        }
 
         console.log("Valores actualizados:", valoresActualizados)
 
@@ -520,7 +530,8 @@ const EditarPaciente = () => {
                                     <option value="AA" label="AA" />
                                     <option value="PN" label="PN" />
                                     <option value="PNAF" label="PNAF" />
-                                    <option value="VMNI" label="VMNI" />
+                                    <option value="VMNI_Intermitente" label="VMNI Intermitente" />
+                                    <option value="VMNI_Intermitente" label="VMNI Intermiente" />
                                     <option value="VM" label="VM" />
                                 </select>
                             </div>
@@ -531,11 +542,6 @@ const EditarPaciente = () => {
                                     <p>{props.errors.pac_dispositivo_o2}</p>
                                 </div>
                             ) : null  }
-
-
-
-                        </div>
-{/* divisor de  form */}<div className="form-column p-4">
 
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_hemodialisis">
@@ -565,6 +571,11 @@ const EditarPaciente = () => {
                                 </div>
                             </div>
 
+                        </div>
+{/* divisor de  form */}<div className="form-column p-4">
+
+
+
                             <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico1">
                                 Diagnósticos Generales
@@ -578,6 +589,7 @@ const EditarPaciente = () => {
                                 'Parainfluenza',
                                 'Adenovirus',
                                 'VirusSincialRespiratorio',
+                                'Metaneumovirus',
                                 'TuberculosisSensible',
                                 'TuberculosisResistente',
                                 'B24',
@@ -649,8 +661,66 @@ const EditarPaciente = () => {
                             ) : null  }
 
 
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_prealta">
+                                    Fecha de Prealta
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="fecha_prealta"
+                                    type="datetime-local"
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                    value={props.values.fecha_prealta}
+                                />
+                            </div>
+
+                            { props.touched.fecha_prealta && props.errors.fecha_prealta ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{props.errors.fecha_prealta}</p>
+                                </div>
+                            ) : null  }
+
+
 </div>
 {/* divisor de  form */}<div className="form-column p-4">
+
+                        <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="caracteristicas_especiales">
+                                Caracteristicas Especiales 
+                            </label>
+                            {[
+                                'TrasladoDeHospital',
+                                'InfeccionReciente',
+                                'Embarazo',
+                                'Inmunosupresion',
+                            ].map((option) => (
+                                <label key={option} className="block">
+                                <input
+                                    type="checkbox"
+                                    name="caracteristicas_especiales"
+                                    value={option}
+                                    onChange={(e) => {
+                                    const isChecked = e.target.checked;
+                                    const value = e.target.value;
+
+                                    formik.setFieldValue(
+                                        'caracteristicas_especiales',
+                                        isChecked
+                                        ? [...props.values.caracteristicas_especiales, value]
+                                        : props.values.caracteristicas_especiales.filter((val) => val !== value)
+                                    );
+                                    }}
+                                    onBlur={props.handleBlur}
+                                    checked={props.values.caracteristicas_especiales.includes(option)}
+                                    className="mr-2"
+                                />
+                                {option}
+                                </label>
+                            ))}
+                        </div>
 
 
                             <div className="mb-4">
@@ -695,29 +765,6 @@ const EditarPaciente = () => {
                                     </label>
                                 ))}
                             </div>
-
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_prealta">
-                                    Fecha de Prealta
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="fecha_prealta"
-                                    type="datetime-local"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.fecha_prealta}
-                                />
-                            </div>
-
-                            { props.touched.fecha_prealta && props.errors.fecha_prealta ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.fecha_prealta}</p>
-                                </div>
-                            ) : null  }
 
 
                             <div className="mb-4">
@@ -798,7 +845,7 @@ const EditarPaciente = () => {
             </div>
 
 
-            <div className="flex justify-center mt-5">        
+            <div className="flex justify-center ">        
                 <div className="w-full max-w-4xl">
                     <div className="flex justify-center"> {/* Contenedor para centrar el botón */}
                         <button
@@ -808,11 +855,7 @@ const EditarPaciente = () => {
                         >
                             {mostrarCamasMujeres ? 'Ocultar Camas Mujeres' : 'Camas Disponibles Mujeres'}
                         </button>
-
-
                    
-
-
                         <button
                             type="button"
                             onClick={() => setMostrarCamasHombres(!mostrarCamasHombres)}
@@ -820,13 +863,37 @@ const EditarPaciente = () => {
                             >
                             {mostrarCamasHombres ? 'Ocultar Camas Hombres' : 'Camas Disponibles Hombres'}
                         </button>
+
+                        <button
+                            type="button"
+                            onClick={() => setMostrarPacientes(!mostrarPacientes)}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
+                            >
+                            {mostrarPacientes ? 'Ocultar Pacientes' : 'Pacientes'}
+                        </button>
                     </div>
 
                     {/* Renderizar AsignarCama si el estado es true */}
                 </div>
             </div>
-                    {mostrarCamasMujeres && <CamasDisponiblesMujer />}  
-                    {mostrarCamasHombres && <CamasDisponiblesHombre />}  
+
+            <div className="flex flex-row">
+                <div className="flex-1">
+                    {/* Columna 1 */}
+                    
+                    {mostrarCamasHombres && <ReactCamaDispHombre />}
+                    {mostrarCamasMujeres && <ReactCamaDispMujer/>}
+                    {/* {mostrarCamasMujeres && <CamasDisponiblesMujer />} */}
+                </div>
+
+                <div className="flex-1">
+                    {/* Columna 2 */}
+                    {mostrarPacientes && <ReactPacientesHosp />}
+                    
+                    
+                    {/* {mostrarCamasHombres && <CamasDisponiblesHombre />} */}
+                </div>
+            </div>
 
             
         </Layout>
