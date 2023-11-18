@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState} from 'react';
 import Layout from '../components/Layout';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { gql, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router'
 import { InspiraLetter } from '../components/icons/InspiraLetter';
+
 
 const AUTENTICAR_USUARIO = gql`
     mutation autenticarUsuario($input: AutenticarInput) {
@@ -49,7 +50,7 @@ const Login = () => {
                         }
                     }
                 });
-                console.log("Token de autenticación",data);
+                console.log(data);
                 guardarMensaje('Autenticando...');
 
                 // Guardar el token en localstorage
@@ -70,7 +71,7 @@ const Login = () => {
 
                 setTimeout(() => {
                     guardarMensaje(null);
-                }, 5000);
+                }, 3000);
             }
         }
     })
@@ -92,14 +93,11 @@ const Login = () => {
             <Layout>
 
                 {mensaje && mostrarMensaje() }
-
                 <div className="flex justify-center">
-                    <InspiraLetter className="text-center" fill="#FFFFFF" width="270px" height="120px" />
-                </div>
-
+                  <InspiraLetter className="text-center" fill="#FFFFFF" width="270px" height="120px" />
+              </div>
                 <div className="flex justify-center mt-5">
                     <div className="w-full max-w-sm">
-
                         <form
                             className="bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4"
                             onSubmit={formik.handleSubmit}
@@ -114,7 +112,6 @@ const Login = () => {
                                     id="email"
                                     type="email"
                                     placeholder="Email Usuario"
-                                    autoComplete="current-email"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.email}
@@ -138,7 +135,6 @@ const Login = () => {
                                     id="password"
                                     type="password"
                                     placeholder="Password Usuario"
-                                    autoComplete="current-password"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.password}
@@ -157,6 +153,7 @@ const Login = () => {
                                 className="bg-gray-800 w-full mt-5 p-2 text-white uppercas hover:cursor-pointer hover:bg-gray-900"
                                 value="Iniciar Sesión"
                             />
+
                         </form>
                     </div>
                 </div>

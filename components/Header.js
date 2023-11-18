@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
-import { useQuery, gql } from '@apollo/client';
-import { useRouter } from 'next/dist/client/router';
-import jwtDecode from 'jwt-decode';
+import React from 'react';
+import { useQuery, gql } from '@apollo/client'
+import { useRouter } from 'next/router';
 import { Navbar } from './Navbar';
 
 const OBTENER_USUARIO = gql`
@@ -15,36 +14,35 @@ const OBTENER_USUARIO = gql`
 `;
 
 const Header = () => {
+
     const router = useRouter();
 
-    const isTokenExpired = (token) => {
-        const decodedToken = jwtDecode(token);
-        const currentTime = Date.now() / 1000;
-        return decodedToken.exp < currentTime;
-    };
+    // query de apollo
+    const { data, loading, error} = useQuery(OBTENER_USUARIO);
 
-    const { data, loading, error } = useQuery(OBTENER_USUARIO);
+    // console.log(data)
+    // console.log(loading)
+    // console.log(error)
 
-    useEffect(() => {
-        const authToken = localStorage.getItem('token');
-    
-        if (!authToken || isTokenExpired(authToken)) {
-            router.replace('/nuevacuenta');
-        }
-    }, [router]);
+    // Proteger que no accedamos a data antes de tener resultados
+    if(loading) return null;
 
-    if (loading) return null;
+    // Si no hay informacion
+    if(!data) {
+        return router.push('/login');
+    }
 
     const { nombre, apellido } = data.obtenerUsuario;
 
     const cerrarSesion = () => {
         localStorage.removeItem('token');
         router.push('/login');
-    };
+    }
 
-    return (
-        <Navbar usuario={{ nombre, apellido }} onCerrarSesion={cerrarSesion} />
-    );
-};
-
+    return ( 
+            <Navbar usuario={{ nombre, apellido }} onCerrarSesion={cerrarSesion} />
+     );
+}
+ 
 export default Header;
+
