@@ -8,24 +8,7 @@ import {
   getSortedRowModel
 } from '@tanstack/react-table';
 
-const OBTENER_CAMAS_DISPONIBLES_HOMBRE = gql`
-  query obtenerCamasDisponiblesHombre {
-    obtenerCamasDisponiblesHombre {
-      id
-      cama_numero
-      cama_prioridad
-      cama_compartida
-      cama_disponible
-      cama_ocupada
-      cama_genero
-      cama_dispositivo_o2
-      cama_hemodialisis
-      cama_aislamiento
-      cama_dan
-      cama_codigo_uveh
-    }
-  }
-`;
+import { OBTENER_CAMAS_DISPONIBLES_HOMBRE } from '../../graphql/queries'; 
 
 const ReactCamaDispHombre = () => {
   const { data, loading, error } = useQuery(OBTENER_CAMAS_DISPONIBLES_HOMBRE);  

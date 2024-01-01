@@ -15,7 +15,7 @@ export const Navbar = ({ usuario, onCerrarSesion }) => {
 
   return (
 
-    <nav className="bg-gray-800 fixed top-0 w-full z-10">
+    <nav className="bg-gray-900 fixed top-0 w-full z-10 mr-2">
     <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
                     {/* Botón para abrir/cerrar el menú móvil */}
@@ -45,6 +45,11 @@ export const Navbar = ({ usuario, onCerrarSesion }) => {
                             </a>
                         </Link>
                         <Link href="/">
+                            <a className={`rounded-md px-3 py-2 text-sm font-medium ${router.pathname === "/urgencias" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"}`}>
+                                Urgencias
+                            </a>
+                        </Link>
+                        <Link href="/">
                             <a className={`rounded-md px-3 py-2 text-sm font-medium ${router.pathname === "/" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"}`}>
                             Hospitalizados
                             </a>
@@ -67,6 +72,11 @@ export const Navbar = ({ usuario, onCerrarSesion }) => {
                         <Link href="/pacientes">
                             <a className={`rounded-md px-3 py-2 text-sm font-medium ${router.pathname === "/pacientes" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"}`}>
                                 Pacientes (todos)
+                            </a>
+                        </Link>
+                        <Link href="/programaintegral">
+                            <a className={`rounded-md px-3 py-2 text-sm font-medium ${router.pathname === "/programaintegral" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"}`}>
+                                Programa Integral
                             </a>
                         </Link>
                     </div>

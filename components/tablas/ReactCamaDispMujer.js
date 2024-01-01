@@ -8,24 +8,10 @@ import {
   getSortedRowModel
 } from '@tanstack/react-table';
 
-const OBTENER_CAMAS_DISPONIBLES_MUJER = gql`
-  query obtenerCamasDisponiblesMujer {
-    obtenerCamasDisponiblesMujer {
-      id
-      cama_numero
-      cama_prioridad
-      cama_compartida
-      cama_disponible
-      cama_ocupada
-      cama_genero
-      cama_dispositivo_o2
-      cama_hemodialisis
-      cama_aislamiento
-      cama_dan
-      cama_codigo_uveh
-    }
-  }
-`;
+import { OBTENER_CAMAS_DISPONIBLES_MUJER } from '../../graphql/queries'; 
+
+import { EditIcon, TaskIcon, BedIcon, Female, Male, Kidneys, SoapIcon } from '../../components/icons';
+
 
 const ReactCamaDispMujer = () => {
   const { data, loading, error } = useQuery(OBTENER_CAMAS_DISPONIBLES_MUJER);
@@ -41,90 +27,80 @@ const ReactCamaDispMujer = () => {
   const columns = React.useMemo(
     () => [
       {
-        header: '#',
+        header: 'Cama',
         accessorKey: 'cama_numero',
+        cell: info => {
+          const cama_numero = info.getValue();
+          return (
+            <div className="px-1 text-center">
+              {cama_numero}
+            </div>
+          );
+        },
       },
       {
-        header: 'Priodidad',
+        header: 'Prioridad',
         accessorKey: 'cama_prioridad',
+        cell: info => {
+          const cama_prioridad = info.getValue();
+          return (
+            <div className="px-1 text-left">
+              {cama_prioridad !== "SinPrioridad" ? cama_prioridad : ''}
+            </div>
+          );
+        },
       },
       {
-        header: 'Cubiculo',
+        header: 'Cubículo',
         accessorKey: 'cama_compartida',
         cell: info => {
           const valor = info.getValue();
           const bgColor = valor === true ? "bg-indigo-100 p-2" : "";
           return (
-            <div className={`${bgColor}`}>
+            <div className={`${bgColor} text-center`}>
               {valor === true ? "Compartido" : "Aislado"}
             </div>
           );
         },
       },
       {
-        header: 'Genero',
+        header: 'Género',
         accessorKey: 'cama_genero',
+        cell: info => {
+          const cama_genero = info.getValue();
+          return (
+            <div className="px-1 text-center">
+              {cama_genero === 'Mujer' ? (
+                <Female width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }} />
+              ) : cama_genero === 'Hombre' ? (
+                <Male width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }}/>
+              ) : ''}
+            </div>
+          );
+        },
       },
-/*       {
-        header: 'lado',
-        accessorKey: 'cama_lado',
-      }, */
       {
         header: 'Dispositivo O2',
         accessorKey: 'cama_dispositivo_o2',
-      },
-      {
-        header: 'Ocupada',
-        accessorKey: 'cama_ocupada',
         cell: info => {
-          const valor = info.getValue();
-          if (valor === true) {
-            return "Ocupada";
-          } else if (valor === false) {
-            return "Disponible";
-          }
-          return valor;
+          const cama_dispositivo_o2 = info.getValue();
+          return (
+            <div className="px-1 text-center">
+              {cama_dispositivo_o2}
+            </div>
+          );
         },
       },
       {
         header: 'Hemodialisis',
         accessorKey: 'cama_hemodialisis',
         cell: info => {
-          const valor = info.getValue();
-          if (valor === true) {
-            return "HD";
-          } else if (valor === false) {
-            return "";
-          }
-          return valor;
-        },
-      },
-      {
-        header: 'Código UVEH',
-        accessorKey: 'cama_codigo_uveh',
-      },
-      {
-        header: 'Aislamiento',
-        accessorKey: 'cama_aislamiento',
-        cell: info => {
-          const valor = info.getValue();
-          if (valor === true) {
-            return "Aislamiento";
-          } else if (valor === false) {
-            return "";
-          }
-          return valor;
-        },
-      },
-      {
-        header: 'DAN',
-        accessorKey: 'cama_dan',
-        cell: info => {
-          const valor = info.getValue();
-          const bgColor = valor === true ? "bg-red-400 p-2" : "";
+          const cama_hemodialisis = info.getValue();
           return (
-            <div className={`${bgColor}`}>
-              {valor === true ? "DAN" : ""}
+            <div className="px-1 text-center">
+              {cama_hemodialisis ? (
+                <Kidneys width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }} />
+              ) : ''}
             </div>
           );
         },

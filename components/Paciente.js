@@ -5,67 +5,8 @@ import { format, differenceInYears, differenceInDays, isTomorrow } from 'date-fn
 import { Bug, Eye } from "lucide-react";
 import { BacteriumIcon } from './icons/BacteriumIcon';
 
-//Esta busqueda es para modifcar al encotrado en el botón 
-//Utilizo el resolver de eliminar que modifiqué por dentro 
-const ELIMINAR_PACIENTE = gql`
-    mutation eliminarPaciente($id: ID!) {
-        eliminarPaciente(id:$id) 
-    }
-`;
-
-//Esta busqueda es para modifcar al encotrado en el botón 
-const OBTENER_PACIENTES = gql`
-query ObtenerPacientes {
-  obtenerPacientes {
-    id
-    expediente
-    pac_apellido_paterno
-    pac_apellido_materno
-    pac_nombre
-    pac_genero
-    pac_FN
-    pac_dispositivo_o2
-    pac_hemodialisis
-    diagnostico
-    diagnostico1
-    caracteristicas_especiales
-    pac_codigo_uveh
-    fecha_ingreso
-    fecha_prealta
-    fecha_egreso
-    hospitalizado
-    cama_relacionada {
-      id
-      cama_numero
-      cama_compartida
-      cama_disponible
-      cama_ocupada
-      cama_genero
-      cama_dispositivo_o2
-      cama_hemodialisis
-      cama_aislamiento
-      cama_dan
-      cama_codigo_uveh
-    }
-    microorganismo_relacionado {
-      id
-      fecha_deteccion
-      metodo_deteccion
-      microorganismo_tipo
-      microorganismo_nombre
-      susceptibilidad
-      comentario_uveh
-    }
-    antibiotico_relacionado {
-      id
-      antibiotico_nombre
-      antibiotico_comentario
-      antibiotico_inicio
-      antibiotico_fin
-    }
-  }
-}
-`;
+import { ELIMINAR_PACIENTE } from '../graphql/mutations';
+import { OBTENER_PACIENTES } from '../graphql/queries';
 
 const Paciente = ({paciente, contador }) => {
     //console.log("Paciente del componente Paciente",paciente)

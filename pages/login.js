@@ -95,15 +95,15 @@ const Login = () => {
                 {mensaje && mostrarMensaje() }
                 <div className="flex justify-center">
                   <InspiraLetter className="text-center" fill="#FFFFFF" width="270px" height="120px" />
-              </div>
+              </div >
                 <div className="flex justify-center mt-5">
-                    <div className="w-full max-w-sm">
+                    <div className="w-full max-w-sm p-6 backdrop-filter backdrop-blur-lg bg-white/30 border border-gray-300 shadow-lg rounded-lg">
                         <form
-                            className="bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4"
+                            className="px-8 pt-6 pb-8 mb-4"
                             onSubmit={formik.handleSubmit}
                         >
                             <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                                <label className="block text-gray-700 text-base font-bold mb-2" htmlFor="email">
                                     Email
                                 </label>
 
@@ -126,7 +126,7 @@ const Login = () => {
                             ) : null  }
 
                             <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                                <label className="block text-gray-700 text-base font-bold mb-2" htmlFor="password">
                                     Password
                                 </label>
 

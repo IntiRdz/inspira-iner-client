@@ -4,24 +4,7 @@ import CamaVista from '../components/camas/CamaVista';
 import { gql, useQuery } from '@apollo/client';
 import Link from 'next/link';
 
-const OBTENER_CAMAS_DISPONIBLES_MUJER = gql`
-  query obtenerCamasDisponiblesMujer {
-    obtenerCamasDisponiblesMujer {
-      id
-      cama_numero
-      cama_prioridad
-      cama_compartida
-      cama_disponible
-      cama_ocupada
-      cama_genero
-      cama_dispositivo_o2
-      cama_hemodialisis
-      cama_aislamiento
-      cama_dan
-      cama_codigo_uveh
-    }
-  }
-`;
+import { OBTENER_CAMAS_DISPONIBLES_MUJER } from '../graphql/queries';
 
 const CamasDisponiblesMujer = () => {
   const [camas, setCamas] = useState(null);

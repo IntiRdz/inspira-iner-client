@@ -3,18 +3,8 @@ import Select from 'react-select'
 import { gql, useQuery } from '@apollo/client';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 
-  const OBTENER_CAMAS = gql`
-    query ObtenerCamas {
-      obtenerCamas {
-        id
-        cama_numero
-        cama_compartida
-        cama_disponible
-        cama_ocupada
+import { OBTENER_CAMAS } from '../../graphql/queries'; 
 
-    }
-    }
-`;
 
 export const AsignarCamaTodas = () => {
   

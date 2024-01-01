@@ -5,6 +5,7 @@ import PacienteState from '../context/pacientes/PacienteState';
 import { AuthProvider } from '../context/usuarios/AuthContext';
 
 
+
 function MyApp({ Component, pageProps }) {
   const [apolloClient, setApolloClient] = useState(null);
 

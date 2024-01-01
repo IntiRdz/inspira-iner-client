@@ -20,7 +20,7 @@ export default ( state, action ) => {
         case SELECCIONAR_MICROORGANISMO: 
         return {
             ...state,
-            diagnostico: action.payload
+            microorganismo: action.payload
         }
 
         default: 

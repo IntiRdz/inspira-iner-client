@@ -5,61 +5,10 @@ import { gql, useQuery, useMutation } from '@apollo/client'
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
-import { format } from 'date-fns';
 
-const OBTENER_CAMAS = gql`
-  query obtenerCamas {
-      obtenerCamas {
-            id
-            cama_numero
-            cama_prioridad
-            cama_compartida
-            cama_disponible
-            cama_genero
-            cama_dispositivo_o2
-            cama_hemodialisis
-            cama_aislamiento
-            cama_dan
-            cama_codigo_uveh
-      }
-  }
-`;
+import { OBTENER_CAMAS, OBTENER_CAMA } from '../../graphql/queries'; 
+import { ACTUALIZAR_CAMA } from '../../graphql/mutations'; 
 
-const OBTENER_CAMA = gql`
-    query obtenerCama($id: ID!) {
-        obtenerCama(id: $id) {
-            cama_numero
-            cama_prioridad
-            cama_compartida
-            cama_disponible
-            cama_ocupada
-            cama_genero
-            cama_dispositivo_o2
-            cama_hemodialisis
-            cama_codigo_uveh
-            cama_aislamiento
-            cama_dan
-        }
-    }
-`;
-
-const ACTUALIZAR_CAMA = gql`
-    mutation actualizarCama($id: ID!, $input: CamaInput) {
-            actualizarCama(id:$id, input:$input) {
-                cama_numero
-                cama_prioridad
-                cama_compartida
-                cama_disponible
-                cama_ocupada
-                cama_genero
-                cama_dispositivo_o2
-                cama_hemodialisis
-                cama_codigo_uveh
-                cama_aislamiento
-                cama_dan
-            }
-    }
-`;
 
 const EditarCama = () => {
     
@@ -224,9 +173,7 @@ const EditarCama = () => {
 
     return ( 
         <Layout>
-            <h1 className="text-2xl text-gray-800 font-light">Editar Cama</h1>
-
-            <div className="flex justify-center mt-5">
+            <div className="flex justify-center mt-2">
                 <div className="w-full max-w-lg">
 
                     <Formik

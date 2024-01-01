@@ -21,8 +21,8 @@ const Layout = ({ children }) => {
                     
                 </div>
             ) : (
-                <div className="bg-gray-200 min-h-screen">
-                    <main className="flex-grow overflow-auto p-4 text-sm">
+                <div className="mi-gradiente min-h-screen">
+                    <main className="flex-grow overflow-auto pt-20 pl-3 pr-3 pb-3 text-sm">
                         <Header />
                         {children}
                     </main>

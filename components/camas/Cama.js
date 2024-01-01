@@ -1,44 +1,11 @@
 import React from 'react';
-import Swal from 'sweetalert2';
-import { gql, useMutation } from '@apollo/client';
 import Router from 'next/router';
-import { format } from 'date-fns';
 
 
-const ELIMINAR_CAMA = gql`
-    mutation eliminarCama($id: ID!) {
-        eliminarCama(id: $id) 
-    }
-`;
+import { OBTENER_CAMAS } from '../../graphql/queries'; 
+import { ELIMINAR_CAMA } from '../../graphql/mutations'; 
 
-const OBTENER_CAMAS = gql`
-query ObtenerCamas {
-  obtenerCamas {
-    id
-    cama_numero
-    cama_compartida
-    cama_lado
-    cama_prioridad
-    cama_disponible
-    cama_ocupada
-    cama_genero
-    cama_dispositivo_o2
-    cama_hemodialisis
-    cama_aislamiento
-    cama_dan
-    cama_codigo_uveh
-    creado
-    paciente_relacionado {
-      id
-      pac_nombre
-    }
-    microorganismo_relacionado {
-      id
-      microorganismo_nombre
-    }
-  }
-}
-`;
+
 
 const Cama = ({cama}) => {
     const { 

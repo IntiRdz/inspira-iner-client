@@ -1,19 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Select from 'react-select'
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 
-  const OBTENER_CAMAS_DISPONIBLES = gql`
-    query obtenerCamasDisponibles {
-        obtenerCamasDisponibles {
-          id
-          cama_numero
-          cama_compartida
-          cama_disponible
-          cama_ocupada
-        }
-    }
-`;
+import { OBTENER_CAMAS_DISPONIBLES } from '../../graphql/queries'; 
+
 
 export const AsignarCama = () => {
   
@@ -23,7 +14,7 @@ export const AsignarCama = () => {
     //Context de cama
     const { agregarCama } = useContext(PacienteContext);
    
-    //console.log("Cama ID",cama.id)
+    //console.log("Cama ID subida al contexto",cama.id)
 
     const { data, loading, error } = useQuery(OBTENER_CAMAS_DISPONIBLES)
     

@@ -6,41 +6,8 @@ import * as Yup from 'yup';
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
 
-const NUEVA_CAMA = gql`
-    mutation nuevaCama($input: CamaInput) {
-        nuevaCama(input: $input) {
-            id
-            cama_numero
-            cama_compartida
-            cama_prioridad
-            cama_disponible
-            cama_genero
-            cama_dispositivo_o2
-            cama_hemodialisis
-            cama_aislamiento
-            cama_dan
-            cama_codigo_uveh
-        }
-    }
-`;
-
-const OBTENER_CAMAS = gql`
-  query obtenerCamas {
-      obtenerCamas {
-            id
-            cama_numero
-            cama_compartida
-            cama_prioridad
-            cama_disponible
-            cama_genero
-            cama_dispositivo_o2
-            cama_hemodialisis
-            cama_aislamiento
-            cama_dan
-            cama_codigo_uveh
-      }
-  }
-`;
+import { OBTENER_CAMAS } from '../graphql/queries';
+import { NUEVA_CAMA } from '../graphql/mutations';
 
 const NuevaCama = () => {
 

@@ -24,12 +24,40 @@ body {
     padding: 10px; /* Espacio alrededor de cada columna */
 }
 
-.border-inferior-verde {
-    border-bottom: 2px solid green;
+.border-superior {
+    border-top: 1px solid #0284C7 !important;
 }
 
-.border-superior-verde {
-    border-top: 2px solid green;
+.border-inferior {
+    border-bottom: 1px solid #0284C7 !important;
+}
+
+.mi-gradiente {
+    background-image: linear-gradient(180deg, #2f6ed3 5%, #5095e4 20%, #5095e4 60%, #2f6ed3 95%);
+}
+
+.content {
+    margin-top: 60px; /* Ajusta este valor según la altura de tu Header */
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+  }
+  
+.tooltip:hover::after {
+content: attr(data-tooltip);
+position: absolute;
+bottom: 100%;
+left: 50%;
+transform: translateX(-50%);
+background-color: black;
+color: white;
+text-align: center;
+border-radius: 6px;
+padding: 5px;
+z-index: 1;
+/* Estilos adicionales para el tooltip */
 }
 
 @media screen and (max-width: 768px) {
