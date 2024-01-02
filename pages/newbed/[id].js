@@ -7,7 +7,6 @@ import {differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz'; 
 
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 
 import PacienteContext from '../../context/pacientes/PacienteContext';

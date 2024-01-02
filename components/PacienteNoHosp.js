@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { gql, useMutation } from '@apollo/client';
+import React from 'react';
+import { useMutation } from '@apollo/client';
 import Router from 'next/router';
 import { BacteriumIcon } from './icons/BacteriumIcon';
 import { format, parseISO, differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
