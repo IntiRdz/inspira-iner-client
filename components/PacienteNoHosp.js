@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import Router from 'next/router';
-import { Bug, Eye } from "lucide-react";
+import { BacteriumIcon } from './icons/BacteriumIcon';
 import { format, parseISO, differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
 
 import { OBTENER_PACIENTES } from '../graphql/queries'; 
@@ -248,7 +248,7 @@ const PacienteNoHosp = ({paciente, contador}) => {
                         className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
                         onClick={() => asignarMicroorganismo() }
                     >
-                        <Bug/>
+                        <BacteriumIcon />
 
                         <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 ml-2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </button>
@@ -260,8 +260,8 @@ const PacienteNoHosp = ({paciente, contador}) => {
                         className="flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold"
                         onClick={() => verMicroorganismo() }
                     >
-                    <Bug/>  
-                    <Eye/>
+                    <BacteriumIcon />  
+                    <BacteriumIcon />
 
                     </button>
                 </td>
