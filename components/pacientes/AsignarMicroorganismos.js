@@ -20,7 +20,7 @@ export const AsignarCamaTodas = () => {
     
     useEffect(() => {
          agregarCama (cama.id);
-     }, [cama.id])
+     }, [cama.id, agregarCama])
    
     const seleccionarCama = camas => {
         setCama(camas);
