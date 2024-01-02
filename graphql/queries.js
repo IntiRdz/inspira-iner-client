@@ -421,3 +421,24 @@ ${FRAGMENTO_MICROORGANISMO}
 ${FRAGMENTO_DIAGNOSTICO}
 `;
 
+
+export const OBTENER_TRASLADOS_HOY = gql`
+query ObtenerTrasladosHoy {
+  obtenerTrasladosHoy {
+    admision_relacionada {
+      paciente_relacionado {
+        ...FragmentoPaciente
+      }
+      cama_relacionada {
+        cama {
+          cama_numero
+        }
+      }
+    }
+    microorganismo_relacionado {
+      microorganismo_nombre
+    }
+  }
+}
+${FRAGMENTO_PACIENTE}
+`;
