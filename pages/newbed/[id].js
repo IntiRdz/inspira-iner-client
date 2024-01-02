@@ -20,7 +20,6 @@ import ReactCamaDispMujer from '../../components/tablas/ReactCamaDispMujer';
 //import CamasDisponiblesMujer from '../../components/camas/CamasDisponiblesMujer';
 import { OBTENER_PACIENTE, OBTENER_PACIENTES } from '../../graphql/queries';
 import { ACTUALIZAR_PACIENTE } from '../../graphql/mutations';
-import { EditIcon } from 'lucide-react';
 import PacienteRenglon from '../../components/pacientes/PacienteRenglon';
 
 const timeZone = 'America/Mexico_City'; // Definir la zona horaria
