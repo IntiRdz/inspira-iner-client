@@ -59,7 +59,7 @@ export const AsignarMicroorganismo = () => {
 
     useEffect(() => {
          agregarMicroorganismo (microorganismo.nombre);
-     }, [microorganismo.nombre])
+     }, [microorganismo.nombre, agregarMicroorganismo])
 
 
    
