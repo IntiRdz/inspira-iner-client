@@ -1,34 +1,21 @@
-import React, { useState, useMemo } from 'react';
-import Link from 'next/link';
+import React, {useState} from 'react'
+import { AstronautIcon } from './icons/AstronautIcon'
+import Link from 'next/link'
 import { useRouter } from 'next/router';
-import { AstronautIcon } from './icons/AstronautIcon';
-
-const NavLink = ({ href, children }) => {
-  const router = useRouter();
-  const isActive = router.pathname === href;
-  const linkClass = `rounded-md px-3 py-2 text-sm font-medium ${isActive ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"}`;
-
-  return (
-    <Link href={href} className={linkClass}>
-      {children}
-    </Link>
-  );
-};
 
 export const Navbar = ({ usuario, onCerrarSesion }) => {
 
+    const router = useRouter();
+
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
-  
-    const menuItems = useMemo(() => [
-      { href: "/nuevopaciente", label: "Ingresar Paciente" },
-      { href: "/", label: "Urgencias" }, // Asegúrate de actualizar esta ruta si es necesario
-      { href: "/camasdisponibles", label: "Camas Disponibles" },
-      // Agrega aquí más elementos según sea necesario
-    ], []);
-    
-    return (
-        <nav className="bg-gray-900 fixed top-0 w-full z-10 mr-2">
+
+    const toggleDropdown = () => {
+      setIsDropdownOpen(!isDropdownOpen);
+    };
+
+  return (
+
+    <nav className="bg-gray-900 fixed top-0 w-full z-10 mr-2">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
                 {/* Botón para abrir/cerrar el menú móvil */}
@@ -51,11 +38,8 @@ export const Navbar = ({ usuario, onCerrarSesion }) => {
                             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                                 <div className="hidden sm:ml-6 sm:block">
                                     <div className="flex space-x-4">
-                                        {menuItems.map(item => (
-                                            <NavLink key={item.href} href={item.href}>
-                                            {item.label}
-                                            </NavLink>
-                                        ))}
+                                        {/* Iteración de enlaces con verificación de ruta activa */}
+
                                     </div>
                                 </div>
                             </div>
@@ -104,10 +88,7 @@ export const Navbar = ({ usuario, onCerrarSesion }) => {
             </div>
         )}
     </nav>
-      );
-    };
 
 
-    
-export default Navbar;
-
+  )
+}
