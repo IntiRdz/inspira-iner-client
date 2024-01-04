@@ -6,7 +6,7 @@ import { AstronautIcon } from './icons/AstronautIcon';
 const NavLink = ({ href, children }) => {
   const router = useRouter();
   const isActive = router.pathname === href;
-  const linkClass = `rounded-md px-3 py-2 text-sm font-medium ${isActive ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"}`;
+  const linkClass = `rounded-md px-3 py-2 text-sm font-medium ${isActive ? "bg-gray-900 text-blue-600" : "text-gray-300 hover:bg-gray-700 hover:text-white"}`;
 
   return (
     <Link href={href} className={linkClass}>
@@ -22,7 +22,17 @@ export const Navbar = ({ usuario, onCerrarSesion }) => {
   
     const menuItems = useMemo(() => [
       { href: "/nuevopaciente", label: "Ingresar Paciente" },
-      { href: "/", label: "Urgencias" }, // Asegúrate de actualizar esta ruta si es necesario
+      { href: "/", label: "Urgencias" }, 
+      { href: "/clinico1", label: "1" },
+      { href: "/clinico2", label: "2" },
+      { href: "/clinico3", label: "3" },
+      { href: "/clinico4", label: "4" },
+      { href: "/clinico5", label: "5" },
+      { href: "/clinico7", label: "7" },
+      { href: "/clinico8", label: "8" },
+      { href: "/clinico9", label: "9" },
+      { href: "/clinico10", label: "10" },
+      { href: "/camas", label: "Camas" },
       { href: "/camasdisponibles", label: "Camas Disponibles" },
       // Agrega aquí más elementos según sea necesario
     ], []);
@@ -89,19 +99,19 @@ export const Navbar = ({ usuario, onCerrarSesion }) => {
             </div>
         </div>
 
-            {/* <!-- Mobile menu, show/hide based on menu state. --> */}
-            {isDropdownOpen && (
-            <div className="sm:hidden" id="mobile-menu">
-                <div className="space-y-1 px-2 pb-3 pt-2">
-                {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" --> */}
-                {/*<a href="#" className="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">Dashboard</a>
-                <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Team</a>
-                <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Projects</a>
-                <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Calendar</a>
-                */}
-            
-                </div>
+        {/* <!-- Mobile menu, show/hide based on menu state. --> */}
+        {isDropdownOpen && (
+        <div className="sm:hidden" id="mobile-menu">
+            <div className="space-y-1 px-2 pb-3 pt-2">
+            {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" --> */}
+            {/*<a href="#" className="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">Dashboard</a>
+            <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Team</a>
+            <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Projects</a>
+            <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Calendar</a>
+            */}
+        
             </div>
+        </div>
         )}
     </nav>
       );

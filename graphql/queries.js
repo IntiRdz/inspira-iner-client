@@ -128,9 +128,9 @@ query ObtenerPacientesNoHospitalizados {
 
 
 export const OBTENER_CAMAS = gql`
-    query ObtenerCamas {
-        obtenerCamas {
-          ...FragmentoCama
+  query ObtenerCamas {
+    obtenerCamas {
+      ...FragmentoCama
           camahistorial {
               ...FragmentoCamaHistorial
               admision_relacionada {
@@ -138,10 +138,17 @@ export const OBTENER_CAMAS = gql`
                 paciente_relacionado {
                   ...FragmentoPaciente
                 }
+                cama_relacionada {
+                  ...FragmentoCamaHistorial
+                  microorganismo_relacionado {
+                  ...FragmentoMicroorganismo
+                  }
+                }
+                diagnostico {
+                  ...FragmentoDiagnostico
+                }
             }
           }
-
-
         }
 
     }
@@ -149,6 +156,8 @@ export const OBTENER_CAMAS = gql`
   ${FRAGMENTO_CAMA_HISTORIAL}
   ${FRAGMENTO_ADMISION}
   ${FRAGMENTO_PACIENTE}
+  ${FRAGMENTO_MICROORGANISMO}
+  ${FRAGMENTO_DIAGNOSTICO}
 `;
 
 export const OBTENER_CAMAS_URGENCIAS = gql`

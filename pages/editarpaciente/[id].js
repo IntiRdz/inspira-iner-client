@@ -1,10 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
-import { useQuery, gql, useMutation } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
-import { OBTENER_PACIENTE, OBTENER_PACIENTES } from '../../graphql/queries';
-import EditarPaciente from '../../components/pacientes/EditarPaciente';
+import { OBTENER_PACIENTE } from '../../graphql/queries';
 import PacienteRenglon from '../../components/pacientes/PacienteRenglon';
 import MicroPaciente from '../../components/pacientes/MicroPaciente';
 import MicroNuevo from '../../components/pacientes/MicroNuevo';

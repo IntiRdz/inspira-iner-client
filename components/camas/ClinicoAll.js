@@ -4,22 +4,28 @@ import { format, differenceInYears, differenceInDays, isTomorrow } from 'date-fn
 import { utcToZonedTime } from 'date-fns-tz'; 
 import Router from 'next/router';
 
-import { EditIcon, TaskIcon, BedIcon, Female, Male, Kidneys, SoapIcon } from '../../components/icons';
+import { EditIcon, TaskIcon, BedIcon, Female, Male, Kidneys, SoapIcon } from '../icons';
 
-import { OBTENER_CAMAS_URGENCIAS } from '../../graphql/queries'; 
+import { OBTENER_CAMAS } from '../../graphql/queries'; 
 
 const timeZone = 'America/Mexico_City'; // Define la zona horaria
 
-const Clinico0 = () => {
-  const { data, loading, error } = useQuery(OBTENER_CAMAS_URGENCIAS);
+const ClinicoAll = () => {
+  const { data, loading, error } = useQuery(OBTENER_CAMAS);
 
-  const camas = data ? data.obtenerCamasUrgencias : [];
+  if (loading) {
+    return <h2><a href="#loading" aria-hidden="true" className="aal_anchor" id="loading"><svg aria-hidden="true" className="aal_svg" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fillRule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Loading...</h2>;
+  }
 
-  if (loading) return 'Cargando...';
-  if (error) return `Error: ${error.message}`;
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  const camas = data ? data.obtenerCamas : [];
 
   const camasOrdenadas = [...camas].sort((a, b) => a.cama_numero - b.cama_numero);
-  console.log(camasOrdenadas)
+  //console.log(camasOrdenadas)
 
   // Verificación de fechas y diagnósticos
   const calcularEdad = fechaNacimiento => {
@@ -230,12 +236,12 @@ const progreso = 30;
                     <td className={fechaPreAltaClasses}>{ultimaAdmision.fecha_prealta ? format(utcToZonedTime(new Date(ultimaAdmision.fecha_prealta), timeZone), 'dd/MM/yy') : ''}</td>
                     <td className="border px-1 text-center">{calcularDiasEstancia(ultimaAdmision.fecha_ingreso)}</td>
                     <td className="border px-1">
-                    {Array.isArray(ultimaAdmision.microorganismo_relacionado) 
-                      ? ultimaAdmision.microorganismo_relacionado.map(microorganismo => 
-                          <span key={microorganismo.id}>{microorganismo.microorganismo_nombre}</span>
-                        ).join(', ') 
-                      : ultimaAdmision.microorganismo_relacionado.microorganismo_nombre} 
-                    </td> 
+                      {ultimaAdmision.cama_relacionada.flatMap(cama => 
+                        Array.isArray(cama.microorganismo_relacionado) 
+                          ? cama.microorganismo_relacionado.map(microorganismo => microorganismo.microorganismo_nombre) 
+                          : [cama.microorganismo_relacionado.microorganismo_nombre]
+                      ).join(', ')}
+                    </td>
                     <td className="border px-1 relative">
                       <div className="w-full bg-gray-200 rounded">
                           <div 
@@ -249,7 +255,7 @@ const progreso = 30;
                     <td className="border px-1">
                       <span className="flex justify-center items-center">
                         <button 
-                          onClick={() => navegar(`/editarpaciente/${ultimaAdmision.paciente_relacionado.id}`)}
+                          onClick={() => navegar(`/programaintegral/${ultimaAdmision.paciente_relacionado.id}`)}
                           className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"
                           data-tooltip="Programa Integral"
                         >
@@ -305,4 +311,4 @@ const progreso = 30;
     
   );
 }
-export default Clinico0;
+export default ClinicoAll;
