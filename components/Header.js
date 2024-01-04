@@ -1,51 +1,26 @@
 import React from 'react';
-import { useQuery, gql } from '@apollo/client'
 import { useRouter } from 'next/router';
 import { Navbar } from './Navbar';
-
-const OBTENER_USUARIO = gql`
-    query obtenerUsuario{
-        obtenerUsuario {
-            id
-            nombre
-            apellido
-        }
-    }
-`;
+import { AuthContext } from '../context/usuarios/AuthContext'; // Asegúrate de usar la ruta correcta
 
 const Header = () => {
 
-    const router = useRouter();
+    const { user, iniciarSesion, cerrarSesion } = useContext(AuthContext);
 
-    // query de apollo
-    const { data, loading, error} = useQuery(OBTENER_USUARIO);
-    if (loading) return 'Cargando...';
-    // console.log(data)
-    // console.log(loading)
-    // console.log(error)
+    const manejarLogin = () => {
+        // Suponiendo que obtienes un token de alguna manera
+        const token = 'tu_token_jwt';
+        iniciarSesion(token);
+    };
 
-    // Proteger que no accedamos a data antes de tener resultados
+    const manejarLogout = () => {
+        cerrarSesion();
+    };
 
-
-    // Si no hay informacion
-    if(!data) {
-        return router.push('/login');
-    }
-
-/*     const { nombre, apellido } = data.obtenerUsuario;
-
-    const cerrarSesion = () => {
-        localStorage.removeItem('token');
-        router.push('/login');
-    } */
-
-    const nombre = "Dr@";
-    const apellido = "Inspir@";
-
-
+    const {nombre, apellido} = user;
 
     return ( 
-            <Navbar usuario={{ nombre, apellido }} /* onCerrarSesion={cerrarSesion} */ />
+            <Navbar usuario={{ nombre, apellido }}  onCerrarSesion={cerrarSesion}  />
      );
 }
  
