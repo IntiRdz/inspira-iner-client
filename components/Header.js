@@ -17,7 +17,7 @@ const Header = () => {
         cerrarSesion();
     };
 
-    const {nombre, apellido} = user;
+    const {nombre, apellido} = user || {};
 
     return ( 
             <Navbar usuario={{ nombre, apellido }}  onCerrarSesion={cerrarSesion}  />
