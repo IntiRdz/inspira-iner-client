@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { Navbar } from './Navbar';
 import { AuthContext } from '../context/usuarios/AuthContext'; // Asegúrate de usar la ruta correcta
