@@ -10,13 +10,10 @@ import {
 
 import { OBTENER_CAMAS_DISPONIBLES_MUJER } from '../../graphql/queries'; 
 
-import { EditIcon, TaskIcon, BedIcon, Female, Male, Kidneys, SoapIcon } from '../../components/icons';
-
-
-const ReactCamaDispMujer = () => {
-  const { data, loading, error } = useQuery(OBTENER_CAMAS_DISPONIBLES_MUJER);
+export default function ReactCamaDispMujer () {
+  const { data, loading, error } = useQuery(OBTENER_CAMAS_DISPONIBLES_MUJER);  
   const [camas, setCamas] = useState([]);
-  
+
   useEffect(() => {
     if (data && data.obtenerCamasDisponiblesMujer) {
       setCamas(data.obtenerCamasDisponiblesMujer);
@@ -27,82 +24,42 @@ const ReactCamaDispMujer = () => {
   const columns = React.useMemo(
     () => [
       {
-        header: 'Cama',
+        header: '#',
         accessorKey: 'cama_numero',
-        cell: info => {
-          const cama_numero = info.getValue();
-          return (
-            <div className="px-1 text-center">
-              {cama_numero}
-            </div>
-          );
-        },
       },
       {
-        header: 'Prioridad',
+        header: 'Priodidad',
         accessorKey: 'cama_prioridad',
-        cell: info => {
-          const cama_prioridad = info.getValue();
-          return (
-            <div className="px-1 text-left">
-              {cama_prioridad !== "SinPrioridad" ? cama_prioridad : ''}
-            </div>
-          );
-        },
       },
       {
-        header: 'Cubículo',
+        header: 'Cubiculo',
         accessorKey: 'cama_compartida',
         cell: info => {
           const valor = info.getValue();
           const bgColor = valor === true ? "bg-indigo-100 p-2" : "";
           return (
-            <div className={`${bgColor} text-center`}>
+            <div className={`${bgColor}`}>
               {valor === true ? "Compartido" : "Aislado"}
             </div>
           );
         },
       },
-      {
-        header: 'Género',
-        accessorKey: 'cama_genero',
-        cell: info => {
-          const cama_genero = info.getValue();
-          return (
-            <div className="px-1 text-center">
-              {cama_genero === 'Mujer' ? (
-                <Female width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }} />
-              ) : cama_genero === 'Hombre' ? (
-                <Male width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }}/>
-              ) : ''}
-            </div>
-          );
-        },
-      },
+
       {
         header: 'Dispositivo O2',
         accessorKey: 'cama_dispositivo_o2',
-        cell: info => {
-          const cama_dispositivo_o2 = info.getValue();
-          return (
-            <div className="px-1 text-center">
-              {cama_dispositivo_o2}
-            </div>
-          );
-        },
       },
       {
         header: 'Hemodialisis',
         accessorKey: 'cama_hemodialisis',
         cell: info => {
-          const cama_hemodialisis = info.getValue();
-          return (
-            <div className="px-1 text-center">
-              {cama_hemodialisis ? (
-                <Kidneys width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }} />
-              ) : ''}
-            </div>
-          );
+          const valor = info.getValue();
+          if (valor === true) {
+            return "HD";
+          } else if (valor === false) {
+            return "";
+          }
+          return valor;
         },
       },
     ],
@@ -170,7 +127,6 @@ const ReactCamaDispMujer = () => {
     );
 };
 
-export default ReactCamaDispMujer;
 
 
 

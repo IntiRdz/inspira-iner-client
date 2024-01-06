@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
-import { AsignarCama } from '../pacientes/AsignarCama';
+import { AsignarCama } from './AsignarCama';
 
 const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual, onData=1  }) => {
 

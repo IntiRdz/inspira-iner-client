@@ -10,7 +10,7 @@ import {
 
 import { OBTENER_CAMAS_DISPONIBLES_HOMBRE } from '../../graphql/queries'; 
 
-export default function ReactCamaDispHombre  () {
+const ReactCamaDispHombre = () => {
   const { data, loading, error } = useQuery(OBTENER_CAMAS_DISPONIBLES_HOMBRE);  
   const [camas, setCamas] = useState([]);
 
@@ -44,10 +44,30 @@ export default function ReactCamaDispHombre  () {
           );
         },
       },
-
+      {
+        header: 'Genero',
+        accessorKey: 'cama_genero',
+      },
+/*       {
+        header: 'lado',
+        accessorKey: 'cama_lado',
+      }, */
       {
         header: 'Dispositivo O2',
         accessorKey: 'cama_dispositivo_o2',
+      },
+      {
+        header: 'Ocupada',
+        accessorKey: 'cama_ocupada',
+        cell: info => {
+          const valor = info.getValue();
+          if (valor === true) {
+            return "Ocupada";
+          } else if (valor === false) {
+            return "Disponible";
+          }
+          return valor;
+        },
       },
       {
         header: 'Hemodialisis',
@@ -60,6 +80,36 @@ export default function ReactCamaDispHombre  () {
             return "";
           }
           return valor;
+        },
+      },
+      {
+        header: 'Código UVEH',
+        accessorKey: 'cama_codigo_uveh',
+      },
+      {
+        header: 'Aislamiento',
+        accessorKey: 'cama_aislamiento',
+        cell: info => {
+          const valor = info.getValue();
+          if (valor === true) {
+            return "Aislamiento";
+          } else if (valor === false) {
+            return "";
+          }
+          return valor;
+        },
+      },
+      {
+        header: 'DAN',
+        accessorKey: 'cama_dan',
+        cell: info => {
+          const valor = info.getValue();
+          const bgColor = valor === true ? "bg-red-400 p-2" : "";
+          return (
+            <div className={`${bgColor}`}>
+              {valor === true ? "DAN" : ""}
+            </div>
+          );
         },
       },
     ],
@@ -126,6 +176,8 @@ export default function ReactCamaDispHombre  () {
         </div>
     );
 };
+
+export default ReactCamaDispHombre;
 
 
 
