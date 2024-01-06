@@ -259,7 +259,38 @@ export const OBTENER_CAMAS_2 = gql`
   ${FRAGMENTO_DIAGNOSTICO}
 `;
 
+export const OBTENER_CAMAS_3 = gql`
+  query ObtenerCamas3 {
+    obtenerCamas3 {
+      ...FragmentoCama
+          camahistorial {
+              ...FragmentoCamaHistorial
+              admision_relacionada {
+              ...FragmentoAdmision
+                paciente_relacionado {
+                  ...FragmentoPaciente
+                }
+                cama_relacionada {
+                  ...FragmentoCamaHistorial
+                  microorganismo_relacionado {
+                  ...FragmentoMicroorganismo
+                  }
+                }
+                diagnostico {
+                  ...FragmentoDiagnostico
+                }
+            }
+          }
+        }
 
+    }
+  ${FRAGMENTO_CAMA}
+  ${FRAGMENTO_CAMA_HISTORIAL}
+  ${FRAGMENTO_ADMISION}
+  ${FRAGMENTO_PACIENTE}
+  ${FRAGMENTO_MICROORGANISMO}
+  ${FRAGMENTO_DIAGNOSTICO}
+`;
 
 export const OBTENER_CAMA = gql`
     query obtenerCama($id: ID!) {
