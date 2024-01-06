@@ -292,6 +292,38 @@ export const OBTENER_CAMAS_3 = gql`
   ${FRAGMENTO_DIAGNOSTICO}
 `;
 
+export const OBTENER_CAMAS_4 = gql`
+  query ObtenerCamas4 {
+    obtenerCamas4 {
+      ...FragmentoCama
+          camahistorial {
+              ...FragmentoCamaHistorial
+              admision_relacionada {
+              ...FragmentoAdmision
+                paciente_relacionado {
+                  ...FragmentoPaciente
+                }
+                cama_relacionada {
+                  ...FragmentoCamaHistorial
+                  microorganismo_relacionado {
+                  ...FragmentoMicroorganismo
+                  }
+                }
+                diagnostico {
+                  ...FragmentoDiagnostico
+                }
+            }
+          }
+        }
+
+    }
+  ${FRAGMENTO_CAMA}
+  ${FRAGMENTO_CAMA_HISTORIAL}
+  ${FRAGMENTO_ADMISION}
+  ${FRAGMENTO_PACIENTE}
+  ${FRAGMENTO_MICROORGANISMO}
+  ${FRAGMENTO_DIAGNOSTICO}
+`;
 export const OBTENER_CAMA = gql`
     query obtenerCama($id: ID!) {
         obtenerCama(id: $id) {
@@ -301,6 +333,171 @@ export const OBTENER_CAMA = gql`
   ${FRAGMENTO_CAMA}
 `;
 
+export const OBTENER_CAMAS_5 = gql`
+  query ObtenerCamas5 {
+    obtenerCamas3 {
+      ...FragmentoCama
+          camahistorial {
+              ...FragmentoCamaHistorial
+              admision_relacionada {
+              ...FragmentoAdmision
+                paciente_relacionado {
+                  ...FragmentoPaciente
+                }
+                cama_relacionada {
+                  ...FragmentoCamaHistorial
+                  microorganismo_relacionado {
+                  ...FragmentoMicroorganismo
+                  }
+                }
+                diagnostico {
+                  ...FragmentoDiagnostico
+                }
+            }
+          }
+        }
+
+    }
+  ${FRAGMENTO_CAMA}
+  ${FRAGMENTO_CAMA_HISTORIAL}
+  ${FRAGMENTO_ADMISION}
+  ${FRAGMENTO_PACIENTE}
+  ${FRAGMENTO_MICROORGANISMO}
+  ${FRAGMENTO_DIAGNOSTICO}
+`;
+
+
+export const OBTENER_CAMAS_7 = gql`
+  query ObtenerCamas7 {
+    obtenerCamas3 {
+      ...FragmentoCama
+          camahistorial {
+              ...FragmentoCamaHistorial
+              admision_relacionada {
+              ...FragmentoAdmision
+                paciente_relacionado {
+                  ...FragmentoPaciente
+                }
+                cama_relacionada {
+                  ...FragmentoCamaHistorial
+                  microorganismo_relacionado {
+                  ...FragmentoMicroorganismo
+                  }
+                }
+                diagnostico {
+                  ...FragmentoDiagnostico
+                }
+            }
+          }
+        }
+
+    }
+  ${FRAGMENTO_CAMA}
+  ${FRAGMENTO_CAMA_HISTORIAL}
+  ${FRAGMENTO_ADMISION}
+  ${FRAGMENTO_PACIENTE}
+  ${FRAGMENTO_MICROORGANISMO}
+  ${FRAGMENTO_DIAGNOSTICO}
+`;
+
+export const OBTENER_CAMAS_8 = gql`
+  query ObtenerCamas3 {
+    obtenerCamas3 {
+      ...FragmentoCama
+          camahistorial {
+              ...FragmentoCamaHistorial
+              admision_relacionada {
+              ...FragmentoAdmision
+                paciente_relacionado {
+                  ...FragmentoPaciente
+                }
+                cama_relacionada {
+                  ...FragmentoCamaHistorial
+                  microorganismo_relacionado {
+                  ...FragmentoMicroorganismo
+                  }
+                }
+                diagnostico {
+                  ...FragmentoDiagnostico
+                }
+            }
+          }
+        }
+
+    }
+  ${FRAGMENTO_CAMA}
+  ${FRAGMENTO_CAMA_HISTORIAL}
+  ${FRAGMENTO_ADMISION}
+  ${FRAGMENTO_PACIENTE}
+  ${FRAGMENTO_MICROORGANISMO}
+  ${FRAGMENTO_DIAGNOSTICO}
+`;
+
+export const OBTENER_CAMAS_9 = gql`
+  query ObtenerCamas9 {
+    obtenerCamas3 {
+      ...FragmentoCama
+          camahistorial {
+              ...FragmentoCamaHistorial
+              admision_relacionada {
+              ...FragmentoAdmision
+                paciente_relacionado {
+                  ...FragmentoPaciente
+                }
+                cama_relacionada {
+                  ...FragmentoCamaHistorial
+                  microorganismo_relacionado {
+                  ...FragmentoMicroorganismo
+                  }
+                }
+                diagnostico {
+                  ...FragmentoDiagnostico
+                }
+            }
+          }
+        }
+
+    }
+  ${FRAGMENTO_CAMA}
+  ${FRAGMENTO_CAMA_HISTORIAL}
+  ${FRAGMENTO_ADMISION}
+  ${FRAGMENTO_PACIENTE}
+  ${FRAGMENTO_MICROORGANISMO}
+  ${FRAGMENTO_DIAGNOSTICO}
+`;
+
+export const OBTENER_CAMAS_10 = gql`
+  query ObtenerCamas10 {
+    obtenerCamas3 {
+      ...FragmentoCama
+          camahistorial {
+              ...FragmentoCamaHistorial
+              admision_relacionada {
+              ...FragmentoAdmision
+                paciente_relacionado {
+                  ...FragmentoPaciente
+                }
+                cama_relacionada {
+                  ...FragmentoCamaHistorial
+                  microorganismo_relacionado {
+                  ...FragmentoMicroorganismo
+                  }
+                }
+                diagnostico {
+                  ...FragmentoDiagnostico
+                }
+            }
+          }
+        }
+
+    }
+  ${FRAGMENTO_CAMA}
+  ${FRAGMENTO_CAMA_HISTORIAL}
+  ${FRAGMENTO_ADMISION}
+  ${FRAGMENTO_PACIENTE}
+  ${FRAGMENTO_MICROORGANISMO}
+  ${FRAGMENTO_DIAGNOSTICO}
+`;
 
 
 export const OBTENER_CAMAS_DISPONIBLES = gql`
