@@ -7,6 +7,7 @@ import { OBTENER_PACIENTE } from '../../graphql/queries';
 import PacienteRenglon from '../../components/pacientes/PacienteRenglon';
 import MicroNuevo from '../../components/pacientes/MicroNuevo';
 import DiagnosticosPaciente from '../../components/pacientes/DiagnosticosPaciente';
+import PdfPacPrograma from '../../components/programa/PdfPacPrograma';
 
 
 
@@ -18,8 +19,6 @@ const Editar = () => {
     const { data, loading, error } = useQuery(OBTENER_PACIENTE, {
         variables: { id }
     });
-
-    const [newMicro, setNewMicro] = useState(false);
 
     if (loading) return <p>Cargando...</p>;
     if (error) return <p>Ha ocurrido un error</p>;
@@ -37,22 +36,10 @@ const Editar = () => {
                 <div className="w-full w-lg">  
                     <DiagnosticosPaciente obtenerPaciente ={data.obtenerPaciente}/>      
                 </div>
+                <div className="w-full w-lg">  
+                    <PdfPacPrograma obtenerPaciente ={data.obtenerPaciente}/>      
+                </div> 
 
-                <div className="w-full max-w-4xl">  
-                    <button
-                        type="button"
-                        onClick={() => setNewMicro(!newMicro)}
-                        className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
-                        >
-                        {newMicro ? 'Ocultar' : 'Agregar Microorganismo'}
-                    </button>
-                </div>
-
-                {/* Nuevo Microorganismo  */}
-                <div className="w-full w-lg">              
-                    {newMicro && <MicroNuevo obtenerPaciente ={data.obtenerPaciente}/>}
-
-                </div>
 
 
             

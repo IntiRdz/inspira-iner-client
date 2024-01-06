@@ -69,7 +69,7 @@ const PacienteRenglon = ({obtenerPaciente}) => {
       //console.log("obtenerPaciente", obtenerPaciente);
 
   return (
-    <>
+    <div>
         <table className="table-auto shadow-md mt-2 w-full w-lg">
             <thead className="bg-gray-800">
               <tr className="text-white">
@@ -130,7 +130,7 @@ const PacienteRenglon = ({obtenerPaciente}) => {
                           <EditIcon color='white' />
                         </button>
                       </span>
-                    </td>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -140,7 +140,7 @@ const PacienteRenglon = ({obtenerPaciente}) => {
                     {editPatient && <EditarPaciente obtenerPaciente ={obtenerPaciente}/>}
 
                 </div>
-    </>
+    </div>
   )
 }
 
