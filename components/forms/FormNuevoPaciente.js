@@ -1,5 +1,5 @@
 import React from 'react';
-import { AsignarCama } from './AsignarCama';
+import { AsignarCama } from '../pacientes/AsignarCama';
 
 const FormNuevoPaciente = ({ formik }) => {
     return (
@@ -247,6 +247,7 @@ const FormNuevoPaciente = ({ formik }) => {
                 'InfeccionReciente',
                 'Embarazo',
                 'Inmunosupresion',
+                'ComunidadLG',
             ].map((option) => (
                 <label key={option} className="block">
                 <input

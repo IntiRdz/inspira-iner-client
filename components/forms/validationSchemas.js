@@ -104,6 +104,7 @@ export const validationSchema = Yup.object({
         'InfeccionReciente',
         'Embarazo',
         'Inmunosupresion',
+        'ComunidadLG'
         ])
     ),
     fecha_ingreso: Yup.date().required('La fecha de ingreso es obligatoria'),

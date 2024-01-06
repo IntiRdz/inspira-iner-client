@@ -8,8 +8,8 @@ import PacienteContext from '../../context/pacientes/PacienteContext';
 
 import { OBTENER_PACIENTES } from '../../graphql/queries';
 import { ACTUALIZAR_PACIENTE } from '../../graphql/mutations';
-import { pacienteValidationSchema } from '../../graphql/validationSchemas';
-import FormEditPatient from './FormEditPaciente';
+import { pacienteValidationSchema } from '../../components/forms/validationSchemas';
+import FormEditPatient from '../forms/FormEditPaciente';
 
 
 const EditarPaciente = ({obtenerPaciente}) => {

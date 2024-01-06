@@ -1,7 +1,7 @@
 import React from 'react';
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 
-export const DocuPDF = () => {
+export const DocuPDF = ({obtenerPaciente}) => {
     const styles = StyleSheet.create({
         page: {
             flexDirection: 'row',
