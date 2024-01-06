@@ -1,5 +1,5 @@
 import React from 'react';
-import { AsignarCama } from '../pacientes/AsignarCama';
+import { AsignarCama } from './AsignarCama';
 
 const FormNuevoPaciente = ({ formik }) => {
     return (

@@ -10,9 +10,9 @@ import { Formik } from 'formik';
 import Swal from 'sweetalert2';
 
 import PacienteContext from '../../context/pacientes/PacienteContext';
-import { AsignarCama } from '../../components/pacientes/AsignarCama';
+import { AsignarCama } from '../../components/forms/AsignarCama';
 import ReactCamaDispHombre from '../../components/tablas/ReactCamaDispHombre';
-import ClinicoAll from '../../components/camas/ClinicoAll';
+import ClinicoAllSimple from '../../components/camas/ClinicoAllSimple';
 import ReactCamaDispMujer from '../../components/tablas/ReactCamaDispMujer';
 
 //import CamasDisponiblesHombre from '../../components/camas/CamasDisponiblesHom';
@@ -242,7 +242,7 @@ const NewBed = () => {
 
                 <div className="w-4/6">
                     {/* Columna 2 */}
-                    {mostrarPacientes && <ClinicoAll />}
+                    {mostrarPacientes && <ClinicoAllSimple />}
                     {/* {mostrarCamasHombres && <CamasDisponiblesHombre />} */}
                 </div>
             </div>

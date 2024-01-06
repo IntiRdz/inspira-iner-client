@@ -6,42 +6,43 @@ import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 
 import PacienteContext from '../../context/pacientes/PacienteContext';
-/* import { AsignarCamaTodas } from '../../components/pacientes/AsignarCamaTodas'; */
 
 import FormNuevoMicro from '../forms/FormNuevoMicro';
 
-import { OBTENER_PACIENTES } from '../../graphql/queries'; 
+import { OBTENER_PACIENTE } from '../../graphql/queries'; 
 import { NUEVO_MICROORGANISMO } from '../../graphql/mutations'; 
 
 
 const MicroNuevo = ({obtenerPaciente}) => {
     // routing
     const router = useRouter();
-    const { query: { id } } = router;
+
 
     // Mensaje de alerta
     const [mensaje, guardarMensaje] = useState(null);
 
-
+    const id = obtenerPaciente.id;
     
     
     const {microorganismo} = useContext(PacienteContext);
     
     console.log('Microorganismo del PacienteContext:', microorganismo);
 
-// Consulta para obtener todos los pacientes y actualizar el context de la consulta obtenerPacientes
-  const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
-  
-
-
-//console.log("obtenerPaciente De micro", obtenerPaciente);
 
     // Mutation para asignar el microrganismo al paciente al paciente
-     const [nuevoMicroorganismo] = useMutation(NUEVO_MICROORGANISMO);
+     const [nuevoMicroorganismo] = useMutation(NUEVO_MICROORGANISMO, {
+        refetchQueries: [
+            {
+                query: OBTENER_PACIENTE,
+                variables: { id: id }
+            }
+        ],
+    });
+
+    
 
 
     const ultimaCamaRelacionadaId = obtenerPaciente.admision_relacionada[0].cama_relacionada.slice(-1)[0].id;
-    const ultimaAdmisionId = obtenerPaciente.admision_relacionada.slice(-1)[0].id;
     console.log("ultimaCamaRelacionadaId", ultimaCamaRelacionadaId);
             
     // Formulario para nuevos microorganismos
@@ -123,7 +124,7 @@ const MicroNuevo = ({obtenerPaciente}) => {
                 )
 
                 // Redireccionar hacia los microorganismos
-                router.push('/'); 
+                router.push(`/editarpaciente/${id}`);
 
 
 

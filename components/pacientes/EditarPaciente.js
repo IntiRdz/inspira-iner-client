@@ -6,9 +6,8 @@ import { format } from 'date-fns';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 
 
-import { OBTENER_PACIENTES } from '../../graphql/queries';
-import { ACTUALIZAR_PACIENTE } from '../../graphql/mutations';
-import { pacienteValidationSchema } from '../../components/forms/validationSchemas';
+import { ACTUALIZAR_PACIENTE, OBTENER_PACIENTE, OBTENER_CAMAS_DISPONIBLES } from '../../graphql/mutations';
+import { validationSchema } from '../../components/forms/validationSchemas';
 import FormEditPatient from '../forms/FormEditPaciente';
 
 
@@ -18,9 +17,10 @@ const EditarPaciente = ({obtenerPaciente}) => {
     // Mensaje de alerta
     const [mensaje, guardarMensaje] = useState(null);
 
+    const id = obtenerPaciente.id;
 
     const { cama } = useContext(PacienteContext);
-    console.log("Valor de id.cama del contexto:", cama);
+    //console.log("Valor de id.cama del contexto:", cama);
     
     const [childData, setChildData] = useState(null);
 
@@ -28,34 +28,17 @@ const EditarPaciente = ({obtenerPaciente}) => {
         setChildData(data);
     }
 
-    const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
-    
-    
-    // Mutation para modificar al paceinte
+
     const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
-        update(cache, { data: { actualizarPaciente } }) {
-            // Obtener el objeto de cache directamente desde la consulta anterior
-            const { obtenerPacientes } = pacientesData;
-    
-            // Verificar si hay errores o está cargando en la consulta original
-            if (pacientesLoading || pacientesError) {
-                console.log('Cargando o error en la consulta de pacientes');
-                return;
-            }
-    
-            // Reescribir ese objeto
-            cache.writeQuery({
-                query: OBTENER_PACIENTES,
-                data: {
-                    obtenerPacientes: [...obtenerPacientes, actualizarPaciente]
-                }
-            });
-        },
+        refetchQueries: [
+            { query: OBTENER_PACIENTE, variables: { id: id } },
+            { query: OBTENER_CAMAS_DISPONIBLES }
+        ],
     });
 
-    const id = obtenerPaciente.id;
+    
 
-    console.log("obtenerPaciente", obtenerPaciente);
+    //console.log("obtenerPaciente", obtenerPaciente);
 
     const ultimaAdmision = obtenerPaciente.admision_relacionada?.slice(-1)[0] || null;
     const camaActual = ultimaAdmision?.cama_relacionada?.slice(-1)[0]?.cama_numero || null;
@@ -105,7 +88,7 @@ const EditarPaciente = ({obtenerPaciente}) => {
             cama_relacionada
         } = valores;
 
-        //console.log("Valores Inciales:", valores)
+        console.log("Valores Inciales:", valores)
 
         const valoresActualizados = {
             expediente,
@@ -149,7 +132,7 @@ const EditarPaciente = ({obtenerPaciente}) => {
             )
 
             // Redireccionar
-            router.push('/urgencias');
+            router.push(`/editarpaciente/${id}`);
             
         } catch (error) {
             console.error("Errores en graphQL:", error);
@@ -200,9 +183,10 @@ const EditarPaciente = ({obtenerPaciente}) => {
         <>
             <div className="flex justify-center mt-2">
                 <div className="w-full max-w-7xl">
+                {mensaje && mostrarMensaje()}
                     <FormEditPatient
                         initialValues={initialValues}
-                        validationSchema={pacienteValidationSchema}
+                        validationSchema={validationSchema}
                         onSubmit={actualizarInfoPaciente}
                         camaActual={camaActual}
                         onData={handleDataFromChild}
@@ -211,7 +195,7 @@ const EditarPaciente = ({obtenerPaciente}) => {
                 </div>
             </div>
 
-            {mensaje && mostrarMensaje()}
+            
         </>
      );
 }
