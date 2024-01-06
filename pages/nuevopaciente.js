@@ -9,14 +9,14 @@ import { format } from 'date-fns';
 
 import PacienteContext from '../context/pacientes/PacienteContext';
 
-import { validationSchema } from '../graphql/validationSchemas';
+import { validationSchema } from '../components/forms/validationSchemas';
 
-import { OBTENER_PACIENTES, OBTENER_CAMAS_URGENCIAS } from '../graphql/queries';
 import { NUEVO_PACIENTE } from '../graphql/mutations';
 
 import { SUSCRIPCION_NUEVO_PACIENTE } from '../graphql/subscriptions';
-import { SUSCRIPCION_ACTUALIZAR_CAMA } from '../graphql/subscriptions';
-import FormNuevoPaciente from '../components/pacientes/FormNuevoPaciente';
+import { OBTENER_CAMAS_URGENCIAS } from '../graphql/queries';
+ import { SUSCRIPCION_ACTUALIZAR_CAMA } from '../graphql/subscriptions';  
+import FormNuevoPaciente from '../components/forms/FormNuevoPaciente';
 
 const NuevoPaciente = () => {
     
@@ -27,59 +27,28 @@ const NuevoPaciente = () => {
     const [mensaje, guardarMensaje] = useState(null);
     const { cama } = useContext(PacienteContext);
 
-    const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
 
-     // Mutation de apollo
-/*      const [nuevoPaciente] = useMutation(NUEVO_PACIENTE, {
-        update(cache, { data: { nuevoPaciente } }) {
-            // Obtener el objeto de cache directamente desde la consulta anterior
-            const { obtenerPacientes } = pacientesData;
-    
-            // Verificar si hay errores o está cargando en la consulta original
-            if (pacientesLoading || pacientesError) {
-                console.log('Cargando o error en la consulta de pacientes');
-                return;
-            }
-    
-            // Reescribir ese objeto
-            cache.writeQuery({
-                query: OBTENER_PACIENTES,
-                data: {
-                    obtenerPacientes: [...obtenerPacientes, nuevoPaciente]
-                }
-            });
-        },
-    }); */
 
     const [nuevoPaciente] = useMutation(NUEVO_PACIENTE, {
-        update(cache, { data: { nuevoPaciente } }) {
-            // Actualizar caché para NUEVO_PACIENTE
-            const { obtenerPacientes } = cache.readQuery({ query: OBTENER_PACIENTES });
-            cache.writeQuery({
-                query: OBTENER_PACIENTES,
-                data: { obtenerPacientes: [...obtenerPacientes, nuevoPaciente] },
-            });
-    
-            // Actualizar caché para OBTENER_CAMAS_URGENCIAS
-            const { obtenerCamasUrgencias } = cache.readQuery({ query: OBTENER_CAMAS_URGENCIAS });
-            // Encuentra la cama actualizada en la lista y actualízala
-            const camasUrgenciasActualizadas = obtenerCamasUrgencias.map(cama => {
-                if (cama.id === nuevoPaciente.cama_relacionada) {
-                    return { ...cama, cama_ocupada: true, cama_genero: nuevoPaciente.pac_genero };
-                }
-                return cama;
-            });
-            
-            cache.writeQuery({
-                query: OBTENER_CAMAS_URGENCIAS,
-                data: { obtenerCamasUrgencias: camasUrgenciasActualizadas },
-            });
+        refetchQueries: [{
+            query: OBTENER_CAMAS_URGENCIAS // Esta es la consulta que quieres refrescar
+        }],
+        onCompleted: () => {
+            // Opcional: código que se ejecuta después de completar la mutación
+            router.push('/');
+            Swal.fire(
+                'Creado',
+                'Se agregó correctamente al paciente',
+                'success'
+            )
         },
+        onError: (error) => {
+            // Opcional: Manejar errores aquí
+            console.error("Error al crear paciente:", error);
+        }
     });
-    
-    
 
-    const { data, loading, error } = useSubscription(SUSCRIPCION_NUEVO_PACIENTE);
+     const { data, loading, error } = useSubscription(SUSCRIPCION_NUEVO_PACIENTE);
     if (data) {
         console.log('Nuevo paciente recibido:', data);
       }
@@ -87,7 +56,7 @@ const NuevoPaciente = () => {
     const { data: dataSubscription, loading: loadingSubscription, error: errorSubscription } = useSubscription(SUSCRIPCION_ACTUALIZAR_CAMA);
     if (dataSubscription) {
     console.log('Cama actualizada recibido:', dataSubscription);
-    }
+    } 
 
     const formik = useFormik({
         initialValues: {

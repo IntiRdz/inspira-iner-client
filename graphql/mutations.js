@@ -32,26 +32,9 @@ export const NUEVO_PACIENTE = gql`
     mutation nuevoPaciente($input: PacienteInput) {
         nuevoPaciente(input: $input) {
             ...FragmentoPaciente
-            admision_relacionada {
-                ...FragmentoAdmision
-                cama_relacionada{
-                    ...FragmentoCamaHistorial
-                    cama{
-                        ...FragmentoCama
-                    }
-                    microorganismo_relacionado {
-                    ...FragmentoMicroorganismo
-                }   
-                }
-
-            }
         }
     }
 ${FRAGMENTO_PACIENTE}
-${FRAGMENTO_ADMISION}
-${FRAGMENTO_CAMA_HISTORIAL}
-${FRAGMENTO_CAMA}
-${FRAGMENTO_MICROORGANISMO}
 `;
 
 export const ACTUALIZAR_PACIENTE = gql`

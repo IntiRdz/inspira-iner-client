@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
-import { AsignarCama } from './AsignarCama';
+import { AsignarCama } from '../pacientes/AsignarCama';
 
 const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual, onData=1  }) => {
 
@@ -164,9 +164,6 @@ const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual
                                 </div>
                             ) : null  }
 
-</div>
-{/* divisor de  form */}<div className="form-column p-4">
-
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_genero">
                                     Género
@@ -190,6 +187,11 @@ const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual
                                     <p>{props.errors.pac_genero}</p>
                                 </div>
                             ) : null  }
+
+</div>
+{/* divisor de  form */}<div className="form-column p-4">
+
+
 
 
 
@@ -224,14 +226,15 @@ const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual
                             ) : null  }
 
                             <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_hemodialisis">
-                                    Hemodialisis
-                                </label>
+                                <div className="block text-gray-700 text-sm font-bold mb-2">
+                                    Hemodiálisis
+                                </div>
 
                                 <div className="flex items-center">
                                     <input
                                         className="mr-2 leading-tight"
                                         id="pac_hemodialisis_true"
+                                        name="pac_hemodialisis"
                                         type="radio"
                                         onChange={() => props.setFieldValue("pac_hemodialisis", true)}
                                         onBlur={props.handleBlur}
@@ -242,6 +245,7 @@ const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual
                                     <input
                                         className="ml-4 mr-2 leading-tight"
                                         id="pac_hemodialisis_false"
+                                        name="pac_hemodialisis"
                                         type="radio"
                                         onChange={() => props.setFieldValue("pac_hemodialisis", false)}
                                         onBlur={props.handleBlur}
@@ -253,46 +257,49 @@ const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual
 
 
 
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="caracteristicas_especiales">
-                                Caracteristicas Especiales 
-                            </label>
-                            {[
-                                'TrasladoDeHospital',
-                                'InfeccionReciente',
-                                'Embarazo',
-                                'Inmunosupresion',
-                            ].map((option) => (
-                                <label key={option} className="block">
-                                <input
-                                    type="checkbox"
-                                    name="caracteristicas_especiales"
-                                    value={option}
-                                    onChange={(e) => {
-                                    const isChecked = e.target.checked;
-                                    const value = e.target.value;
 
-                                    props.setFieldValue(
-                                        'caracteristicas_especiales',
-                                        isChecked
-                                        ? [...props.values.caracteristicas_especiales, value]
-                                        : props.values.caracteristicas_especiales.filter((val) => val !== value)
-                                    );
-                                    }}
-                                    onBlur={props.handleBlur}
-                                    checked={props.values.caracteristicas_especiales.includes(option)}
-                                    className="mr-2"
-                                />
-                                {option}
-                                </label>
-                            ))}
-                        </div>
+                            <div className="mb-4">
+                                <div className="block text-gray-700 text-sm font-bold mb-2">
+                                    Características Especiales 
+                                </div>
+                                {[
+                                    'TrasladoDeHospital',
+                                    'InfeccionReciente',
+                                    'Embarazo',
+                                    'Inmunosupresion',
+                                    'ComunidadLG',
+                                ].map((option) => (
+                                    <div key={option} className="block">
+                                        <input
+                                            type="checkbox"
+                                            id={option}
+                                            name="caracteristicas_especiales"
+                                            value={option}
+                                            onChange={(e) => {
+                                                const isChecked = e.target.checked;
+                                                const value = e.target.value;
 
-                        <div className="mb-4">
+                                                props.setFieldValue(
+                                                    'caracteristicas_especiales',
+                                                    isChecked
+                                                    ? [...props.values.caracteristicas_especiales, value]
+                                                    : props.values.caracteristicas_especiales.filter((val) => val !== value)
+                                                );
+                                            }}
+                                            onBlur={props.handleBlur}
+                                            checked={props.values.caracteristicas_especiales.includes(option)}
+                                            className="mr-2"
+                                        />
+                                        <label htmlFor={option}>{option}</label>
+                                    </div>
+                                ))}
+                            </div>
+
+
+                            <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico">
                                     Diagnóstico
                                 </label>
-
                                 <input
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="diagnostico"
@@ -302,16 +309,14 @@ const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual
                                     onBlur={props.handleBlur}
                                     value={props.values.diagnostico}
                                 />
+                                {props.touched.diagnostico && props.errors.diagnostico && (
+                                    <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                                        <p className="font-bold">Error</p>
+                                        <p>{props.errors.diagnostico}</p>
+                                    </div>
+                                )}
                             </div>
 
-                            
-
-                            { props.touched.diagnostico && props.errors.diagnostico ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.diagnostico}</p>
-                                </div>
-                            ) : null  }
 
 
                             <div className="mb-4">
@@ -340,60 +345,62 @@ const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual
 
 {/* divisor de  form */}<div className="form-column p-4">
 
+<div className="mb-4">
+    <div className="block text-gray-700 text-sm font-bold mb-2">
+        Diagnósticos Generales
+    </div>
+    {[
+        'CodigoHemoptisis',
+        'CodigoViaAerea',
+        'CodigoInfarto',
+        'COVID',
+        'Influenza',
+        'Parainfluenza',
+        'Adenovirus',
+        'VirusSincialRespiratorio',
+        'Metaneumovirus',
+        'TuberculosisSensible',
+        'TuberculosisResistente',
+        'B24',
+        'SIRA',
+        'NeumoniaBacteriana',
+        'EPOC',
+        'Asma',
+        'TromboembiaPulmonar',
+        'DerramePleural',
+        'Neumotorax',
+        'NeumoniaIntersticialDifusa',
+        'InsuficienciaCaridiaca',
+        'CaPulmonarOSospecha',
+    ].map((option) => (
+        <div key={option} className="block">
+            <input
+                type="checkbox"
+                id={option}
+                name="diagnostico1"
+                value={option}
+                onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    const value = e.target.value;
+
+                    props.setFieldValue(
+                        'diagnostico1',
+                        isChecked
+                        ? [...props.values.diagnostico1, value]
+                        : props.values.diagnostico1.filter((val) => val !== value)
+                    );
+                }}
+                onBlur={props.handleBlur}
+                checked={props.values.diagnostico1.includes(option)}
+                className="mr-2"
+            />
+            <label htmlFor={option}>{option}</label>
+        </div>
+    ))}
+</div>
 
 
-                            <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico1">
-                                Diagnósticos Generales
-                            </label>
-                            {[
-                                'CodigoHemoptisis',
-                                'CodigoViaAerea',
-                                'CodigoInfarto',
-                                'COVID',
-                                'Influenza',
-                                'Parainfluenza',
-                                'Adenovirus',
-                                'VirusSincialRespiratorio',
-                                'Metaneumovirus',
-                                'TuberculosisSensible',
-                                'TuberculosisResistente',
-                                'B24',
-                                'SIRA',
-                                'NeumoniaBacteriana',
-                                'EPOC',
-                                'Asma',
-                                'TromboembiaPulmonar',
-                                'DerramePleural',
-                                'Neumotorax',
-                                'NeumoniaIntersticialDifusa',
-                                'InsuficienciaCaridiaca',
-                                'CaPulmonarOSospecha',
-                            ].map((option) => (
-                                <label key={option} className="block">
-                                <input
-                                    type="checkbox"
-                                    name="diagnostico1"
-                                    value={option}
-                                    onChange={(e) => {
-                                    const isChecked = e.target.checked;
-                                    const value = e.target.value;
 
-                                    props.setFieldValue(
-                                        'diagnostico1',
-                                        isChecked
-                                        ? [...props.values.diagnostico1, value]
-                                        : props.values.diagnostico1.filter((val) => val !== value)
-                                    );
-                                    }}
-                                    onBlur={props.handleBlur}
-                                    checked={props.values.diagnostico1.includes(option)}
-                                    className="mr-2"
-                                />
-                                {option}
-                                </label>
-                            ))}
-                            </div>
 
 
 
@@ -409,124 +416,129 @@ const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual
 
 
 
+    <div className="mb-4">
+        <div className="block text-gray-700 text-sm font-bold mb-2">
+            Código UVEH
+        </div>
+        {[
+            'Sin_Definir',
+            'Sin_Aislamientos',
+            'Acinetobacter',
+            'Colonización_Acinetobacter',
+            'Contacto_Acinetobacter',
+            'Hisopado_Rectal',
+            'Clostridium_Difficile',
+            'Enterobacterias_XDR_MDR',
+            'Pseudomonas_XDR_MDR',
+            'SAMR',
+            'Tuberculosisis_o_Sospecha',
+            'SAMS',
+        ].map((option) => (
+            <div key={option} className="block">
+                <input
+                    type="checkbox"
+                    id={`pac_codigo_uveh_${option}`}
+                    name="pac_codigo_uveh"
+                    value={option}
+                    onChange={(e) => {
+                        const isChecked = e.target.checked;
+                        const value = e.target.value;
 
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_codigo_uveh">
-                                    Código UVEH
-                                </label>
-                                {[
-                                    'Sin_Definir',
-                                    'Sin_Aislamientos',
-                                    'Acinetobacter',
-                                    'Colonización_Acinetobacter',
-                                    'Contacto_Acinetobacter',
-                                    'Hisopado_Rectal',
-                                    'Clostridium_Difficile',
-                                    'Enterobacterias_XDR_MDR',
-                                    'Pseudomonas_XDR_MDR',
-                                    'SAMR',
-                                    'Tuberculosisis_o_Sospecha',
-                                    'SAMS',
-                                ].map((option) => (
-                                    <label key={option} className="block">
-                                        <input
-                                            type="checkbox"
-                                            name="pac_codigo_uveh"
-                                            value={option}
-                                            onChange={(e) => {
-                                                const isChecked = e.target.checked;
-                                                const value = e.target.value;
-
-                                                props.setFieldValue(
-                                                    'pac_codigo_uveh',
-                                                    isChecked
-                                                    ? [...props.values.pac_codigo_uveh, value]
-                                                    : props.values.pac_codigo_uveh.filter((val) => val !== value)
-                                                );
-                                            }}
-                                            onBlur={props.handleBlur}
-                                            checked={props.values.pac_codigo_uveh.includes(option)}
-                                            className="mr-2"
-                                        />
-                                        {option}
-                                    </label>
-                                ))}
-                            </div>
+                        props.setFieldValue(
+                            'pac_codigo_uveh',
+                            isChecked
+                            ? [...props.values.pac_codigo_uveh, value]
+                            : props.values.pac_codigo_uveh.filter((val) => val !== value)
+                        );
+                    }}
+                    onBlur={props.handleBlur}
+                    checked={props.values.pac_codigo_uveh.includes(option)}
+                    className="mr-2"
+                />
+                <label htmlFor={`pac_codigo_uveh_${option}`}>{option.replace(/_/g, ' ')}</label>
+            </div>
+        ))}
+    </div>
 
 
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_egreso">
-                                    Fecha de Egreso
-                                </label>
 
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="fecha_egreso"
-                                    type="datetime-local"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.fecha_egreso}
-                                />
-                            </div>
 
-                            { props.touched.fecha_egreso && props.errors.fecha_egreso ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.fecha_egreso}</p>
-                                </div>
-                            ) : null  }
 
-                            <div className="mb-4" hidden>
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="hospitalizado">
-                                    Hospitalizado
-                                </label>
+        <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_egreso">
+                Fecha de Egreso
+            </label>
 
-                                <div className="flex items-center">
-                                    <input
-                                        className="mr-2 leading-tight"
-                                        id="hospitalizado_true"
-                                        type="radio"
-                                        onChange={() => props.setFieldValue("hospitalizado", true)}
-                                        onBlur={props.handleBlur}
-                                        checked={props.values.hospitalizado === true}
-                                    />
-                                    <label htmlFor="hospitalizado_true">Sí</label>
+            <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="fecha_egreso"
+                type="datetime-local"
+                onChange={props.handleChange}
+                onBlur={props.handleBlur}
+                value={props.values.fecha_egreso}
+            />
+        </div>
 
-                                    <input
-                                        className="ml-4 mr-2 leading-tight"
-                                        id="hospitalizado_false"
-                                        type="radio"
-                                        onChange={() => props.setFieldValue("hospitalizado", false)}
-                                        onBlur={props.handleBlur}
-                                        checked={props.values.hospitalizado === false}
-                                    />
-                                    <label htmlFor="hospitalizado_false">No</label>
-                                </div>
-                            </div>
+        { props.touched.fecha_egreso && props.errors.fecha_egreso ? (
+            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                <p className="font-bold">Error</p>
+                <p>{props.errors.fecha_egreso}</p>
+            </div>
+        ) : null  }
+
+        <div className="mb-4" hidden>
+            <div className="block text-gray-700 text-sm font-bold mb-2">
+                Hospitalizado
+            </div>
+
+            <div className="flex items-center">
+                <input
+                    className="mr-2 leading-tight"
+                    id="hospitalizado_true"
+                    name="hospitalizado"
+                    type="radio"
+                    onChange={() => props.setFieldValue("hospitalizado", true)}
+                    onBlur={props.handleBlur}
+                    checked={props.values.hospitalizado === true}
+                />
+                <label htmlFor="hospitalizado_true">Sí</label>
+
+                <input
+                    className="ml-4 mr-2 leading-tight"
+                    id="hospitalizado_false"
+                    name="hospitalizado"
+                    type="radio"
+                    onChange={() => props.setFieldValue("hospitalizado", false)}
+                    onBlur={props.handleBlur}
+                    checked={props.values.hospitalizado === false}
+                />
+                <label htmlFor="hospitalizado_false">No</label>
+            </div>
+        </div>
                             
-                            {/* Botón para mostrar/ocultar AsignarCama */}
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setMostrarAsignarCama(!mostrarAsignarCama);
-                                    sendDataToParent();
-                                }}
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            >
-                                {mostrarAsignarCama ? 'Misma Cama' : 'Cambiar Cama'}
-                            </button>
-                            <a>  Cama Actual:  {camaActual} </a>
-                            {/* Renderizar AsignarCama si el estado es true */}
-                            {mostrarAsignarCama && <AsignarCama />}  
+        {/* Botón para mostrar/ocultar AsignarCama */}
+        <button
+            type="button"
+            onClick={() => {
+                setMostrarAsignarCama(!mostrarAsignarCama);
+                sendDataToParent();
+            }}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+            {mostrarAsignarCama ? 'Misma Cama' : 'Cambiar Cama'}
+        </button>
+        <a>  Cama Actual:  {camaActual} </a>
+        {/* Renderizar AsignarCama si el estado es true */}
+        {mostrarAsignarCama && <AsignarCama />}  
 
-                            <input
-                            type="submit"
-                            className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
-                            value="Actualizar Paciente"
-                        />
-                    </div>
-                    </div>
-                </form>
+        <input
+        type="submit"
+        className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
+        value="Actualizar Paciente"
+    />
+</div>
+</div>
+        </form>
 
 
             )}

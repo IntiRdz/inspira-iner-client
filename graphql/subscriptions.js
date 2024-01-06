@@ -1,5 +1,16 @@
-import { gql, useSubscription } from '@apollo/client';
-import { FRAGMENTO_PACIENTE, FRAGMENTO_CAMA, FRAGMENTO_ADMISION, FRAGMENTO_CAMA_HISTORIAL } from './fragments';
+
+import { gql } from '@apollo/client';
+
+import {
+  FRAGMENTO_PACIENTE,
+  FRAGMENTO_CAMA,
+  FRAGMENTO_MICROORGANISMO,
+  FRAGMENTO_ADMISION,
+  FRAGMENTO_CAMA_HISTORIAL,
+  FRAGMENTO_DIAGNOSTICO
+} from './fragments';
+
+
 
 export const SUSCRIPCION_NUEVO_PACIENTE = gql`
     subscription suscripcionNuevoPaciente {
@@ -12,9 +23,6 @@ export const SUSCRIPCION_NUEVO_PACIENTE = gql`
                     cama{
                         ...FragmentoCama
                     }
-                }
-                microorganismo_relacionado {
-                ...FragmentoMicroorganismo
                 }
             }
         }
