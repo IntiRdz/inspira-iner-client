@@ -1,5 +1,8 @@
 import React from 'react'
 import { AsignarMicroorganismo } from './AsignarMicroorganismo'
+import { utcToZonedTime } from 'date-fns-tz'; 
+
+const timeZone = 'America/Mexico_City'; // Definir la zona horaria
 
 const FormNuevoMicro = ({ formik }) => {
   
@@ -19,7 +22,7 @@ const FormNuevoMicro = ({ formik }) => {
             <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="fecha_deteccion"
-                type="datetime-local"
+                type="date" // Cambiado de datetime-local a date
                 placeholder="Fecha de detección del Microorganismo"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -47,7 +50,7 @@ const FormNuevoMicro = ({ formik }) => {
             >
                 <option value="" label="Seleccione una opción" />
                 <option value="PCR" label="PCR" />
-                <option value="Panel" label="Panel" />
+                <option value="Panel_Neummonia" label="Panel de Neumonía" />
                 <option value="Cultivo" label="Cultivo" />                            
             </select>
         </div>
@@ -73,7 +76,7 @@ const FormNuevoMicro = ({ formik }) => {
                 <option value="" label="Seleccione una opción" />
                 <option value="Virus" label="Virus" />
                 <option value="Bacteria" label="Bacteria" />
-                <option value="Micobacteria" label="No Micobacteria" />
+                <option value="Micobacteria" label="Micobacteria" />
                 <option value="Hongo" label="Hongo" />                             
             </select>
         </div>
@@ -102,6 +105,7 @@ const FormNuevoMicro = ({ formik }) => {
                 value={formik.values.susceptibilidad}
             >
                 <option value="" label="Seleccione una opción" />
+                <option value="No_Aplica" label="No Aplica" />
                 <option value="Sensible" label="Sensible" />
                 <option value="BLEE" label="BLEE" />
                 <option value="MDR" label="MDR" />

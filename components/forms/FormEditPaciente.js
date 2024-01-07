@@ -214,6 +214,7 @@ const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual
                                     <option value="Tienda_Traqueal" label="Tienda Traqueal" />
                                     <option value="PNAF" label="PNAF" />
                                     <option value="VMNI_Intermitente" label="VMNI Intermitente" />
+                                    <option value="VMNI" label="VMNI" />
                                     <option value="VM" label="VM" />
                                 </select>
                             </div>
@@ -260,12 +261,12 @@ const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual
 
                             <div className="mb-4">
                                 <div className="block text-gray-700 text-sm font-bold mb-2">
-                                    Características Especiales 
+                                    Grupo Poblacional
                                 </div>
                                 {[
                                     'TrasladoDeHospital',
                                     'InfeccionReciente',
-                                    'Embarazo',
+                                    'Obstetrico',
                                     'Inmunosupresion',
                                     'ComunidadLG',
                                 ].map((option) => (
@@ -353,24 +354,24 @@ const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual
         'CodigoHemoptisis',
         'CodigoViaAerea',
         'CodigoInfarto',
+        'SIRA',
+        'NeumoniaViral',
         'COVID',
         'Influenza',
         'Parainfluenza',
-        'Adenovirus',
         'VirusSincialRespiratorio',
         'Metaneumovirus',
+        'NeumoniaBacteriana',
         'TuberculosisSensible',
         'TuberculosisResistente',
         'B24',
-        'SIRA',
-        'NeumoniaBacteriana',
         'EPOC',
         'Asma',
         'TromboembiaPulmonar',
         'DerramePleural',
         'Neumotorax',
         'NeumoniaIntersticialDifusa',
-        'InsuficienciaCaridiaca',
+        'InsuficienciaCardiaca',
         'CaPulmonarOSospecha',
     ].map((option) => (
         <div key={option} className="block">

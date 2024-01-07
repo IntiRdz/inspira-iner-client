@@ -54,10 +54,10 @@ const FormNuevoPaciente = ({ formik }) => {
                 </select>
             </div>
 
-            { formik.touched.pac_dispositivo_o2 && formik.errors.pac_dispositivo_o2 ? (
+            { formik.touched.servicio_tratante && formik.errors.servicio_tratante ? (
                 <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
                     <p className="font-bold">Error</p>
-                    <p>{formik.errors.pac_dispositivo_o2}</p>
+                    <p>{formik.errors.servicio_tratante}</p>
                 </div>
             ) : null  }
 
@@ -195,9 +195,10 @@ const FormNuevoPaciente = ({ formik }) => {
                     <option value="" label="Seleccione un dispositivo" />
                     <option value="AA" label="AA" />
                     <option value="PN" label="PN" />
+                    <option value="Tienda_Traqueal" label="Tienda Traqueal" />
                     <option value="PNAF" label="PNAF" />
-                    <option value="VMNI" label="VMNI" />
                     <option value="VMNI_Intermitente" label="VMNI Intermiente" />
+                    <option value="VMNI" label="VMNI" />
                     <option value="VM" label="VM" />
                 </select>
             </div>
@@ -211,14 +212,15 @@ const FormNuevoPaciente = ({ formik }) => {
 
 
             <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_hemodialisis">
-                    Hemodialisis
-                </label>
+                <div className="block text-gray-700 text-sm font-bold mb-2">
+                    Hemodiálisis
+                </div>
 
                 <div className="flex items-center">
                     <input
                         className="mr-2 leading-tight"
                         id="pac_hemodialisis_true"
+                        name="pac_hemodialisis"
                         type="radio"
                         onChange={() => formik.setFieldValue("pac_hemodialisis", true)}
                         onBlur={formik.handleBlur}
@@ -229,6 +231,7 @@ const FormNuevoPaciente = ({ formik }) => {
                     <input
                         className="ml-4 mr-2 leading-tight"
                         id="pac_hemodialisis_false"
+                        name="pac_hemodialisis"
                         type="radio"
                         onChange={() => formik.setFieldValue("pac_hemodialisis", false)}
                         onBlur={formik.handleBlur}
@@ -239,39 +242,40 @@ const FormNuevoPaciente = ({ formik }) => {
             </div>
 
             <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="caracteristicas_especiales">
-                Caracteristicas Especiales 
-            </label>
-            {[
-                'TrasladoDeHospital',
-                'InfeccionReciente',
-                'Embarazo',
-                'Inmunosupresion',
-                'ComunidadLG',
-            ].map((option) => (
-                <label key={option} className="block">
-                <input
-                    type="checkbox"
-                    name="caracteristicas_especiales"
-                    value={option}
-                    onChange={(e) => {
-                    const isChecked = e.target.checked;
-                    const value = e.target.value;
+                <div className="block text-gray-700 text-sm font-bold mb-2">
+                    Grupo Poblacional 
+                </div>
+                {[
+                    'TrasladoDeHospital',
+                    'InfeccionReciente',
+                    'Obstetrico',
+                    'Inmunosupresion',
+                    'ComunidadLG',
+                ].map((option) => (
+                    <div key={option} className="block">
+                        <input
+                            type="checkbox"
+                            id={option}
+                            name="caracteristicas_especiales"
+                            value={option}
+                            onChange={(e) => {
+                                const isChecked = e.target.checked;
+                                const value = e.target.value;
 
-                    formik.setFieldValue(
-                        'caracteristicas_especiales',
-                        isChecked
-                        ? [...formik.values.caracteristicas_especiales, value]
-                        : formik.values.caracteristicas_especiales.filter((val) => val !== value)
-                    );
-                    }}
-                    onBlur={formik.handleBlur}
-                    checked={formik.values.caracteristicas_especiales.includes(option)}
-                    className="mr-2"
-                />
-                {option}
-                </label>
-            ))}
+                                formik.setFieldValue(
+                                    'caracteristicas_especiales',
+                                    isChecked
+                                    ? [...formik.values.caracteristicas_especiales, value]
+                                    : formik.values.caracteristicas_especiales.filter((val) => val !== value)
+                                );
+                            }}
+                            onBlur={formik.handleBlur}
+                            checked={formik.values.caracteristicas_especiales.includes(option)}
+                            className="mr-2"
+                        />
+                        <label htmlFor={option}>{option}</label>
+                    </div>
+                ))}
             </div>
 
 
@@ -282,38 +286,40 @@ const FormNuevoPaciente = ({ formik }) => {
 {/* divisor de  form */}<div className="form-column p-4">
 
 <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico1">
-                Diagnósticos Generales
-            </label>
-            {[
-                'CodigoHemoptisis',
-                'CodigoViaAerea',
-                'CodigoInfarto',
-                'COVID',
-                'Influenza',
-                'Parainfluenza',
-                'Adenovirus',
-                'VirusSincialRespiratorio',
-                'TuberculosisSensible',
-                'TuberculosisResistente',
-                'B24',
-                'SIRA',
-                'NeumoniaBacteriana',
-                'EPOC',
-                'Asma',
-                'TromboembiaPulmonar',
-                'DerramePleural',
-                'Neumotorax',
-                'NeumoniaIntersticialDifusa',
-                'InsuficienciaCaridiaca',
-                'CaPulmonarOSospecha',
-            ].map((option) => (
-                <label key={option} className="block">
-                <input
-                    type="checkbox"
-                    name="diagnostico1"
-                    value={option}
-                    onChange={(e) => {
+    <div className="block text-gray-700 text-sm font-bold mb-2">
+        Diagnósticos Generales
+    </div>
+    {[
+        'CodigoHemoptisis',
+        'CodigoViaAerea',
+        'CodigoInfarto',
+        'SIRA',
+        'NeumoniaViral',
+        'COVID',
+        'Influenza',
+        'Parainfluenza',
+        'VirusSincialRespiratorio',
+        'Metaneumovirus',
+        'NeumoniaBacteriana',
+        'TuberculosisSensible',
+        'TuberculosisResistente',
+        'B24',
+        'EPOC',
+        'Asma',
+        'TromboembiaPulmonar',
+        'DerramePleural',
+        'Neumotorax',
+        'NeumoniaIntersticialDifusa',
+        'InsuficienciaCardiaca',
+        'CaPulmonarOSospecha',
+    ].map((option) => (
+        <div key={option} className="block">
+            <input
+                type="checkbox"
+                id={option}
+                name="diagnostico1"
+                value={option}
+                onChange={(e) => {
                     const isChecked = e.target.checked;
                     const value = e.target.value;
 
@@ -323,15 +329,16 @@ const FormNuevoPaciente = ({ formik }) => {
                         ? [...formik.values.diagnostico1, value]
                         : formik.values.diagnostico1.filter((val) => val !== value)
                     );
-                    }}
-                    onBlur={formik.handleBlur}
-                    checked={formik.values.diagnostico1.includes(option)}
-                    className="mr-2"
-                />
-                {option}
-                </label>
-            ))}
-            </div>
+                }}
+                onBlur={formik.handleBlur}
+                checked={formik.values.diagnostico1.includes(option)}
+                className="mr-2"
+            />
+            <label htmlFor={option}>{option}</label>
+        </div>
+    ))}
+</div>
+
 
 
             <div className="mb-4">

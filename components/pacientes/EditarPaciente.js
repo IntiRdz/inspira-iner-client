@@ -10,6 +10,8 @@ import { ACTUALIZAR_PACIENTE, OBTENER_PACIENTE, OBTENER_CAMAS_DISPONIBLES } from
 import { validationSchema } from '../../components/forms/validationSchemas';
 import FormEditPatient from '../forms/FormEditPaciente';
 
+const timeZone = 'America/Mexico_City'; // Definir la zona horaria
+
 
 const EditarPaciente = ({obtenerPaciente}) => {
     const router = useRouter();

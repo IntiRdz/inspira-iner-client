@@ -53,10 +53,10 @@ const NuevoPaciente = () => {
         console.log('Nuevo paciente recibido:', data);
       }
 
-    const { data: dataSubscription, loading: loadingSubscription, error: errorSubscription } = useSubscription(SUSCRIPCION_ACTUALIZAR_CAMA);
+/*     const { data: dataSubscription, loading: loadingSubscription, error: errorSubscription } = useSubscription(SUSCRIPCION_ACTUALIZAR_CAMA);
     if (dataSubscription) {
     console.log('Cama actualizada recibido:', dataSubscription);
-    } 
+    }  */
 
     const formik = useFormik({
         initialValues: {

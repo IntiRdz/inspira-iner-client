@@ -60,7 +60,7 @@ const MicroNuevo = ({obtenerPaciente}) => {
             metodo_deteccion: Yup.string()
                 .oneOf([
                     'PCR', 
-                    'Panel', 
+                    'Panel_Neumonia', 
                     'Cultivo'
                 ])
                 .required('El método de detección es obligatorio'),
@@ -73,10 +73,11 @@ const MicroNuevo = ({obtenerPaciente}) => {
                 ])
                 .required('El tipo de microorganismo es obligatorio'),
             susceptibilidad: Yup.string().oneOf([
+                'No_Aplica',
+                'Sensible',
                 'BLEE', 
                 'MDR', 
                 'XDR', 
-                'Sensible'
             ]),
             comentario_uveh: Yup.string(),
         }), 

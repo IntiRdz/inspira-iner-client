@@ -34,6 +34,7 @@ export const Navbar = ({ usuario, onCerrarSesion }) => {
       { href: "/clinico10", label: "10" },
       { href: "/camas", label: "Camas" },
       { href: "/camasdisponibles", label: "Camas Disponibles" },
+      { href: "/traslados", label: "Traslados" },
       // Agrega aquí más elementos según sea necesario
     ], []);
     
