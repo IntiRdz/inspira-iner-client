@@ -335,7 +335,7 @@ export const OBTENER_CAMA = gql`
 
 export const OBTENER_CAMAS_5 = gql`
   query ObtenerCamas5 {
-    obtenerCamas3 {
+    obtenerCamas5 {
       ...FragmentoCama
           camahistorial {
               ...FragmentoCamaHistorial
@@ -369,7 +369,7 @@ export const OBTENER_CAMAS_5 = gql`
 
 export const OBTENER_CAMAS_7 = gql`
   query ObtenerCamas7 {
-    obtenerCamas3 {
+    obtenerCamas7 {
       ...FragmentoCama
           camahistorial {
               ...FragmentoCamaHistorial
@@ -401,8 +401,8 @@ export const OBTENER_CAMAS_7 = gql`
 `;
 
 export const OBTENER_CAMAS_8 = gql`
-  query ObtenerCamas3 {
-    obtenerCamas3 {
+  query ObtenerCamas8 {
+    obtenerCamas8 {
       ...FragmentoCama
           camahistorial {
               ...FragmentoCamaHistorial
@@ -435,7 +435,7 @@ export const OBTENER_CAMAS_8 = gql`
 
 export const OBTENER_CAMAS_9 = gql`
   query ObtenerCamas9 {
-    obtenerCamas3 {
+    obtenerCamas9 {
       ...FragmentoCama
           camahistorial {
               ...FragmentoCamaHistorial
@@ -468,7 +468,7 @@ export const OBTENER_CAMAS_9 = gql`
 
 export const OBTENER_CAMAS_10 = gql`
   query ObtenerCamas10 {
-    obtenerCamas3 {
+    obtenerCamas10 {
       ...FragmentoCama
           camahistorial {
               ...FragmentoCamaHistorial

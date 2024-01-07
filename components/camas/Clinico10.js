@@ -4,7 +4,7 @@ import { format, differenceInYears, differenceInDays, isTomorrow } from 'date-fn
 import { utcToZonedTime } from 'date-fns-tz'; 
 import { useRouter } from 'next/navigation';
 
-import { EditIcon, TaskIcon, BedIcon, Female, Male, Kidneys, SoapIcon } from '../icons';
+import { EditIcon, TaskIcon, BedIcon, Female, Male, Kidneys, SoapIcon } from '../../components/icons';
 
 import { OBTENER_CAMAS_10 } from '../../graphql/queries'; 
 
