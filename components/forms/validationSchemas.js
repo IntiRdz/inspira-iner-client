@@ -11,8 +11,9 @@ export const validationSchema = Yup.object({
     pac_FN: Yup.date().required('La fecha de nacimiento del paciente es obligatoria'),
     pac_dispositivo_o2: Yup.string().oneOf([
         'AA', 
-        'PN', 
-        'PNAF', 
+        'PN',
+        'Tienda_Traqueal',
+        'PNAF',
         'VMNI_Intermiente',  
         'VMNI',
         'VM'
