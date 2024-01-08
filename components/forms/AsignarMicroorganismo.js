@@ -33,6 +33,7 @@ const options = [
   { id: '26', nombre: 'Coronavirus OC43' },
   { id: '27', nombre: 'Coronavirus HKU1' },
   { id: '28', nombre: 'Enterovirus/Rinovirus' },
+  { id: '53', nombre: 'Influenza A' },
   { id: '29', nombre: 'Influenza A H1N1' },
   { id: '30', nombre: 'Influenza A H3N2' },
   { id: '31', nombre: 'Influenza B' },
