@@ -33,8 +33,8 @@ const ClinicoTraslados = () => {
           </tr>
         </thead>
         <tbody className="text-gray-700">
-          {data.obtenerTrasladosHoy.map((traslado) => (
-            <tr key={traslado.admision_relacionada.paciente_relacionado.expediente}>
+          {data.obtenerTrasladosHoy.map((traslado, index) => (
+            <tr key={`${traslado.admision_relacionada.paciente_relacionado.expediente}-${index}`}>
               <td className="py-3 px-4 uppercase">
                 {traslado.admision_relacionada.cama_relacionada[0]?.cama?.cama_numero || 'N/A'}
               </td>
