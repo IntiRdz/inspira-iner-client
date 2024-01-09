@@ -30,20 +30,8 @@ const NuevoPaciente = () => {
 
 
     const [nuevoPaciente] = useMutation(NUEVO_PACIENTE, {
-        refetchQueries: [{
-            query: OBTENER_CAMAS_URGENCIAS // Esta es la consulta que quieres refrescar
-        }],
-        onCompleted: () => {
-            // Opcional: código que se ejecuta después de completar la mutación
-            router.push('/');
-            Swal.fire(
-                'Creado',
-                'Se agregó correctamente al paciente',
-                'success'
-            )
-        },
+        refetchQueries: [{ query: OBTENER_CAMAS_URGENCIAS }],
         onError: (error) => {
-            // Opcional: Manejar errores aquí
             console.error("Error al crear paciente:", error);
         }
     });
@@ -82,7 +70,7 @@ const NuevoPaciente = () => {
         validationSchema,
 
         onSubmit: async valores => {
-            console.log("Formulario enviado con los siguientes valores:", valores);
+            //console.log("Formulario enviado con los siguientes valores:", valores);
             const { 
                 servicio_tratante,
                 expediente,
@@ -103,7 +91,7 @@ const NuevoPaciente = () => {
                 hospitalizado,
             } = valores;
 
-            console.log("valores inciales del nuevo objeto", valores)
+            //console.log("valores inciales del nuevo objeto", valores)
 
             // Verificar si las fechas son nulas o vacías
             const fechaPrealta = fecha_prealta || undefined; // Establece un valor predeterminado si es nulo o vacío
@@ -130,12 +118,12 @@ const NuevoPaciente = () => {
                 cama_relacionada: cama,
             };
 
-            console.log("Valores actualizados:", valoresActualizados)
+            //console.log("Valores actualizados:", valoresActualizados)
 
 
         
             try {
-                console.log("antes de la llamada a crear Paciente");
+                //console.log("antes de la llamada a crear Paciente");
                 const { data } = await nuevoPaciente({
                     variables: {
                         input: valoresActualizados
@@ -143,24 +131,20 @@ const NuevoPaciente = () => {
                 });
                 
                 
-                console.log("Después de la llamada a crear Paciente");
+                //console.log("Después de la llamada a crear Paciente");
 
-                //console.log(data);
-
-                //Mostrar alerta
                 Swal.fire(
                     'Creado',
                     'Se agregó correctamente al paciente',
                     'success'
-                )
+                );
 
-                //Redireccionar
                 router.push('/');
 
             } catch (error) {
                 console.error("Error completo:", error);
             
-                let mensajeError = "Error desconocido durante la actualización del paciente.";
+                let mensajeError = "Error durante la actualización del paciente.";
             
                 // Verificar si es un error de Apollo y tratar de obtener detalles más específicos
                 if (error.networkError && error.networkError.result) {
