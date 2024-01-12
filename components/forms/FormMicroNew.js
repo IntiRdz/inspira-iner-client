@@ -1,10 +1,13 @@
 import React from 'react'
-import { AsignarMicroorganismo } from './AsignarMicroorganismo'
 import { utcToZonedTime } from 'date-fns-tz'; 
+import Select from 'react-select';
+import { microorganismoOptions } from './selecMicro';
 
 const timeZone = 'America/Mexico_City'; // Definir la zona horaria
 
 export default function FormMicroNew ({ formik }) {
+
+    microorganismoOptions
   
   return (
     
@@ -89,9 +92,29 @@ export default function FormMicroNew ({ formik }) {
         ) : null  }
 
 
-        <div className="mb-4">
-            <AsignarMicroorganismo id="microorganismo-select" />
-        </div>
+
+
+
+    <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="microorganismo_nombre">
+            Microorganismo
+        </label>
+        <Select
+            id="microorganismo_nombre"
+            className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            options={microorganismoOptions}
+            onChange={(selectedOption) => 
+                formik.setFieldValue('microorganismo_nombre', selectedOption.value)}
+            onBlur={formik.handleBlur}
+            value={microorganismoOptions.find(option => option.value === formik.values.microorganismo_nombre)}
+        />
+        {formik.errors.microorganismo_nombre && (
+            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                <p className="font-bold">Error</p>
+                <p>{formik.errors.microorganismo_nombre}</p>
+            </div>
+        )}
+    </div>
 
         <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="susceptibilidad">

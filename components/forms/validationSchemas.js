@@ -95,6 +95,21 @@ export const  validationSchemaMicro = Yup.object({
 });
 
 
+export const  validationSchemaDx = Yup.object({
+    fecha_diagnostico: Yup.date().required('La fecha diagnóstico es obligatoria'),
+    fecha_resolucion: Yup.date(),
+    diagnostico_tipo: Yup.string()
+        .oneOf([
+            'Previo', 
+            'Ingreso', 
+            'Hospitalizacion',
+            'Egreso'
+        ])
+        .required('El método de detección es obligatorio'),
+    diagnostico_activo: Yup.boolean(),
+});
+
+
 // Esquema de validación para otro formulario
 export const otroFormularioValidationSchema = Yup.object({
     // Definiciones del esquema...

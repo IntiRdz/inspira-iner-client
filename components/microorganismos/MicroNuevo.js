@@ -1,38 +1,41 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useQuery, gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useFormik } from 'formik';
 import { format } from 'date-fns';
 
 import Swal from 'sweetalert2';
 
-import PacienteContext from '../../context/pacientes/PacienteContext';
-
-import { validationSchemaMicro } from '../../components/forms/validationSchemas';
-
-
 import { OBTENER_PACIENTE } from '../../graphql/queries'; 
 import { NUEVO_MICROORGANISMO } from '../../graphql/mutations'; 
 
 import FormMicroNew from '../forms/FormMicroNew';
+import { validationSchemaMicro } from '../../components/forms/validationSchemas';
 
+import ModalGeneral from '../modals/ModalGeneral';
 
-export default function MicroNuevo ({obtenerPaciente}) {
+export default function MicroNuevo ({obtenerPaciente, isOpen, onClose}) {
     // routing
     const router = useRouter();
-
 
     // Mensaje de alerta
     const [mensaje, guardarMensaje] = useState(null);
 
     const id = obtenerPaciente.id;
-    
-    
-    const {microorganismo} = useContext(PacienteContext);
-    
-    console.log('Microorganismo del PacienteContext:', microorganismo);
+
+    const [isModalOpen, setIsModalOpen] = useState(isOpen);
 
 
+    // Sincroniza el estado local del modal con el prop 'isOpen'
+    useEffect(() => {
+        setIsModalOpen(isOpen);
+    }, [isOpen]);
+
+    const closeModal = () => {
+        onClose(); // Cierra el modal utilizando la función del padre
+    };
+    
+    
     // Mutation para asignar el microrganismo al paciente al paciente
      const [nuevoMicroorganismo] = useMutation(NUEVO_MICROORGANISMO, {
         refetchQueries: [
@@ -43,62 +46,29 @@ export default function MicroNuevo ({obtenerPaciente}) {
         ],
     });
 
-    
-
-
     const ultimaCamaRelacionadaId = obtenerPaciente.admision_relacionada[0].cama_relacionada.slice(-1)[0].id;
-    console.log("ultimaCamaRelacionadaId", ultimaCamaRelacionadaId);
+    //console.log("ultimaCamaRelacionadaId", ultimaCamaRelacionadaId);
             
-    // Formulario para nuevos microorganismos
     const formik = useFormik({
         initialValues: {
-            fecha_deteccion: format(new Date(), 'yyyy-MM-dd\'T\'HH:mm:ss'),
+            fecha_deteccion: format(new Date(), 'yyyy-MM-dd'),
             metodo_deteccion: '',
             microorganismo_tipo: '',
             susceptibilidad: '',
             comentario_uveh: '',
-
+            camahistorial: ultimaCamaRelacionadaId
         },
 
-
-        validationSchemaMicro,
-
+        validationSchema: validationSchemaMicro,
 
         onSubmit: async valores => {
-
-            
-            const { 
-                fecha_deteccion,
-                metodo_deteccion,
-                microorganismo_tipo,
-                microorganismo_nombre,
-                susceptibilidad,
-                comentario_uveh,
-                camahistorial,
-            } = valores;
-            
-            //console.log("Valores Inciales:", valores)
-
-            const valoresActualizados = {
-                fecha_deteccion,
-                metodo_deteccion,
-                microorganismo_tipo,
-                microorganismo_nombre: microorganismo,
-                susceptibilidad,
-                comentario_uveh,
-                camahistorial: ultimaCamaRelacionadaId
-            };
-
-            //console.log("Valores actualizados:", valoresActualizados)
-
             try {
                 const { data } = await nuevoMicroorganismo({
                     variables: {
-                        input: valoresActualizados
+                        input: valores
                     }
                 });
 
-            
                 console.log("Después de la llamada a actualizarPaciente");
                 // Mostrar una alerta
                 Swal.fire(
@@ -107,10 +77,10 @@ export default function MicroNuevo ({obtenerPaciente}) {
                     'success'
                 )
 
+                onClose();
+
                 // Redireccionar hacia los microorganismos
-                router.push(`/editarpaciente/${id}`);
-
-
+                //router.push(`/editarpaciente/${id}`);
 
             } catch (error) {
                 console.error("Error completo:", error);
@@ -152,15 +122,16 @@ export default function MicroNuevo ({obtenerPaciente}) {
 
     return ( 
         <>  
-
-            <div className="flex justify-center mt-5">
-                <div className="w-full max-w-lg">
-                    <FormMicroNew 
-                        formik={formik}
-                        obtenerPaciente={obtenerPaciente}
-                    />
+            <ModalGeneral isOpen={isModalOpen} onClose={closeModal}>
+                <div className="flex justify-center mt-5">
+                    <div className="w-full max-w-lg">
+                        <FormMicroNew 
+                            formik={formik}
+                            obtenerPaciente={obtenerPaciente}
+                        />
+                    </div>
                 </div>
-            </div>
+            </ModalGeneral>
             {mensaje && mostrarMensaje()}
         </>
      );

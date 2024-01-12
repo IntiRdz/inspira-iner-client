@@ -55,7 +55,8 @@ export default function DiagnosticosPaciente ({obtenerPaciente}) {
   return ( 
 
         <div className="w-full backdrop-filter backdrop-blur-lg bg-white border border-gray-300 shadow-lg rounded-lg p-2">
-            <h2 className="text-2xl text-gray-800 backdrop-filter backdrop-blur-lg bg-white border border-gray-300 shadow-lg rounded-lg p-2">Diagnósticos de la Última Admisión</h2>
+            <h2 className="text-2xl text-gray-800 backdrop-filter backdrop-blur-lg bg-white border border-gray-300 shadow-lg rounded-lg p-2">Diagnósticos de la Última Admisión
+            </h2>
             <table className="table-auto shadow-md mt-1 w-full">
                 <thead className="bg-gray-800">
                     <tr className="text-white">
@@ -72,7 +73,7 @@ export default function DiagnosticosPaciente ({obtenerPaciente}) {
                         <tr key={diag.id || index}>
                             <td className="border px-4 py-2">{diag.diagnostico_nombre}</td>
                             <td className="border px-4 py-2">{formatFecha(diag.fecha_diagnostico, 'dd-MM-yyyy')}</td>
-                            <td className="border px-4 py-2">{formatFecha(diag.fecha_resolucion, 'dd-MM-yyyy')}</td>
+                            <td className="border px-4 py-2">{diag.fecha_resolucion? formatFecha(diag.fecha_resolucion, 'dd-MM-yyyy'): ''}</td>
                             <td className="border px-4 py-2">{diag.diagnostico_tipo}</td>
                             <td className="border px-4 py-2">{diag.diagnostico_activo ? 'Sí' : 'No'}</td>
                             <td className="border px-4 py-2">
@@ -87,9 +88,9 @@ export default function DiagnosticosPaciente ({obtenerPaciente}) {
 
             {/* Modal para editar diagnóstico */}
 
-             {isModalOpen && diagnosticoActual && (
+            {isModalOpen && diagnosticoActual && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full">
-                    <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                    <div className="relative top-0 mx-auto p-5 border w-full h-full shadow-lg rounded-md bg-white">
                         <div className="mt-3 text-center">
                             <h3 className="text-lg leading-6 font-medium text-gray-900">Editar Diagnóstico</h3>
                             <FormDiagnosticEdit

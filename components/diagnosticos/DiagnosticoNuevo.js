@@ -1,36 +1,44 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useQuery, gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { format } from 'date-fns';
+
 import Swal from 'sweetalert2';
 
-import PacienteContext from '../../context/pacientes/PacienteContext';
-
-import FormMicroNew from '../forms/FormMicroNew';
-
 import { OBTENER_PACIENTE } from '../../graphql/queries'; 
-import { NUEVO_MICROORGANISMO } from '../../graphql/mutations'; 
+import { NUEVO_DIAGNOSTICO } from '../../graphql/mutations'; 
 
+import FormDiagnosticNew from '../forms/FormDiagnosticNew';
+import { validationSchemaDx } from '../../components/forms/validationSchemas';
 
-export default function DiagnosticoNuevo  ({obtenerPaciente}) {
+import ModalGeneral from '../modals/ModalGeneral';
+
+export default function DiagnosticoNuevo  ({obtenerPaciente, isOpen, onClose }) {
     // routing
     const router = useRouter();
-
 
     // Mensaje de alerta
     const [mensaje, guardarMensaje] = useState(null);
 
     const id = obtenerPaciente.id;
-    
-    
-    const {microorganismo} = useContext(PacienteContext);
-    
-    console.log('Microorganismo del PacienteContext:', microorganismo);
+   
+    const [isModalOpen, setIsModalOpen] = useState(isOpen);
 
 
+    // Sincroniza el estado local del modal con el prop 'isOpen'
+    useEffect(() => {
+        setIsModalOpen(isOpen);
+    }, [isOpen]);
+
+    const closeModal = () => {
+        onClose(); // Cierra el modal utilizando la función del padre
+    };
+
+    
+    
     // Mutation para asignar el microrganismo al paciente al paciente
-     const [nuevoMicroorganismo] = useMutation(NUEVO_MICROORGANISMO, {
+     const [nuevoDiagnostico] = useMutation(NUEVO_DIAGNOSTICO, {
         refetchQueries: [
             {
                 query: OBTENER_PACIENTE,
@@ -39,93 +47,49 @@ export default function DiagnosticoNuevo  ({obtenerPaciente}) {
         ],
     });
 
-    
-
-
-    const ultimaCamaRelacionadaId = obtenerPaciente.admision_relacionada[0].cama_relacionada.slice(-1)[0].id;
-    console.log("ultimaCamaRelacionadaId", ultimaCamaRelacionadaId);
+    const admision_relacionadaId = obtenerPaciente.admision_relacionada[0].id;
+    console.log("Ultima Admision Relacionada", admision_relacionadaId);
             
     // Formulario para nuevos microorganismos
     const formik = useFormik({
         initialValues: {
-            fecha_deteccion: '',
-            metodo_deteccion: '',
-            microorganismo_tipo: '',
-            susceptibilidad: '',
-            comentario_uveh: '',
+            fecha_diagnostico: format(new Date(), 'yyyy-MM-dd'),
+            fecha_resolucion: '',
+            diagnostico_tipo: 'Ingreso',
+            diagnostico_activo: true,
+            admision_relacionada: admision_relacionadaId,
 
         },
-        validationSchema: Yup.object({
-            fecha_deteccion: Yup.date().required('La fecha de detección es obligatoria'),
-            metodo_deteccion: Yup.string()
-                .oneOf([
-                    'PCR', 
-                    'Panel_Neumonia', 
-                    'Cultivo'
-                ])
-                .required('El método de detección es obligatorio'),
-            microorganismo_tipo: Yup.string()
-                .oneOf([
-                    'Virus', 
-                    'Bacteria', 
-                    'Micobacteria', 
-                    'Hongo'
-                ])
-                .required('El tipo de microorganismo es obligatorio'),
-            susceptibilidad: Yup.string().oneOf([
-                'No_Aplica',
-                'Sensible',
-                'BLEE', 
-                'MDR', 
-                'XDR', 
-            ]),
-            comentario_uveh: Yup.string(),
-        }), 
+
+        validationSchema: validationSchemaDx,
+
         onSubmit: async valores => {
+            // Manejar el valor opcional de fecha_resolucion
+            const fechaResolucion = valores.fecha_resolucion ? format(new Date(valores.fecha_resolucion), 'yyyy-MM-dd') : undefined;
 
-            
-            const { 
-                fecha_deteccion,
-                metodo_deteccion,
-                microorganismo_tipo,
-                microorganismo_nombre,
-                susceptibilidad,
-                comentario_uveh,
-                camahistorial,
-            } = valores;
-            
-            //console.log("Valores Inciales:", valores)
-
-            const valoresActualizados = {
-                fecha_deteccion,
-                metodo_deteccion,
-                microorganismo_tipo,
-                microorganismo_nombre: microorganismo,
-                susceptibilidad,
-                comentario_uveh,
-                camahistorial: ultimaCamaRelacionadaId
+            const input = {
+                ...valores,
+                fecha_resolucion: fechaResolucion
             };
 
-            console.log("Valores actualizados:", valoresActualizados)
-
             try {
-                const { data } = await nuevoMicroorganismo({
-                    variables: {
-                        input: valoresActualizados
-                    }
+                const { data } = await nuevoDiagnostico({
+                    variables: { input }
                 });
 
             
-                console.log("Después de la llamada a actualizarPaciente");
+                console.log("Después de la llamada a Nuevo Diagnóstico");
                 // Mostrar una alerta
                 Swal.fire(
                     'Creado',
-                    'Se creó el microorganismo correctamente',
+                    'Se agregó el diagnóstico correctamente',
                     'success'
                 )
 
                 // Redireccionar hacia los microorganismos
-                router.push(`/editarpaciente/${id}`);
+                //router.push(`/editarpaciente/${id}`);
+
+                onClose();
 
 
 
@@ -169,15 +133,16 @@ export default function DiagnosticoNuevo  ({obtenerPaciente}) {
 
     return ( 
         <>  
-
-            <div className="flex justify-center mt-5">
-                <div className="w-full max-w-lg">
-                    <FormMicroNew 
-                        formik={formik}
-                        obtenerPaciente={obtenerPaciente}
-                    />
+            <ModalGeneral isOpen={isModalOpen} onClose={closeModal}>
+                <div className="flex justify-center mt-5">
+                    <div className="w-full max-w-lg">
+                        <FormDiagnosticNew 
+                            formik={formik}
+                            obtenerPaciente={obtenerPaciente}
+                        />
+                    </div>
                 </div>
-            </div>
+            </ModalGeneral>
             {mensaje && mostrarMensaje()}
         </>
      );

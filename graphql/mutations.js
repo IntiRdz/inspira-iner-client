@@ -5,6 +5,7 @@ import {
     FRAGMENTO_ADMISION,
     FRAGMENTO_CAMA_HISTORIAL,
     FRAGMENTO_MICROORGANISMO,
+    FRAGMENTO_DIAGNOSTICO,
     FRAGMENTO_ANTIBIOTICO
  } from './fragments';
 
@@ -110,24 +111,6 @@ export const NUEVO_MICROORGANISMO = gql`
 `;
 
 
-export const NUEVO_MICROORGANISMO2 = gql`
-  mutation nuevoMicroorganismo($input: MicroorganismoInput) {
-    nuevoMicroorganismo(input: $input) {
-        ...FragmentoMicroorganismo
-        admision_relacionada {
-            ...FragmentoAdmision
-            paciente_relacionado {
-                ...FragmentoPaciente
-            }
-            cama_relacionada {
-                ...FragmentoCama
-            }
-        }
-    }
-  }
-`;
-
-
 export const ACTUALIZAR_MICROORGANISMO = gql`
     mutation actualizarMicroorganismo($id: ID!, $input: MicroorganismoInput) {
             actualizarMicroorganismo(id:$id, input:$input) {
@@ -135,4 +118,15 @@ export const ACTUALIZAR_MICROORGANISMO = gql`
             }
     }
 ${FRAGMENTO_MICROORGANISMO}
+`;
+
+
+export const NUEVO_DIAGNOSTICO = gql`
+  mutation nuevoDiagnostico($input: DiagnosticoInput) {
+    nuevoDiagnostico(input: $input) {
+        ...FragmentoDiagnostico
+    }
+  }
+${FRAGMENTO_DIAGNOSTICO}
+
 `;
