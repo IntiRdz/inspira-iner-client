@@ -7,13 +7,13 @@ import PacienteContext from '../../context/pacientes/PacienteContext';
 
 
 import { ACTUALIZAR_PACIENTE, OBTENER_PACIENTE, OBTENER_CAMAS_DISPONIBLES } from '../../graphql/mutations';
-import { validationSchema } from '../../components/forms/validationSchemas';
-import FormEditPatient from '../forms/FormEditPaciente';
+import { validationSchemaPatient } from '../../components/forms/validationSchemas';
+import FormPatientEdit from '../forms/FormPatientEdit';
 
 const timeZone = 'America/Mexico_City'; // Definir la zona horaria
 
 
-const EditarPaciente = ({obtenerPaciente}) => {
+export default function PacienteEditar ({obtenerPaciente}) {
     const router = useRouter();
     
     // Mensaje de alerta
@@ -90,7 +90,7 @@ const EditarPaciente = ({obtenerPaciente}) => {
             cama_relacionada
         } = valores;
 
-        console.log("Valores Inciales:", valores)
+        //console.log("Valores Inciales:", valores)
 
         const valoresActualizados = {
             expediente,
@@ -186,9 +186,9 @@ const EditarPaciente = ({obtenerPaciente}) => {
             <div className="flex justify-center mt-2">
                 <div className="w-full max-w-7xl">
                 {mensaje && mostrarMensaje()}
-                    <FormEditPatient
+                    <FormPatientEdit
                         initialValues={initialValues}
-                        validationSchema={validationSchema}
+                        validationSchema={validationSchemaPatient}
                         onSubmit={actualizarInfoPaciente}
                         camaActual={camaActual}
                         onData={handleDataFromChild}
@@ -201,5 +201,3 @@ const EditarPaciente = ({obtenerPaciente}) => {
         </>
      );
 }
- 
-export default EditarPaciente;

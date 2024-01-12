@@ -1,7 +1,7 @@
 import React from 'react';
 import { AsignarCama } from './AsignarCama';
 
-const FormNuevoPaciente = ({ formik }) => {
+export default function FormPatientNew  ({ formik }) {
     return (
         
         <form
@@ -376,8 +376,7 @@ const FormNuevoPaciente = ({ formik }) => {
             />
         </div>
         </div>
+        
     </form>
     );
 };
-
-export default FormNuevoPaciente;

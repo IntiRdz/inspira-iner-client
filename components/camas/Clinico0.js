@@ -152,9 +152,7 @@ const progreso = 30;
                   <th className="w-1/12 px-1 py-1">Hemodialisis</th>
                   <th className="w-1/11 px-1 py-1">Código UVEH</th>
                   <th className="w-1/12 px-1 py-1">Expediente</th>
-                  <th className="w-1/12 px-1 py-1">Nombre</th>
-                  <th className="w-1/11 px-1 py-1">Apellido Paterno</th>
-                  <th className="w-1/12 px-1 py-1">Apellido Materno</th>
+                  <th className="w-1/7 px-1 py-1">Nombre</th>
                   <th className="w-1/12 px-1 py-1">Edad</th>
                   <th className="w-1/12 px-1 py-1">Ingreso</th>
                   <th className="w-1/12 px-1 py-1">Prealta</th>
@@ -231,9 +229,11 @@ const progreso = 30;
                         }
                     </td>
                     <td className="border px-1 text-center">{ultimaAdmision.paciente_relacionado.expediente || ''}</td>
-                    <td className="border px-1 ">{ultimaAdmision.paciente_relacionado.pac_nombre || ''}</td>
-                    <td className="border px-1 ">{ultimaAdmision.paciente_relacionado.pac_apellido_paterno || ''}</td>
-                    <td className="border px-1 ">{ultimaAdmision.paciente_relacionado.pac_apellido_materno || ''}</td>
+                    <td className="py-3 px-4">
+                      {
+                        `${ultimaAdmision.paciente_relacionado.pac_apellido_paterno} ${ultimaAdmision.paciente_relacionado.pac_apellido_materno} ${ultimaAdmision.paciente_relacionado.pac_nombre}`
+                      }
+                    </td>
                     <td className="border px-1 text-center">{calcularEdad(ultimaAdmision.paciente_relacionado.pac_FN) || ''}</td>
                     <td className="border px-1 ">{ultimaAdmision.fecha_ingreso ? format(utcToZonedTime(new Date(ultimaAdmision.fecha_ingreso), timeZone), 'dd/MM/yy') : ''}</td>
                     <td className={fechaPreAltaClasses}>{ultimaAdmision.fecha_prealta ? format(utcToZonedTime(new Date(ultimaAdmision.fecha_prealta), timeZone), 'dd/MM/yy') : ''}</td>
@@ -283,8 +283,6 @@ const progreso = 30;
                   </>
                 ) : (
                   <>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
                   <td className="border px-1"></td>
                   <td className="border px-1"></td>
                   <td className="border px-1"></td>

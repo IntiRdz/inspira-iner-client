@@ -126,3 +126,13 @@ export const NUEVO_MICROORGANISMO2 = gql`
     }
   }
 `;
+
+
+export const ACTUALIZAR_MICROORGANISMO = gql`
+    mutation actualizarMicroorganismo($id: ID!, $input: MicroorganismoInput) {
+            actualizarMicroorganismo(id:$id, input:$input) {
+                ...FragmentoMicroorganismo
+            }
+    }
+${FRAGMENTO_MICROORGANISMO}
+`;

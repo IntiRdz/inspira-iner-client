@@ -3,10 +3,10 @@ import { format, differenceInDays } from 'date-fns';
 import { useQuery } from '@apollo/client';
 
 import { OBTENER_ULTIMA_ADMISION_PACIENTE } from '../../graphql/queries'; 
-import FormEditarDiagnostico from '../forms/FormEditarDiagnostico';
+import FormDiagnosticEdit from '../forms/FormDiagnosticEdit';
 
 
-const DiagnosticosPaciente = ({obtenerPaciente}) => {
+export default function DiagnosticosPaciente ({obtenerPaciente}) {
 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,11 +64,11 @@ const DiagnosticosPaciente = ({obtenerPaciente}) => {
                         <th className="py-2">Fecha de Resolución</th>
                         <th className="py-2">Tipo</th>
                         <th className="py-2">Activo</th>
-                        <th className="py-2">Acciones</th> {/* Columna adicional para botones */}
+                        <th className="py-2">Acciones</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white">
-                    {ultimaAdmision && ultimaAdmision.diagnostico.map((diag, index) => (
+                     {ultimaAdmision && ultimaAdmision.diagnostico.map((diag, index) => (
                         <tr key={diag.id || index}>
                             <td className="border px-4 py-2">{diag.diagnostico_nombre}</td>
                             <td className="border px-4 py-2">{formatFecha(diag.fecha_diagnostico, 'dd-MM-yyyy')}</td>
@@ -86,7 +86,8 @@ const DiagnosticosPaciente = ({obtenerPaciente}) => {
             </table>
 
             {/* Modal para editar diagnóstico */}
-            {isModalOpen && diagnosticoActual && (
+
+             {isModalOpen && diagnosticoActual && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full">
                     <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                         <div className="mt-3 text-center">
@@ -98,7 +99,6 @@ const DiagnosticosPaciente = ({obtenerPaciente}) => {
                             />
                             <div className="items-center px-4 py-3">
                                 <button onClick={closeModal} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 mr-2">Cerrar</button>
-                                {/* ... otros botones o acciones ... */}
                             </div>
                         </div>
                     </div>
@@ -110,5 +110,3 @@ const DiagnosticosPaciente = ({obtenerPaciente}) => {
     
      )
 }
- 
-export default DiagnosticosPaciente;

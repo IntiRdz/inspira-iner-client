@@ -1,11 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { format, differenceInDays } from 'date-fns';
 import { EditIcon } from '../icons';
 import MicroEditar from '../microorganismos/MicroEditar';
 
 export default function PacienteMicroorganismos({ obtenerPaciente }) {
+
+
     const [editMicro, setEditMicro] = useState(false);
     const [microorganismoSeleccionado, setMicroorganismoSeleccionado] = useState(null);
+
+    // ... otras definiciones de funciones y lógica del componente
+
+    const handleEditClick = (microorganismo) => {
+        setMicroorganismoSeleccionado(microorganismo);
+        setEditMicro(true);
+    };
+
+    // useEffect para verificar el estado actualizado
+    useEffect(() => {
+        console.log(microorganismoSeleccionado);
+    }, [microorganismoSeleccionado]);
+
+
 
     const formatFecha = (fecha, formato) => {
         return format(new Date(fecha), formato);
@@ -17,10 +33,10 @@ export default function PacienteMicroorganismos({ obtenerPaciente }) {
         return differenceInDays(hoy, fechaDetec);
     };
 
-    const handleEditClick = (microorganismo) => {
-        setEditMicro(true);
-        setMicroorganismoSeleccionado(microorganismo);
+    const cerrarEdicion = () => {
+        setEditMicro(false);
     };
+
 
     return (
         <> 
@@ -53,11 +69,13 @@ export default function PacienteMicroorganismos({ obtenerPaciente }) {
                                 <td className="border px-4 py-2">{microorganismo.microorganismo_nombre}</td>
                                 <td className="border px-4 py-2">{microorganismo.susceptibilidad}</td>
                                 <td className="border px-4 py-2">{microorganismo.comentario_uveh}</td>
-                                <td className="border px-1"></td>
                                 <td className="border px-1">
                                     <span className="flex justify-center items-center">
                                         <button 
-                                            onClick={() => handleEditClick(microorganismo)}
+                                            onClick={() => {
+                                                handleEditClick(microorganismo);
+                                                setEditMicro(!editMicro);
+                                            }}
                                             className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2 rounded text-xs"
                                             data-tooltip="Editar"
                                         >
@@ -74,7 +92,7 @@ export default function PacienteMicroorganismos({ obtenerPaciente }) {
 
 
             <div className="w-full w-lg">              
-              {editMicro && <MicroEditar microorganismo={microorganismoSeleccionado}/>}
+              {editMicro && <MicroEditar microorganismo={microorganismoSeleccionado} obtenerPaciente={obtenerPaciente} onClose={cerrarEdicion}/>}
              </div>
         </>
     );

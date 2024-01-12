@@ -2,18 +2,22 @@ import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { format } from 'date-fns';
+
 import Swal from 'sweetalert2';
 
 import PacienteContext from '../../context/pacientes/PacienteContext';
 
-import FormNuevoMicro from '../forms/FormNuevoMicro';
+import { validationSchemaMicro } from '../../components/forms/validationSchemas';
+
 
 import { OBTENER_PACIENTE } from '../../graphql/queries'; 
 import { NUEVO_MICROORGANISMO } from '../../graphql/mutations'; 
 
+import FormMicroNew from '../forms/FormMicroNew';
 
-const MicroNuevo = ({obtenerPaciente}) => {
+
+export default function MicroNuevo ({obtenerPaciente}) {
     // routing
     const router = useRouter();
 
@@ -48,39 +52,18 @@ const MicroNuevo = ({obtenerPaciente}) => {
     // Formulario para nuevos microorganismos
     const formik = useFormik({
         initialValues: {
-            fecha_deteccion: '',
+            fecha_deteccion: format(new Date(), 'yyyy-MM-dd\'T\'HH:mm:ss'),
             metodo_deteccion: '',
             microorganismo_tipo: '',
             susceptibilidad: '',
             comentario_uveh: '',
 
         },
-        validationSchema: Yup.object({
-            fecha_deteccion: Yup.date().required('La fecha de detección es obligatoria'),
-            metodo_deteccion: Yup.string()
-                .oneOf([
-                    'PCR', 
-                    'Panel_Neumonia', 
-                    'Cultivo'
-                ])
-                .required('El método de detección es obligatorio'),
-            microorganismo_tipo: Yup.string()
-                .oneOf([
-                    'Virus', 
-                    'Bacteria', 
-                    'Micobacteria', 
-                    'Hongo'
-                ])
-                .required('El tipo de microorganismo es obligatorio'),
-            susceptibilidad: Yup.string().oneOf([
-                'No_Aplica',
-                'Sensible',
-                'BLEE', 
-                'MDR', 
-                'XDR', 
-            ]),
-            comentario_uveh: Yup.string(),
-        }), 
+
+
+        validationSchemaMicro,
+
+
         onSubmit: async valores => {
 
             
@@ -106,7 +89,7 @@ const MicroNuevo = ({obtenerPaciente}) => {
                 camahistorial: ultimaCamaRelacionadaId
             };
 
-            console.log("Valores actualizados:", valoresActualizados)
+            //console.log("Valores actualizados:", valoresActualizados)
 
             try {
                 const { data } = await nuevoMicroorganismo({
@@ -172,7 +155,7 @@ const MicroNuevo = ({obtenerPaciente}) => {
 
             <div className="flex justify-center mt-5">
                 <div className="w-full max-w-lg">
-                    <FormNuevoMicro 
+                    <FormMicroNew 
                         formik={formik}
                         obtenerPaciente={obtenerPaciente}
                     />
@@ -182,5 +165,3 @@ const MicroNuevo = ({obtenerPaciente}) => {
         </>
      );
 }
- 
-export default MicroNuevo;

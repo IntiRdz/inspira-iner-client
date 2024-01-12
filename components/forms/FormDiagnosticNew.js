@@ -4,7 +4,7 @@ import { utcToZonedTime } from 'date-fns-tz';
 
 const timeZone = 'America/Mexico_City'; // Definir la zona horaria
 
-const FormNuevoMicro = ({ formik }) => {
+export default function FormDiagnosticoNew ({ formik }) {
   
   return (
     
@@ -152,5 +152,3 @@ const FormNuevoMicro = ({ formik }) => {
     </form>
   )
 }
-
-export default FormNuevoMicro

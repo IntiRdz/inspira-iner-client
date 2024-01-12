@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Formik } from 'formik';
 import { AsignarCama } from './AsignarCama';
 
-const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual, onData=1  }) => {
+export default function  FormPatientEdit  ({ initialValues, validationSchema, onSubmit, camaActual, onData=1  })  {
 
     const someData = "Data from child";
 
@@ -538,13 +538,11 @@ const FormEditPatient = ({ initialValues, validationSchema, onSubmit, camaActual
         value="Actualizar Paciente"
     />
 </div>
-</div>
-        </form>
+                        </div>
+                    </form>
 
 
             )}
         </Formik>
     );
 };
-
-export default FormEditPatient;

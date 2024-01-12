@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import {differenceInYears} from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz'; 
 import { EditIcon, Female, Kidneys, Male } from '../icons';
-import EditarPaciente from './EditarPaciente';
+import PacienteEditar from './PacienteEditar';
 
 const timeZone = 'America/Mexico_City'; // Definir la zona horaria
 
-const PacienteRenglon = ({obtenerPaciente}) => {
+export default function PacienteRenglon ({obtenerPaciente}) {
 
   const [editPatient, setEditPatient] = useState(false);
 
@@ -137,11 +137,8 @@ const PacienteRenglon = ({obtenerPaciente}) => {
 
 
           <div className="w-full w-lg">              
-                    {editPatient && <EditarPaciente obtenerPaciente ={obtenerPaciente}/>}
-
-                </div>
+              {editPatient && <PacienteEditar obtenerPaciente ={obtenerPaciente}/>}
+          </div>
     </div>
   )
 }
-
-export default PacienteRenglon

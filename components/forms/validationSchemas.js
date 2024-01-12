@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-export const validationSchema = Yup.object({
+export const validationSchemaPatient = Yup.object({
     expediente: Yup.string()
     .required('El expediente del paciente es obligatorio')
     .matches(/^[a-zA-Z0-9]{6,9}$/, 'El expediente debe tener entre 6 y 9 caracteres alfanuméricos'),            
@@ -63,6 +63,35 @@ export const validationSchema = Yup.object({
     fecha_prealta: Yup.date(),
     fecha_egreso: Yup.date(),
     hospitalizado: Yup.boolean()
+});
+
+
+
+export const  validationSchemaMicro = Yup.object({
+    fecha_deteccion: Yup.date().required('La fecha de detección es obligatoria'),
+    metodo_deteccion: Yup.string()
+        .oneOf([
+            'PCR', 
+            'Panel_Neumonia', 
+            'Cultivo'
+        ])
+        .required('El método de detección es obligatorio'),
+    microorganismo_tipo: Yup.string()
+        .oneOf([
+            'Virus', 
+            'Bacteria', 
+            'Micobacteria', 
+            'Hongo'
+        ])
+        .required('El tipo de microorganismo es obligatorio'),
+    susceptibilidad: Yup.string().oneOf([
+        'No_Aplica',
+        'Sensible',
+        'BLEE', 
+        'MDR', 
+        'XDR', 
+    ]),
+    comentario_uveh: Yup.string(),
 });
 
 

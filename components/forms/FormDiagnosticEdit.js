@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FormEditarDiagnostico = ({ diagnostico, onInputChange, onSubmit }) => {
+export default function FormDiagnosticEdit ({ diagnostico, onInputChange, onSubmit })  {
     return (
         <form onSubmit={onSubmit}>
             <div className="mb-4">
@@ -54,5 +54,3 @@ const FormEditarDiagnostico = ({ diagnostico, onInputChange, onSubmit }) => {
         </form>
     );
 };
-
-export default FormEditarDiagnostico;
