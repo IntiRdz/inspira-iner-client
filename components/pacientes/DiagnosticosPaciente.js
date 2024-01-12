@@ -92,7 +92,7 @@ export default function DiagnosticosPaciente ({obtenerPaciente}) {
                     <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                         <div className="mt-3 text-center">
                             <h3 className="text-lg leading-6 font-medium text-gray-900">Editar Diagnóstico</h3>
-                            <FormEditarDiagnostico
+                            <FormDiagnosticEdit
                                 diagnostico={diagnosticoActual}
                                 onInputChange={handleInputChange}
                                 onSubmit={handleFormSubmit}
