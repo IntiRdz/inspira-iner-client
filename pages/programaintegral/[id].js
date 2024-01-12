@@ -5,7 +5,6 @@ import { useQuery } from '@apollo/client';
 
 import { OBTENER_PACIENTE } from '../../graphql/queries';
 import PacienteRenglon from '../../components/pacientes/PacienteRenglon';
-import MicroNuevo from '../../components/pacientes/MicroNuevo';
 import DiagnosticosPaciente from '../../components/pacientes/DiagnosticosPaciente';
 import PdfPacPrograma from '../../components/programa/PdfPacPrograma';
 
