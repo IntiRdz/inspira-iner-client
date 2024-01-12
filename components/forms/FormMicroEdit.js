@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import Select from 'react-select';
 import { microorganismoOptions } from './selecMicro';
 
-export default function  FormMicroEdit  ({ initialValues, validationSchema, onSubmit, onClose })  {
+export default function  FormMicroEdit  ({ initialValues, validationSchema, onSubmit })  {
 
     microorganismoOptions
 
@@ -176,13 +176,6 @@ export default function  FormMicroEdit  ({ initialValues, validationSchema, onSu
       value="Modificar Microorganismo"
   />
 
-<button
-    type="button" // Importante para que no envíe el formulario
-    className="bg-red-500 w-full mt-3 p-2 text-white uppercase font-bold hover:bg-red-700"
-    onClick={onClose} // Llama a la función onClose al hacer clic
->
-    Cerrar
-</button>
 </form>
 
 

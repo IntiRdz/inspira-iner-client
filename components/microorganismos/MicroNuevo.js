@@ -9,8 +9,8 @@ import Swal from 'sweetalert2';
 import { OBTENER_PACIENTE } from '../../graphql/queries'; 
 import { NUEVO_MICROORGANISMO } from '../../graphql/mutations'; 
 
-import FormMicroNew from '../forms/FormMicroNew';
 import { validationSchemaMicro } from '../../components/forms/validationSchemas';
+import FormMicroNew from '../forms/FormMicroNew';
 
 import ModalGeneral from '../modals/ModalGeneral';
 
@@ -24,8 +24,6 @@ export default function MicroNuevo ({obtenerPaciente, isOpen, onClose}) {
     const id = obtenerPaciente.id;
 
     const [isModalOpen, setIsModalOpen] = useState(isOpen);
-
-
     // Sincroniza el estado local del modal con el prop 'isOpen'
     useEffect(() => {
         setIsModalOpen(isOpen);

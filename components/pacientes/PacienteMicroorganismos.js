@@ -3,7 +3,7 @@ import { format, differenceInDays } from 'date-fns';
 import { EditIcon } from '../icons';
 import MicroEditar from '../microorganismos/MicroEditar';
 
-export default function PacienteMicroorganismos({ obtenerPaciente }) {
+export default function PacienteMicroorganismos({ obtenerPaciente, onEdit }) {
 
 
     const [editMicro, setEditMicro] = useState(false);
@@ -13,7 +13,8 @@ export default function PacienteMicroorganismos({ obtenerPaciente }) {
 
     const handleEditClick = (microorganismo) => {
         setMicroorganismoSeleccionado(microorganismo);
-        setEditMicro(true);
+        /* setEditMicro(true); */
+        onEdit(microorganismo);
     };
 
     // useEffect para verificar el estado actualizado
@@ -71,16 +72,13 @@ export default function PacienteMicroorganismos({ obtenerPaciente }) {
                                 <td className="border px-4 py-2">{microorganismo.comentario_uveh}</td>
                                 <td className="border px-1">
                                     <span className="flex justify-center items-center">
-                                        <button 
-                                            onClick={() => {
-                                                handleEditClick(microorganismo);
-                                                setEditMicro(!editMicro);
-                                            }}
-                                            className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2 rounded text-xs"
-                                            data-tooltip="Editar"
-                                        >
-                                            <EditIcon color='white' />
-                                        </button>
+                                    <button 
+                                        onClick={() => handleEditClick(microorganismo)}
+                                        className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2 rounded text-xs"
+                                        data-tooltip="Editar"
+                                    >
+                                        <EditIcon color='white' />
+                                    </button>
                                     </span>
                                 </td>
                             </tr>
@@ -90,10 +88,10 @@ export default function PacienteMicroorganismos({ obtenerPaciente }) {
             </tbody>
             </table>
 
-
+{/* 
             <div className="w-full w-lg">              
               {editMicro && <MicroEditar microorganismo={microorganismoSeleccionado} obtenerPaciente={obtenerPaciente} onClose={cerrarEdicion}/>}
-             </div>
+             </div> */}
         </>
     );
 }

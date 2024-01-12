@@ -7,6 +7,7 @@ import { OBTENER_PACIENTE } from '../../graphql/queries';
 import PacienteRenglon from '../../components/pacientes/PacienteRenglon';
 import PacienteMicroorganismos from '../../components/pacientes/PacienteMicroorganismos';
 import MicroNuevo from '../../components/microorganismos/MicroNuevo';
+import MicroEditar from '../../components/microorganismos/MicroEditar';
 import DiagnosticosPaciente from '../../components/pacientes/DiagnosticosPaciente';
 import DiagnosticoNuevo from '../../components/diagnosticos/DiagnosticoNuevo';
 import PacienteTraslados from '../../components/pacientes/PacienteTraslados';
@@ -22,6 +23,10 @@ const Editar = () => {
     });
 
     const [newMicro, setNewMicro] = useState(false);
+
+    const [microorganismoActual, setMicroorganismoActual] = useState(null);
+    const [editMicro, setEditMicro] = useState(false);
+
     const [newDx, setNewDx] = useState(false);
 
     if (loading) return <p>Cargando...</p>;
@@ -50,7 +55,11 @@ const Editar = () => {
                             >
                             Agregar Microorganismo
                         </button>
-                        <PacienteMicroorganismos obtenerPaciente ={data.obtenerPaciente}/>      
+                        <PacienteMicroorganismos obtenerPaciente={data.obtenerPaciente} onEdit={microorganismo => {
+                            setMicroorganismoActual(microorganismo);
+                            setEditMicro(true);
+                        }}/>
+     
                     </div>
 
                 </div>
@@ -72,9 +81,18 @@ const Editar = () => {
 
                 {/* Nuevo Microorganismo  */}
                 <div className="w-full w-lg">              
-                    {newMicro && <MicroNuevo obtenerPaciente ={data.obtenerPaciente} isOpen={newMicro} onClose={() => setNewMicro(false)}/>}
+                    {newMicro && <MicroNuevo obtenerPaciente ={data.obtenerPaciente} isOpen={newMicro} onClose={() => setNewMicro(false)} />}
 
                 </div>
+
+                {/* Nuevo Microorganismo  */}
+                <div className="w-full w-lg">              
+                    {editMicro && <MicroEditar microorganismo={microorganismoActual} obtenerPaciente={data.obtenerPaciente} isOpen={editMicro} onClose={() => setEditMicro(false)}/>}
+
+                </div>
+
+
+
                 {/* Nuevo Diagnóstico */}
                 <div className="w-full w-lg">              
                     {newDx && <DiagnosticoNuevo obtenerPaciente = {data.obtenerPaciente} isOpen={newDx} onClose={() => setNewDx(false)}/>}

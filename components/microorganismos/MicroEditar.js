@@ -1,16 +1,20 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useQuery, gql, useMutation } from '@apollo/client';
-import Swal from 'sweetalert2';
+import { useMutation } from '@apollo/client';
 import { format } from 'date-fns';
+
+import Swal from 'sweetalert2';
 
 import { OBTENER_PACIENTE } from '../../graphql/mutations';
 import { ACTUALIZAR_MICROORGANISMO } from '../../graphql/mutations';
+
 import { validationSchemaMicro } from '../../components/forms/validationSchemas';
 import FormMicroEdit from '../forms/FormMicroEdit';
 
+import ModalGeneral from '../modals/ModalGeneral';
 
-export default function MicroEditar({ microorganismo, obtenerPaciente, onClose  }) {
+
+export default function MicroEditar({ microorganismo, obtenerPaciente, isOpen, onClose  }) {
   
   //console.log("Microorganismo Prop",microorganismo ); // Esto te mostrará si el microorganismo está llegando
   
@@ -19,6 +23,17 @@ export default function MicroEditar({ microorganismo, obtenerPaciente, onClose  
 
   const pacId = obtenerPaciente.id;
   const id = microorganismo.id;
+
+
+  const [isModalOpen, setIsModalOpen] = useState(isOpen);
+    // Sincroniza el estado local del modal con el prop 'isOpen'
+    useEffect(() => {
+        setIsModalOpen(isOpen);
+    }, [isOpen]);
+
+    const closeModal = () => {
+        onClose(); // Cierra el modal utilizando la función del padre
+    };
 
   const [actualizarMicroorganismo] = useMutation(ACTUALIZAR_MICROORGANISMO, {
     refetchQueries: [
@@ -102,17 +117,19 @@ const mostrarMensaje = () => {
   return (
 
     <>
-      <div className="flex justify-center mt-2">
-          <div className="w-full max-w-7xl">
-          {mensaje && mostrarMensaje()}
-              <FormMicroEdit
-                  initialValues={initialValues}
-                  validationSchema={validationSchemaMicro}
-                  onSubmit={actualizarInfoMicroorganismo}    
-                  onClose={onClose}  
-              />
-          </div>
-      </div>
+        <ModalGeneral isOpen={isModalOpen} onClose={closeModal}>
+            <div className="flex justify-center mt-2">
+                <div className="w-full max-w-lg">
+                    <FormMicroEdit
+                        initialValues={initialValues}
+                        validationSchema={validationSchemaMicro}
+                        onSubmit={actualizarInfoMicroorganismo}    
+                        /* onClose={onClose}  */ 
+                        />
+                </div>
+            </div>
+        </ModalGeneral>
+        {mensaje && mostrarMensaje()}
     </>
   );
 }
