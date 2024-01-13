@@ -65,6 +65,9 @@ export const FRAGMENTO_MICROORGANISMO = gql`
     metodo_deteccion
     microorganismo_tipo
     microorganismo_nombre
+    microorganismo_muestra_resultado
+    microorganismo_muestra_tipo
+    fecha_ultima_revision
     susceptibilidad
     comentario_uveh
   }

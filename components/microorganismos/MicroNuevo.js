@@ -52,6 +52,9 @@ export default function MicroNuevo ({obtenerPaciente, isOpen, onClose}) {
             fecha_deteccion: format(new Date(), 'yyyy-MM-dd'),
             metodo_deteccion: '',
             microorganismo_tipo: '',
+            microorganismo_muestra_tipo: '',
+            microorganismo_muestra_resultado: 'Pendiente',
+            fecha_ultima_revision: '',
             susceptibilidad: '',
             comentario_uveh: '',
             camahistorial: ultimaCamaRelacionadaId
@@ -60,11 +63,16 @@ export default function MicroNuevo ({obtenerPaciente, isOpen, onClose}) {
         validationSchema: validationSchemaMicro,
 
         onSubmit: async valores => {
+            const fechaRevision = valores.fecha_ultima_revision ? format(new Date(valores.fecha_ultima_revision), 'yyyy-MM-dd') : undefined;
+              
+            const input = {
+                ...valores,
+                fecha_ultima_revision: fechaRevision
+            };
+
             try {
                 const { data } = await nuevoMicroorganismo({
-                    variables: {
-                        input: valores
-                    }
+                    variables: { input }
                 });
 
                 console.log("Después de la llamada a actualizarPaciente");
@@ -123,6 +131,7 @@ export default function MicroNuevo ({obtenerPaciente, isOpen, onClose}) {
             <ModalGeneral isOpen={isModalOpen} onClose={closeModal}>
                 <div className="flex justify-center mt-5">
                     <div className="w-full max-w-lg">
+                    {mensaje && mostrarMensaje()}
                         <FormMicroNew 
                             formik={formik}
                             obtenerPaciente={obtenerPaciente}
@@ -130,7 +139,7 @@ export default function MicroNuevo ({obtenerPaciente, isOpen, onClose}) {
                     </div>
                 </div>
             </ModalGeneral>
-            {mensaje && mostrarMensaje()}
+            
         </>
      );
 }

@@ -45,6 +45,8 @@ export default function MicroEditar({ microorganismo, obtenerPaciente, isOpen, o
     fecha_deteccion: microorganismo.fecha_deteccion ? format(new Date(microorganismo.fecha_deteccion), 'yyyy-MM-dd') : '',
     metodo_deteccion: microorganismo.metodo_deteccion,
     microorganismo_tipo: microorganismo.microorganismo_tipo,
+    microorganismo_muestra_tipo: microorganismo.microorganismo_muestra_tipo,
+    microorganismo_muestra_resultado: microorganismo.microorganismo_muestra_resultado,
     microorganismo_nombre: microorganismo.microorganismo_nombre,
     susceptibilidad: microorganismo.susceptibilidad,
     comentario_uveh: microorganismo.comentario_uveh,

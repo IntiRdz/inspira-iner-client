@@ -1,7 +1,7 @@
 import React from 'react'
 import { utcToZonedTime } from 'date-fns-tz'; 
 import Select from 'react-select';
-import { microorganismoOptions } from './selecMicro';
+import { microorganismoOptions, microorganismoOptionsMuestra } from './selecMicro';
 
 
 export default function FormMicroNew ({ formik }) {
@@ -37,6 +37,27 @@ export default function FormMicroNew ({ formik }) {
                 <p>{formik.errors.fecha_deteccion}</p>
             </div>
         ) : null  } 
+
+    <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="microorganismo_nombre">
+            Seleccione un microorganismo 
+        </label>
+        <Select
+            id="microorganismo_nombre"
+            className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            options={microorganismoOptions}
+            onChange={(selectedOption) => 
+                formik.setFieldValue('microorganismo_nombre', selectedOption.value)}
+            onBlur={formik.handleBlur}
+            value={microorganismoOptions.find(option => option.value === formik.values.microorganismo_nombre)}
+        />
+        {formik.errors.microorganismo_nombre && (
+            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                <p className="font-bold">Error</p>
+                <p>{formik.errors.microorganismo_nombre}</p>
+            </div>
+        )}
+    </div>
 
         <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="metodo_deteccion">
@@ -89,30 +110,70 @@ export default function FormMicroNew ({ formik }) {
             </div>
         ) : null  }
 
-
-
-
-
-    <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="microorganismo_nombre">
-            Microorganismo
+<div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="microorganismo_muestra_resultado">
+            Muestra donde se detectó el Microorganismo
         </label>
         <Select
-            id="microorganismo_nombre"
+            id="microorganismo_muestra_resultado"
             className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            options={microorganismoOptions}
+            options={microorganismoOptionsMuestra}
             onChange={(selectedOption) => 
-                formik.setFieldValue('microorganismo_nombre', selectedOption.value)}
+                formik.setFieldValue('microorganismo_muestra_resultado', selectedOption.value)}
             onBlur={formik.handleBlur}
-            value={microorganismoOptions.find(option => option.value === formik.values.microorganismo_nombre)}
+            value={microorganismoOptionsMuestra.find(option => option.value === formik.values.microorganismo_muestra_resultado)}
         />
-        {formik.errors.microorganismo_nombre && (
+        {formik.errors.microorganismo_muestra_resultado && (
             <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
                 <p className="font-bold">Error</p>
-                <p>{formik.errors.microorganismo_nombre}</p>
+                <p>{formik.errors.microorganismo_muestra_resultado}</p>
             </div>
         )}
     </div>
+
+
+
+
+
+    <label className="block text-gray-700 text-sm font-bold mb-2 mt-4">
+            Estatus del Resultado
+        </label>
+        <div id="microorganismo_muestra_resultado">
+            <label className="inline-flex items-center mr-3">
+                <input
+                    type="radio"
+                    className="form-radio"
+                    name="microorganismo_muestra_resultado"
+                    value="Pendiente"
+                    checked={formik.values.microorganismo_muestra_resultado === 'Pendiente'}
+                    onChange={() => formik.setFieldValue("microorganismo_muestra_resultado", "Pendiente")}
+                />
+                <span className="ml-2">Pendiente</span>
+            </label>
+            <label className="inline-flex items-center mr-3">
+                <input
+                    type="radio"
+                    className="form-radio"
+                    name="microorganismo_muestra_resultado"
+                    value="Preliminar"
+                    checked={formik.values.microorganismo_muestra_resultado === 'Preliminar'}
+                    onChange={() => formik.setFieldValue("microorganismo_muestra_resultado", "Preliminar")}
+                />
+                <span className="ml-2">Preliminar</span>
+            </label>
+            <label className="inline-flex items-center mr-3">
+                <input
+                    type="radio"
+                    className="form-radio"
+                    name="microorganismo_muestra_resultado"
+                    value="Definitivo"
+                    checked={formik.values.microorganismo_muestra_resultado === 'Definitivo'}
+                    onChange={() => formik.setFieldValue("microorganismo_muestra_resultado", "Definitivo")}
+                />
+                <span className="ml-2">Definitivo</span>
+            </label>
+        </div>
+
 
         <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="susceptibilidad">
@@ -138,6 +199,29 @@ export default function FormMicroNew ({ formik }) {
             <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
                 <p className="font-bold">Error</p>
                 <p>{formik.errors.susceptibilidad}</p>
+            </div>
+        ) : null  }
+
+
+        <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_ultima_revision">
+                Fecha de ultima revisión
+            </label>
+
+            <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="fecha_ultima_revision"
+                type="date"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.fecha_ultima_revision}
+            />
+        </div>
+
+        { formik.touched.fecha_ultima_revision && formik.errors.fecha_ultima_revision ? (
+            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                <p className="font-bold">Error</p>
+                <p>{formik.errors.fecha_ultima_revision}</p>
             </div>
         ) : null  }
 

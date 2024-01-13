@@ -57,3 +57,52 @@ export const microorganismoOptions = [
  
     // Más opciones...
   ];
+
+
+export const microorganismoOptionsMuestra = [
+  { value: 'LB03 Otico', label: 'LB03 Otico' },
+  { value: 'LB04 Ocular', label: 'LB04 Ocular' },
+  { value: 'LB05 Otros exudados', label: 'LB05 Otros exudados' },
+  { value: 'LB06 Expectoración, piogenos (inducida y supervisada)', label: 'LB06 Expectoración, piogenos (inducida y supervisada)' },
+  { value: 'LB07 Cultivo, aspirado bronquial (con sonda)', label: 'LB07 Cultivo, aspirado bronquial (con sonda)' },
+  { value: 'LB08 Cultivo, lavado bronquioloalveolar (FBC)', label: 'LB08 Cultivo, lavado bronquioloalveolar (FBC)' },
+  { value: 'LB09 Pleural', label: 'LB09 Pleural' },
+  { value: 'LB10 Cefalorraquídeo', label: 'LB10 Cefalorraquídeo' },
+  { value: 'LB11 Otros líquidos corporales', label: 'LB11 Otros líquidos corporales' },
+  { value: 'LB12 Hemocultivos (Bacteria)', label: 'LB12 Hemocultivos (Bacteria)' },
+  { value: 'LB13 Mielocultivo bacterias', label: 'LB13 Mielocultivo bacterias' },
+  { value: 'LB14 Hemocultivo micobacterias', label: 'LB14 Hemocultivo micobacterias' },
+  { value: 'LB15 Coprocultivo', label: 'LB15 Coprocultivo' },
+  { value: 'LB16 Urocultivo', label: 'LB16 Urocultivo' },
+  { value: 'LB17 Heridas abiertas', label: 'LB17 Heridas abiertas' },
+  { value: 'LB18 Punción estéril', label: 'LB18 Punción estéril' },
+  { value: 'LB19 Biopsia', label: 'LB19 Biopsia' },
+  { value: 'LB20 Punta de catéter', label: 'LB20 Punta de catéter' },
+  { value: 'LB21 Otras secreciones', label: 'LB21 Otras secreciones' },
+  { value: 'LB22 Baciloscopia (Bacilo de Koch)', label: 'LB22 Baciloscopia (Bacilo de Koch)' },
+  { value: 'LB25 Cultivo de hongos', label: 'LB25 Cultivo de hongos' },
+  { value: 'LB27 Inmunofluorescencia para Pneumocistis Jirovecii', label: 'LB27 Inmunofluorescencia para Pneumocistis Jirovecii' },
+  { value: 'LB28 Detección de Cryptococcus', label: 'LB28 Detección de Cryptococcus' },
+  { value: 'LB30 PCR para tuberculosis', label: 'LB30 PCR para tuberculosis' },
+  { value: 'LB39 PCR para virus influenza (A-B)', label: 'LB39 PCR para virus influenza (A-B)' },
+  { value: 'LB39A PCR SARS-COV-2', label: 'LB39A PCR SARS-COV-2' },
+  { value: 'LB42 PCR / Detección de herpes virus', label: 'LB42 PCR / Detección de herpes virus' },
+  { value: 'LB43 PCR para aspergillus sp', label: 'LB43 PCR para aspergillus sp' },
+  { value: 'LB45 Mielocultivo micobacterias', label: 'LB45 Mielocultivo micobacterias' },
+  { value: 'LB46 Cultivo de micobacterias y prueba de susceptibilidad de M. tuberculosis', label: 'LB46 Cultivo de micobacterias y prueba de susceptibilidad de M. tuberculosis' },
+  { value: 'LB47 Tinciones especiales para búsqueda de hongos', label: 'LB47 Tinciones especiales para búsqueda de hongos' },
+  { value: 'LB48 Detección de Histoplasma', label: 'LB48 Detección de Histoplasma' },
+  { value: 'LB49 Detección de C. Immitis', label: 'LB49 Detección de C. Immitis' },
+  { value: 'LB50 Toxina AB C. Difficile', label: 'LB50 Toxina AB C. Difficile' },
+  { value: 'LB51 PCR bacteriano respiratorio', label: 'LB51 PCR bacteriano respiratorio' },
+  { value: 'LB52 PCR viral respiratorio', label: 'LB52 PCR viral respiratorio' },
+  { value: 'LB53 Genotipificación de micobacterias / identificación', label: 'LB53 Genotipificación de micobacterias / identificación' },
+  { value: 'LB54 Genotipificación de micobacterias / drogosusceptibilidad', label: 'LB54 Genotipificación de micobacterias / drogosusceptibilidad' },
+  { value: 'LB55 Detección de Galactomanano - Aspergillus', label: 'LB55 Detección de Galactomanano - Aspergillus' },
+  { value: 'LB57 Ensayo de liberación interferon gamma (Quantiferon)', label: 'LB57 Ensayo de liberación interferon gamma (Quantiferon)' },
+  { value: 'LB58 Detección de antígeno de Legionella pneumophila en orina', label: 'LB58 Detección de antígeno de Legionella pneumophila en orina' },
+  { value: 'LB59 Panel de Sepsis', label: 'LB59 Panel de Sepsis' },
+  { value: 'LB60 Panel Meningitis', label: 'LB60 Panel Meningitis' },
+  { value: 'LB61 Panel gastrointestinal', label: 'LB61 Panel gastrointestinal' }
+  // Más opciones...
+];

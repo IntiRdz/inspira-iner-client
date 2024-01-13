@@ -84,13 +84,19 @@ export const  validationSchemaMicro = Yup.object({
             'Hongo'
         ])
         .required('El tipo de microorganismo es obligatorio'),
+    microorganismo_muestra_resultado: Yup.string().oneOf([
+            'Pendiente',
+            'Preliminar',
+            'Definitivo', 
+            ]).required('El estatus del resultado es obligatorio'),
+    fecha_ultima_revision: Yup.date(),
     susceptibilidad: Yup.string().oneOf([
         'No_Aplica',
         'Sensible',
         'BLEE', 
         'MDR', 
         'XDR', 
-    ]),
+        ]),
     comentario_uveh: Yup.string(),
 });
 
