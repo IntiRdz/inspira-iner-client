@@ -130,7 +130,7 @@ export default function DiagnosticoNuevo  ({obtenerPaciente, isOpen, onClose }) 
         <>  
             <ModalGeneral isOpen={isModalOpen} onClose={closeModal}>
                 <div className="flex justify-center mt-5">
-                    <div className="w-full max-w-lg">
+                    <div className="w-full max-w-2xl">
                         <FormDiagnosticNew 
                             formik={formik}
                             obtenerPaciente={obtenerPaciente}

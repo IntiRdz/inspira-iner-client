@@ -5,7 +5,7 @@ export default function ModalGeneral({ isOpen, onClose, children }) {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full">
-            <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="relative top-20 mx-auto p-5 border shadow-lg rounded-md bg-white max-w-3xl">
                 <div className="mt-3 text-center">
                     {children}
                     <div className="items-center px-4 py-3">
