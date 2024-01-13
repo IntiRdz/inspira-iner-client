@@ -6,15 +6,15 @@ import { format } from 'date-fns';
 import Swal from 'sweetalert2';
 
 import { OBTENER_PACIENTE } from '../../graphql/mutations';
-import { ACTUALIZAR_MICROORGANISMO } from '../../graphql/mutations';
+import { ACTUALIZAR_DIAGNOSTICO, OBTENER_ULTIMA_ADMISION_PACIENTE } from '../../graphql/mutations';
 
-import { validationSchemaMicro } from '../../components/forms/validationSchemas';
-import FormMicroEdit from '../forms/FormMicroEdit';
+import { validationSchemaDx } from '../../components/forms/validationSchemas';
+import FormDiagnosticEdit from '../forms/FormDiagnosticEdit';
 
 import ModalGeneral from '../modals/ModalGeneral';
 
 
-export default function DiagnosticoEditar({ microorganismo, obtenerPaciente, isOpen, onClose  }) {
+export default function DiagnosticoEditar({ diagnostico, obtenerPaciente, isOpen, onClose  }) {
   
   //console.log("Microorganismo Prop",microorganismo ); // Esto te mostrará si el microorganismo está llegando
   
@@ -22,7 +22,7 @@ export default function DiagnosticoEditar({ microorganismo, obtenerPaciente, isO
   const [mensaje, guardarMensaje] = useState(null);
 
   const pacId = obtenerPaciente.id;
-  const id = microorganismo.id;
+  const id = diagnostico.id;
 
 
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
@@ -35,7 +35,7 @@ export default function DiagnosticoEditar({ microorganismo, obtenerPaciente, isO
         onClose(); // Cierra el modal utilizando la función del padre
     };
 
-  const [actualizarMicroorganismo] = useMutation(ACTUALIZAR_MICROORGANISMO, {
+  const [actualizarDiagnostico] = useMutation(ACTUALIZAR_DIAGNOSTICO, {
     refetchQueries: [
         { query: OBTENER_PACIENTE, variables: { id: pacId } },
         { query: OBTENER_ULTIMA_ADMISION_PACIENTE, variables: { id: pacId } }
@@ -43,19 +43,18 @@ export default function DiagnosticoEditar({ microorganismo, obtenerPaciente, isO
     });
 
   const initialValues  = {
-    fecha_deteccion: microorganismo.fecha_deteccion ? format(new Date(microorganismo.fecha_deteccion), 'yyyy-MM-dd') : '',
-    metodo_deteccion: microorganismo.metodo_deteccion,
-    microorganismo_tipo: microorganismo.microorganismo_tipo,
-    microorganismo_nombre: microorganismo.microorganismo_nombre,
-    susceptibilidad: microorganismo.susceptibilidad,
-    comentario_uveh: microorganismo.comentario_uveh,
+    fecha_diagnostico: diagnostico.fecha_diagnostico ? format(new Date(diagnostico.fecha_diagnostico), 'yyyy-MM-dd') : '',
+    fecha_resolucion: diagnostico.fecha_resolucion ? format(new Date(diagnostico.fecha_resolucion), 'yyyy-MM-dd') : '',
+    diagnostico_tipo: diagnostico.diagnostico_tipo,
+    diagnostico_activo: diagnostico.diagnostico_activo,
+    diagnostico_nombre: diagnostico.diagnostico_nombre,
 };
 
 //console.log("initialValues",initialValues); // Esto te mostrará si el microorganismo está llegando
 
-const actualizarInfoMicroorganismo = async (valores) => {
+const actualizarInfoDiagnostico = async (valores) => {
     try {
-      const { data } = await actualizarMicroorganismo({
+      const { data } = await actualizarDiagnostico({
         variables: {
           id,
           input: valores,
@@ -65,7 +64,7 @@ const actualizarInfoMicroorganismo = async (valores) => {
       // Mostrar Alerta
       Swal.fire(
           'Actualizado',
-          'El microorganismo se actualizó correctamente',
+          'El diagnóstico se actualizó correctamente',
           'success'
       )
 
@@ -121,11 +120,10 @@ const mostrarMensaje = () => {
         <ModalGeneral isOpen={isModalOpen} onClose={closeModal}>
             <div className="flex justify-center mt-2">
                 <div className="w-full max-w-lg">
-                    <FormMicroEdit
+                    <FormDiagnosticEdit
                         initialValues={initialValues}
-                        validationSchema={validationSchemaMicro}
-                        onSubmit={actualizarInfoMicroorganismo}    
-                        /* onClose={onClose}  */ 
+                        validationSchema={validationSchemaDx}
+                        onSubmit={actualizarInfoDiagnostico}    
                         />
                 </div>
             </div>

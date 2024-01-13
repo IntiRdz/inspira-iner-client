@@ -128,5 +128,13 @@ export const NUEVO_DIAGNOSTICO = gql`
     }
   }
 ${FRAGMENTO_DIAGNOSTICO}
+`;
 
+export const ACTUALIZAR_DIAGNOSTICO = gql`
+    mutation actualizarDiagnostico($id: ID!, $input: DiagnosticoInput) {
+            actualizarDiagnostico(id:$id, input:$input) {
+                ...FragmentoDiagnostico
+            }
+    }
+${FRAGMENTO_DIAGNOSTICO}
 `;

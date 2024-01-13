@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { format, differenceInDays } from 'date-fns';
+import { EditIcon } from '../icons';
 import { useQuery } from '@apollo/client';
 
 import { OBTENER_ULTIMA_ADMISION_PACIENTE } from '../../graphql/queries'; 
-import FormDiagnosticEdit from '../forms/FormDiagnosticEdit';
 
 
-export default function DiagnosticosPaciente ({obtenerPaciente}) {
+export default function DiagnosticosPaciente ({obtenerPaciente, onEdit}) {
 
+    const [editDx, setEditDx] = useState(false);
+    const [diagnosticoSeleccionado, setDiagnosticoSeleccionado] = useState(null);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [diagnosticoActual, setDiagnosticoActual] = useState(null);  // Estado añadido
-
-
+    // useEffect para verificar el estado actualizado
+    useEffect(() => {
+        console.log(diagnosticoSeleccionado);
+    }, [diagnosticoSeleccionado]);
+    
+    
     const id = obtenerPaciente.id;
     //console.log("id", id)
 
@@ -33,25 +37,23 @@ export default function DiagnosticosPaciente ({obtenerPaciente}) {
         return format(new Date(fecha), formato);
     };
 
+    const calcularDias = (fechaDeteccion) => {
+        const hoy = new Date();
+        const fechaDetec = new Date(fechaDeteccion);
+        return differenceInDays(hoy, fechaDetec);
+    };
 
     const handleEditClick = (diagnostico) => {
-        setDiagnosticoActual(diagnostico);
-        setIsModalOpen(true);
+        setDiagnosticoSeleccionado(diagnostico);
+        onEdit(diagnostico);
     };
 
-    const handleInputChange = (e) => {
-        setDiagnosticoActual({ ...diagnosticoActual, [e.target.name]: e.target.value });
+
+    const cerrarEdicion = () => {
+        setEditDx(false);
     };
 
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-        // Lógica para manejar el envío del formulario
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setDiagnosticoActual(null);
-    };
+    
   return ( 
 
         <div className="w-full backdrop-filter backdrop-blur-lg bg-white border border-gray-300 shadow-lg rounded-lg p-2">
@@ -69,45 +71,28 @@ export default function DiagnosticosPaciente ({obtenerPaciente}) {
                     </tr>
                 </thead>
                 <tbody className="bg-white">
-                     {ultimaAdmision && ultimaAdmision.diagnostico.map((diag, index) => (
-                        <tr key={diag.id || index}>
-                            <td className="border px-4 py-2">{diag.diagnostico_nombre}</td>
-                            <td className="border px-4 py-2">{formatFecha(diag.fecha_diagnostico, 'dd-MM-yyyy')}</td>
-                            <td className="border px-4 py-2">{diag.fecha_resolucion? formatFecha(diag.fecha_resolucion, 'dd-MM-yyyy'): ''}</td>
-                            <td className="border px-4 py-2">{diag.diagnostico_tipo}</td>
-                            <td className="border px-4 py-2">{diag.diagnostico_activo ? 'Sí' : 'No'}</td>
-                            <td className="border px-4 py-2">
-                                <button onClick={() => handleEditClick(diag.id)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    Editar
-                                </button>
-                            </td>
+                     {ultimaAdmision && ultimaAdmision.diagnostico.map((diagnostico, index) => (
+                        <tr key={diagnostico.id || index}>
+                            <td className="border px-4 py-2">{diagnostico.diagnostico_nombre}</td>
+                            <td className="border px-4 py-2">{formatFecha(diagnostico.fecha_diagnostico, 'dd-MM-yyyy')}</td>
+                            <td className="border px-4 py-2">{diagnostico.fecha_resolucion? formatFecha(diagnostico.fecha_resolucion, 'dd-MM-yyyy'): ''}</td>
+                            <td className="border px-4 py-2">{diagnostico.diagnostico_tipo}</td>
+                            <td className="border px-4 py-2">{diagnostico.diagnostico_activo ? 'Sí' : 'No'}</td>
+                            <td className="border px-1">
+                                    <span className="flex justify-center items-center">
+                                    <button 
+                                        onClick={() => handleEditClick(diagnostico)}
+                                        className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2 rounded text-xs"
+                                        data-tooltip="Editar"
+                                    >
+                                        <EditIcon color='white' />
+                                    </button>
+                                    </span>
+                                </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-
-            {/* Modal para editar diagnóstico */}
-
-            {isModalOpen && diagnosticoActual && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full">
-                    <div className="relative top-0 mx-auto p-5 border w-full h-full shadow-lg rounded-md bg-white">
-                        <div className="mt-3 text-center">
-                            <h3 className="text-lg leading-6 font-medium text-gray-900">Editar Diagnóstico</h3>
-                            <FormDiagnosticEdit
-                                diagnostico={diagnosticoActual}
-                                onInputChange={handleInputChange}
-                                onSubmit={handleFormSubmit}
-                            />
-                            <div className="items-center px-4 py-3">
-                                <button onClick={closeModal} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 mr-2">Cerrar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
-
-
-    
      )
 }

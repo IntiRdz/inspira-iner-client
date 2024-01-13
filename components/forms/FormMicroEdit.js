@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Formik } from 'formik';
 import Select from 'react-select';
 import { microorganismoOptions } from './selecMicro';
 
 export default function  FormMicroEdit  ({ initialValues, validationSchema, onSubmit })  {
 
-    microorganismoOptions
+    /* microorganismoOptions */
 
     //console.log("valores inciales del form", initialValues)
    

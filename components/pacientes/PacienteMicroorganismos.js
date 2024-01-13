@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { format, differenceInDays } from 'date-fns';
 import { EditIcon } from '../icons';
-import MicroEditar from '../microorganismos/MicroEditar';
 
 export default function PacienteMicroorganismos({ obtenerPaciente, onEdit }) {
 
@@ -9,21 +8,7 @@ export default function PacienteMicroorganismos({ obtenerPaciente, onEdit }) {
     const [editMicro, setEditMicro] = useState(false);
     const [microorganismoSeleccionado, setMicroorganismoSeleccionado] = useState(null);
 
-    // ... otras definiciones de funciones y lógica del componente
-
-    const handleEditClick = (microorganismo) => {
-        setMicroorganismoSeleccionado(microorganismo);
-        /* setEditMicro(true); */
-        onEdit(microorganismo);
-    };
-
-    // useEffect para verificar el estado actualizado
-    useEffect(() => {
-        console.log(microorganismoSeleccionado);
-    }, [microorganismoSeleccionado]);
-
-
-
+   
     const formatFecha = (fecha, formato) => {
         return format(new Date(fecha), formato);
     };
@@ -34,6 +19,18 @@ export default function PacienteMicroorganismos({ obtenerPaciente, onEdit }) {
         return differenceInDays(hoy, fechaDetec);
     };
 
+   
+    const handleEditClick = (microorganismo) => {
+        setMicroorganismoSeleccionado(microorganismo);
+        onEdit(microorganismo);
+    };
+
+    // useEffect para verificar el estado actualizado
+    useEffect(() => {
+        console.log(microorganismoSeleccionado);
+    }, [microorganismoSeleccionado]);
+
+
     const cerrarEdicion = () => {
         setEditMicro(false);
     };
@@ -41,7 +38,6 @@ export default function PacienteMicroorganismos({ obtenerPaciente, onEdit }) {
 
     return (
         <> 
-            {/* ... Código del componente ... */}
     <h2 className="text-2xl text-gray-800 backdrop-filter backdrop-blur-lg bg-white border border-gray-300 shadow-lg rounded-lg p-2">Microorganismos asociados al paciente</h2>
         <table className="table-auto shadow-md mt-1 w-full">
             <thead className="bg-gray-800">
@@ -87,11 +83,6 @@ export default function PacienteMicroorganismos({ obtenerPaciente, onEdit }) {
                 )}
             </tbody>
             </table>
-
-{/* 
-            <div className="w-full w-lg">              
-              {editMicro && <MicroEditar microorganismo={microorganismoSeleccionado} obtenerPaciente={obtenerPaciente} onClose={cerrarEdicion}/>}
-             </div> */}
         </>
     );
 }

@@ -124,7 +124,6 @@ const mostrarMensaje = () => {
                         initialValues={initialValues}
                         validationSchema={validationSchemaMicro}
                         onSubmit={actualizarInfoMicroorganismo}    
-                        /* onClose={onClose}  */ 
                         />
                 </div>
             </div>

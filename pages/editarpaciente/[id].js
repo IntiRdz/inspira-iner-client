@@ -5,12 +5,17 @@ import { useQuery } from '@apollo/client';
 
 import { OBTENER_PACIENTE } from '../../graphql/queries';
 import PacienteRenglon from '../../components/pacientes/PacienteRenglon';
+import PacienteTraslados from '../../components/pacientes/PacienteTraslados';
+
 import PacienteMicroorganismos from '../../components/pacientes/PacienteMicroorganismos';
 import MicroNuevo from '../../components/microorganismos/MicroNuevo';
 import MicroEditar from '../../components/microorganismos/MicroEditar';
+
 import DiagnosticosPaciente from '../../components/pacientes/DiagnosticosPaciente';
 import DiagnosticoNuevo from '../../components/diagnosticos/DiagnosticoNuevo';
-import PacienteTraslados from '../../components/pacientes/PacienteTraslados';
+import DiagnosticoEditar from '../../components/diagnosticos/DiagnosticoEditar';
+
+
 
 
 const Editar = () => {
@@ -23,16 +28,15 @@ const Editar = () => {
     });
 
     const [newMicro, setNewMicro] = useState(false);
-
     const [microorganismoActual, setMicroorganismoActual] = useState(null);
     const [editMicro, setEditMicro] = useState(false);
 
     const [newDx, setNewDx] = useState(false);
+    const [diagnosticoActual, setDiagnosticoActual] = useState(null);
+    const [editDx, setEditDx] = useState(false);
 
     if (loading) return <p>Cargando...</p>;
     if (error) return <p>Ha ocurrido un error</p>;
-
-
 
     return ( 
         
@@ -59,7 +63,6 @@ const Editar = () => {
                             setMicroorganismoActual(microorganismo);
                             setEditMicro(true);
                         }}/>
-     
                     </div>
 
                 </div>
@@ -68,14 +71,17 @@ const Editar = () => {
 
 
                 <div className="w-full w-lg mt-4 backdrop-filter backdrop-blur-lg bg-white border border-gray-300 shadow-lg rounded-lg p-2">  
-                <button
+                    <button
                         type="button"
                         onClick={() => setNewDx(true)}  // Cambiado para solo abrir el modal
                         className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
                     >
                         Agregar Diagnósticos
                     </button>
-                    <DiagnosticosPaciente obtenerPaciente ={data.obtenerPaciente}/>      
+                    <DiagnosticosPaciente obtenerPaciente ={data.obtenerPaciente} onEdit={diagnostico => {
+                            setDiagnosticoActual(diagnostico);
+                            setEditDx(true);
+                    }}/>      
                 </div>
 
 
@@ -85,17 +91,21 @@ const Editar = () => {
 
                 </div>
 
-                {/* Nuevo Microorganismo  */}
+                {/* Editar Microorganismo  */}
                 <div className="w-full w-lg">              
                     {editMicro && <MicroEditar microorganismo={microorganismoActual} obtenerPaciente={data.obtenerPaciente} isOpen={editMicro} onClose={() => setEditMicro(false)}/>}
 
                 </div>
 
-
-
                 {/* Nuevo Diagnóstico */}
                 <div className="w-full w-lg">              
                     {newDx && <DiagnosticoNuevo obtenerPaciente = {data.obtenerPaciente} isOpen={newDx} onClose={() => setNewDx(false)}/>}
+
+                </div>
+
+                {/* Editar Diagnóstico  */}
+                <div className="w-full w-lg">              
+                    {editDx && <DiagnosticoEditar diagnostico={diagnosticoActual} obtenerPaciente={data.obtenerPaciente} isOpen={editDx} onClose={() => setEditDx(false)}/>}
 
                 </div>
 
