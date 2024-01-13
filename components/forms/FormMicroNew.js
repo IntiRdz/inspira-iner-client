@@ -3,12 +3,10 @@ import { utcToZonedTime } from 'date-fns-tz';
 import Select from 'react-select';
 import { microorganismoOptions } from './selecMicro';
 
-const timeZone = 'America/Mexico_City'; // Definir la zona horaria
 
 export default function FormMicroNew ({ formik }) {
 
-    microorganismoOptions
-  
+      
   return (
     
     <form 
@@ -53,7 +51,7 @@ export default function FormMicroNew ({ formik }) {
             >
                 <option value="" label="Seleccione una opción" />
                 <option value="PCR" label="PCR" />
-                <option value="Panel_Neummonia" label="Panel de Neumonía" />
+                <option value="Panel_Neumonia" label="Panel de Neumonía" />
                 <option value="Cultivo" label="Cultivo" />                            
             </select>
         </div>

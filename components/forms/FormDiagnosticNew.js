@@ -3,9 +3,6 @@ import Select from 'react-select';
 import { diagnosticoOptions } from './selecDx';
 
 
-import { utcToZonedTime } from 'date-fns-tz'; 
-
-const timeZone = 'America/Mexico_City'; // Definir la zona horaria
 
 export default function FormDiagnosticoNew ({ formik }) {
     

@@ -6,11 +6,11 @@ import { format } from 'date-fns';
 
 import Swal from 'sweetalert2';
 
-import { OBTENER_PACIENTE } from '../../graphql/queries'; 
+import { OBTENER_PACIENTE, OBTENER_ULTIMA_ADMISION_PACIENTE } from '../../graphql/queries'; 
 import { NUEVO_DIAGNOSTICO } from '../../graphql/mutations'; 
 
-import FormDiagnosticNew from '../forms/FormDiagnosticNew';
 import { validationSchemaDx } from '../../components/forms/validationSchemas';
+import FormDiagnosticNew from '../forms/FormDiagnosticNew';
 
 import ModalGeneral from '../modals/ModalGeneral';
 
@@ -24,8 +24,6 @@ export default function DiagnosticoNuevo  ({obtenerPaciente, isOpen, onClose }) 
     const id = obtenerPaciente.id;
    
     const [isModalOpen, setIsModalOpen] = useState(isOpen);
-
-
     // Sincroniza el estado local del modal con el prop 'isOpen'
     useEffect(() => {
         setIsModalOpen(isOpen);
@@ -36,19 +34,16 @@ export default function DiagnosticoNuevo  ({obtenerPaciente, isOpen, onClose }) 
     };
 
     
-    
     // Mutation para asignar el microrganismo al paciente al paciente
      const [nuevoDiagnostico] = useMutation(NUEVO_DIAGNOSTICO, {
         refetchQueries: [
-            {
-                query: OBTENER_PACIENTE,
-                variables: { id: id }
-            }
+            { query: OBTENER_PACIENTE, variables: { id: id } },
+            { query: OBTENER_ULTIMA_ADMISION_PACIENTE, variables: { id: id } }
         ],
     });
 
     const admision_relacionadaId = obtenerPaciente.admision_relacionada[0].id;
-    console.log("Ultima Admision Relacionada", admision_relacionadaId);
+    //console.log("Ultima Admision Relacionada", admision_relacionadaId);
             
     // Formulario para nuevos microorganismos
     const formik = useFormik({
