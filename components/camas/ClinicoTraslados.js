@@ -1,9 +1,12 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
 
-
-
 import { OBTENER_TRASLADOS_HOY } from '../../graphql/queries'; 
+
+import { format } from 'date-fns'; // Importar format
+import { utcToZonedTime } from 'date-fns-tz';
+const timeZone = 'America/Mexico_City'; // Define la zona horaria
+
 
 
 const ClinicoTraslados = () => {
@@ -29,7 +32,7 @@ const ClinicoTraslados = () => {
             <th className="py-3 px-4 uppercase font-semibold text-sm">Aislado</th>
             <th className="py-3 px-4 uppercase font-semibold text-sm">Código</th>
             <th className="py-3 px-4 uppercase font-semibold text-sm">Diagnóstico</th>
-            <th className="py-3 px-4 uppercase font-semibold text-sm">Diagnóstico1</th>
+            <th className="py-3 px-4 uppercase font-semibold text-sm">Fecha Traslado</th>
           </tr>
         </thead>
         <tbody className="text-gray-700">
@@ -55,8 +58,18 @@ const ClinicoTraslados = () => {
                     .join(', ')
                 }
               </td>
-              <td className="py-3 px-4 uppercase">{traslado.admision_relacionada.paciente_relacionado.diagnostico}</td>
-              <td className="py-3 px-4 uppercase">{traslado.admision_relacionada.paciente_relacionado.diagnostico1}</td>
+              <td className="py-3 px-4 uppercase">
+                {
+                  traslado.admision_relacionada.diagnostico
+                    .map(diag => diag.diagnostico_nombre)
+                    .join(', ')
+                }
+              </td>
+              <td className="py-3 px-4 uppercase">
+                {
+                  format(utcToZonedTime(new Date(traslado.fecha_traslado), timeZone), 'dd-MM' + ' - HH') + ' hrs'
+                }
+              </td>
             </tr>
           ))}
         </tbody>

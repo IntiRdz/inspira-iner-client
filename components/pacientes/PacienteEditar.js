@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 
 
-import { ACTUALIZAR_PACIENTE, OBTENER_PACIENTE, OBTENER_CAMAS_DISPONIBLES } from '../../graphql/mutations';
+import { ACTUALIZAR_PACIENTE, OBTENER_PACIENTE, OBTENER_CAMAS } from '../../graphql/mutations';
 import { validationSchemaPatient } from '../../components/forms/validationSchemas';
 import FormPatientEdit from '../forms/FormPatientEdit';
 
@@ -34,7 +34,7 @@ export default function PacienteEditar ({obtenerPaciente}) {
     const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
         refetchQueries: [
             { query: OBTENER_PACIENTE, variables: { id: id } },
-            { query: OBTENER_CAMAS_DISPONIBLES }
+            /* { query: OBTENER_CAMAS } */
         ],
     });
 
@@ -58,6 +58,7 @@ export default function PacienteEditar ({obtenerPaciente}) {
         diagnostico: obtenerPaciente.diagnostico,
         caracteristicas_especiales: obtenerPaciente.caracteristicas_especiales || [],
         pac_codigo_uveh: obtenerPaciente.pac_codigo_uveh || [],
+        pac_aislamiento: obtenerPaciente.pac_aislamiento,
         fecha_ingreso: ultimaAdmision?.fecha_ingreso ? format(new Date(ultimaAdmision.fecha_ingreso), 'yyyy-MM-dd HH:mm') : '',
         fecha_prealta: ultimaAdmision?.fecha_prealta ? format(new Date(ultimaAdmision.fecha_prealta), 'yyyy-MM-dd HH:mm') : '',
         fecha_egreso: ultimaAdmision?.fecha_egreso ? format(new Date(ultimaAdmision.fecha_egreso), 'yyyy-MM-dd') : '',
@@ -83,6 +84,7 @@ export default function PacienteEditar ({obtenerPaciente}) {
             diagnostico,
             caracteristicas_especiales,
             pac_codigo_uveh,
+            pac_aislamiento,
             fecha_ingreso,
             fecha_prealta,
             fecha_egreso,
@@ -106,6 +108,7 @@ export default function PacienteEditar ({obtenerPaciente}) {
             diagnostico,
             caracteristicas_especiales,
             pac_codigo_uveh,
+            pac_aislamiento,
             fecha_ingreso: fecha_ingreso === '' ? undefined : fecha_ingreso, // Si es cadena vacía, se envía undefined
             fecha_prealta: fecha_prealta === '' ? undefined : fecha_prealta, // Si es cadena vacía, se envía undefined
             fecha_egreso: fecha_egreso === '' ? undefined : fecha_egreso,

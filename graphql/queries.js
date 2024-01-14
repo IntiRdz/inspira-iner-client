@@ -703,6 +703,7 @@ ${FRAGMENTO_DIAGNOSTICO}
 export const OBTENER_TRASLADOS_HOY = gql`
 query ObtenerTrasladosHoy {
   obtenerTrasladosHoy {
+    fecha_traslado
     admision_relacionada {
       paciente_relacionado {
         ...FragmentoPaciente
@@ -712,9 +713,9 @@ query ObtenerTrasladosHoy {
           cama_numero
         }
       }
-    }
-    microorganismo_relacionado {
-      microorganismo_nombre
+      diagnostico {
+        diagnostico_nombre
+      }
     }
   }
 }

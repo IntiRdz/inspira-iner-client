@@ -141,7 +141,7 @@ const progreso = 30;
                   <th className="w-1/12 px-1 py-1">O2</th>
                   <th className="w-1/12 px-1 py-1">Hemodialisis</th>
                   <th className="w-1/11 px-1 py-1">Código UVEH</th>
-                  <th className="w-1/12 px-1 py-1">Aislamiento</th>
+                  {/* <th className="w-1/12 px-1 py-1">Aislamiento</th> */}
                   <th className="w-1/12 px-1 py-1">DAN</th>
                   <th className="w-1/12 px-1 py-1">Editar</th>
 
@@ -151,6 +151,7 @@ const progreso = 30;
                   <th className="w-1/12 px-1 py-1">O2</th>
                   <th className="w-1/12 px-1 py-1">Hemodialisis</th>
                   <th className="w-1/11 px-1 py-1">Código UVEH</th>
+                  <th className="w-1/12 px-1 py-1">Aislamiento</th>
                   <th className="w-1/12 px-1 py-1">Expediente</th>
                   <th className="w-1/7 px-1 py-1">Nombre</th>
                   <th className="w-1/12 px-1 py-1">Edad</th>
@@ -186,7 +187,7 @@ const progreso = 30;
                 <td className= "border px-1 text-center">{cama.cama_dispositivo_o2}</td>
                 <td className= "border px-1 text-center">{cama.cama_hemodialisis ? <Kidneys width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }} /> : ''}</td>
                 <td className={`border px-1 text-left ${getUvehColor(cama.cama_codigo_uveh)}`}>{aislamientoCamaText(cama.cama_codigo_uveh)}</td>
-                <td className={`border px-1 text-center ${cama.cama_aislamiento ? 'bg-rose-200' : ''}`}>{cama.cama_aislamiento ? 'Aislamiento' : ''}</td>
+                {/* <td className={`border px-1 text-center ${cama.cama_aislamiento ? 'bg-rose-200' : ''}`}>{cama.cama_aislamiento ? 'Aislamiento' : ''}</td> */}
                 <td className={`border px-1 text-center ${cama.cama_dan ? 'bg-red-200' : ''}`}>{cama.cama_dan ? <SoapIcon width="2rem" height="2rem" style={{ display: 'inline-block' }} /> : ''}</td>
           
                 <td className="border px-1 border-r-2 border-r-sky-700 ">
@@ -228,6 +229,7 @@ const progreso = 30;
                         : aislamientoPacienteText(ultimaAdmision.paciente_relacionado.pac_codigo_uveh)
                         }
                     </td>
+                    <td className={`border px-1 text-center ${ultimaAdmision.paciente_relacionado.pac_aislamiento ? 'bg-rose-200' : ''}`}>{ultimaAdmision.paciente_relacionado.pac_aislamiento ? 'Aislamiento' : ''}</td>
                     <td className="border px-1 text-center">{ultimaAdmision.paciente_relacionado.expediente || ''}</td>
                     <td className="py-3 px-4">
                       {
@@ -283,6 +285,7 @@ const progreso = 30;
                   </>
                 ) : (
                   <>
+                  <td className="border px-1"></td>
                   <td className="border px-1"></td>
                   <td className="border px-1"></td>
                   <td className="border px-1"></td>

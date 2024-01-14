@@ -297,7 +297,7 @@ export default function  FormPatientEdit  ({ initialValues, validationSchema, on
                             </div>
 
 
-                            <div className="mb-4">
+                            <div className="mb-4" hidden>
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico">
                                     Diagnóstico
                                 </label>
@@ -346,7 +346,7 @@ export default function  FormPatientEdit  ({ initialValues, validationSchema, on
 
 {/* divisor de  form */}<div className="form-column p-4">
 
-<div className="mb-4">
+<div className="mb-4" hidden>
     <div className="block text-gray-700 text-sm font-bold mb-2">
         Diagnósticos Generales
     </div>
@@ -415,7 +415,35 @@ export default function  FormPatientEdit  ({ initialValues, validationSchema, on
 </div>
 {/* divisor de  form */}<div className="form-column p-4">
 
+<div className="mb-4">
+    <div className="block text-gray-700 text-sm font-bold mb-2">
+        Requiere Aislamiento
+    </div>
 
+    <div className="flex items-center">
+        <input
+            className="mr-2 leading-tight"
+            id="pac_aislamiento_true"
+            name="pac_aislamiento"
+            type="radio"
+            onChange={() => props.setFieldValue("pac_aislamiento", true)}
+            onBlur={props.handleBlur}
+            checked={props.values.pac_aislamiento === true}
+        />
+        <label htmlFor="pac_aislamiento_true">Sí</label>
+
+        <input
+            className="ml-4 mr-2 leading-tight"
+            id="pac_aislamiento_false"
+            name="pac_aislamiento"
+            type="radio"
+            onChange={() => props.setFieldValue("pac_aislamiento", false)}
+            onBlur={props.handleBlur}
+            checked={props.values.pac_aislamiento === false}
+        />
+        <label htmlFor="pac_aislamiento_false">No</label>
+    </div>
+</div>
 
     <div className="mb-4">
         <div className="block text-gray-700 text-sm font-bold mb-2">

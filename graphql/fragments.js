@@ -55,6 +55,7 @@ export const FRAGMENTO_PACIENTE = gql`
     diagnostico1
     caracteristicas_especiales
     pac_codigo_uveh
+    pac_aislamiento
   }
 `;
 
