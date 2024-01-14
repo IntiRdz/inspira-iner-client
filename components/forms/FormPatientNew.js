@@ -61,6 +61,29 @@ export default function FormPatientNew  ({ formik }) {
                 </div>
             ) : null  }
 
+        <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_nombre">
+                    Nombre
+                </label>
+
+                <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="pac_nombre"
+                    type="text"
+                    placeholder="Nombre Paciente"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.pac_nombre}
+                />
+            </div>
+
+            { formik.touched.pac_nombre && formik.errors.pac_nombre ? (
+                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                    <p className="font-bold">Error</p>
+                    <p>{formik.errors.pac_nombre}</p>
+                </div>
+            ) : null  }
+
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_apellido_paterno">
                     Apellido Paterno
@@ -106,31 +129,6 @@ export default function FormPatientNew  ({ formik }) {
                     <p>{formik.errors.pac_apellido_materno}</p>
                 </div>
             ) : null  }
-
-
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_nombre">
-                    Nombre
-                </label>
-
-                <input
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="pac_nombre"
-                    type="text"
-                    placeholder="Nombre Paciente"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.pac_nombre}
-                />
-            </div>
-
-            { formik.touched.pac_nombre && formik.errors.pac_nombre ? (
-                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                    <p className="font-bold">Error</p>
-                    <p>{formik.errors.pac_nombre}</p>
-                </div>
-            ) : null  }
-
 
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_genero">
@@ -178,7 +176,8 @@ export default function FormPatientNew  ({ formik }) {
                 </div>
             ) : null  }
 
-
+</div>
+{/* divisor de  form */}<div className="form-column p-4">
 
             
             <div className="mb-4">
@@ -209,6 +208,8 @@ export default function FormPatientNew  ({ formik }) {
                     <p>{formik.errors.pac_dispositivo_o2}</p>
                 </div>
             ) : null  }
+
+
 
 
             <div className="mb-4">
@@ -282,8 +283,7 @@ export default function FormPatientNew  ({ formik }) {
 
 
 
-            </div>
-{/* divisor de  form */}<div className="form-column p-4">
+
 
 <div className="mb-4" hidden>
     <div className="block text-gray-700 text-sm font-bold mb-2">

@@ -159,6 +159,7 @@ const progreso = 30;
                   <th className="w-1/12 px-1 py-1">Prealta</th>
                   <th className="w-1/12 px-1 py-1">DEH</th>
                   <th className="w-1/12 px-1 py-1">Microorganismos</th>
+                  <th className="w-1/12 px-1 py-1">Dx</th>
                   <th className="w-1/12 px-1 py-1">Atención Integral</th>
                   <th className="w-1/12 px-1 py-1">Editar</th>
               </tr>
@@ -240,6 +241,13 @@ const progreso = 30;
                     <td className="border px-1 ">{ultimaAdmision.fecha_ingreso ? format(utcToZonedTime(new Date(ultimaAdmision.fecha_ingreso), timeZone), 'dd/MM/yy') : ''}</td>
                     <td className={fechaPreAltaClasses}>{ultimaAdmision.fecha_prealta ? format(utcToZonedTime(new Date(ultimaAdmision.fecha_prealta), timeZone), 'dd/MM/yy') : ''}</td>
                     <td className="border px-1 text-center">{calcularDiasEstancia(ultimaAdmision.fecha_ingreso)}</td>
+                    <td className="py-3 px-4">
+                      {
+                        ultimaAdmision.diagnostico
+                          .map(diagnostico => diagnostico.diagnostico_nombre)
+                          .join(', ')
+                      }
+                    </td>
                     <td className="border px-1">
                       {ultimaAdmision.cama_relacionada.flatMap(cama => 
                         Array.isArray(cama.microorganismo_relacionado) 
@@ -285,6 +293,7 @@ const progreso = 30;
                   </>
                 ) : (
                   <>
+                  <td className="border px-1"></td>
                   <td className="border px-1"></td>
                   <td className="border px-1"></td>
                   <td className="border px-1"></td>

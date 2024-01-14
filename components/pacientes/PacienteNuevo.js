@@ -27,8 +27,6 @@ export default function PacienteNuevo () {
     const [mensaje, guardarMensaje] = useState(null);
     const { cama } = useContext(PacienteContext);
 
-
-
     const [nuevoPaciente] = useMutation(NUEVO_PACIENTE, {
         refetchQueries: [{ query: OBTENER_CAMAS_URGENCIAS }],
         onError: (error) => {
@@ -124,7 +122,15 @@ export default function PacienteNuevo () {
             //console.log("Valores actualizados:", valoresActualizados)
 
 
-        
+            Swal.fire({
+                title: 'Creando Paciente...',
+                text: 'Por favor, espera.',
+                allowOutsideClick: false,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
+            });
+
             try {
                 //console.log("antes de la llamada a crear Paciente");
                 const { data } = await nuevoPaciente({
@@ -132,17 +138,22 @@ export default function PacienteNuevo () {
                         input: valoresActualizados
                     },
                 });
-                
-                
-                //console.log("Después de la llamada a crear Paciente");
 
-                Swal.fire(
-                    'Creado',
-                    'Se agregó correctamente al paciente',
-                    'success'
-                );
+            // Captura el ID del paciente creado
+            const pacienteId = data.nuevoPaciente.id; 
 
-                router.push('/');
+            // Cierra la alerta de carga
+            Swal.close();
+
+            // Muestra la alerta de éxito
+            Swal.fire(
+                'Creado',
+                'Se agregó correctamente al paciente',
+                'success'
+            );
+
+                /* router.push('/'); */
+                router.push(`/editarpaciente/${pacienteId}`);
 
             } catch (error) {
                 console.error("Error completo:", error);

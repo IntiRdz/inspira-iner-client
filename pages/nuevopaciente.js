@@ -4,8 +4,6 @@ import PacienteNuevo from '../components/pacientes/PacienteNuevo'
 export default function nuevopaciente () {
   return (
     <div>
-        nuevopaciente
-
         <PacienteNuevo />
     </div>
   )

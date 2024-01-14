@@ -67,28 +67,44 @@ export default function DiagnosticoNuevo  ({obtenerPaciente, isOpen, onClose }) 
                 fecha_resolucion: fechaResolucion
             };
 
+            Swal.fire({
+                title: 'Agregando Diagnóstico...',
+                text: 'Por favor, espera.',
+                allowOutsideClick: false,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
+            });
+
             try {
                 const { data } = await nuevoDiagnostico({
                     variables: { input }
                 });
 
-            
-                console.log("Después de la llamada a Nuevo Diagnóstico");
-                // Mostrar una alerta
+            // Verificar que la respuesta contiene el ID del diagnóstico
+            if (data && data.nuevoDiagnostico && data.nuevoDiagnostico.id) {
+
+                // Cierra la alerta de carga
+                Swal.close();
+
+                // Muestra la alerta de éxito
                 Swal.fire(
                     'Creado',
-                    'Se agregó el diagnóstico correctamente',
+                    'Se agregó correctamente el diagnóstico',
                     'success'
-                )
+                );
 
-                // Redireccionar hacia los microorganismos
-                //router.push(`/editarpaciente/${id}`);
-
+                // Resto de tu código...
                 onClose();
+            } else {
+                // Manejar el caso en que no se recibe el ID
+                throw new Error("No se recibió el ID del diagnóstico");
+            }
 
 
 
             } catch (error) {
+                Swal.close();
                 console.error("Error completo:", error);
             
                 let mensajeError = "Error desconocido durante la actualización del paciente.";
