@@ -126,6 +126,7 @@ export default function PacienteNuevo () {
                 title: 'Creando Paciente...',
                 text: 'Por favor, espera.',
                 allowOutsideClick: false,
+                showConfirmButton: false,
                 onBeforeOpen: () => {
                     Swal.showLoading()
                 },

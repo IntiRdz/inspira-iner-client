@@ -115,18 +115,18 @@ export default function FormMicroNew ({ formik }) {
             Muestra donde se detectó el Microorganismo
         </label>
         <Select
-            id="microorganismo_muestra_resultado"
+            id="microorganismo_muestra_tipo"
             className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             options={microorganismoOptionsMuestra}
             onChange={(selectedOption) => 
-                formik.setFieldValue('microorganismo_muestra_resultado', selectedOption.value)}
+                formik.setFieldValue('microorganismo_muestra_tipo', selectedOption.value)}
             onBlur={formik.handleBlur}
-            value={microorganismoOptionsMuestra.find(option => option.value === formik.values.microorganismo_muestra_resultado)}
+            value={microorganismoOptionsMuestra.find(option => option.value === formik.values.microorganismo_muestra_tipo)}
         />
-        {formik.errors.microorganismo_muestra_resultado && (
+        {formik.errors.microorganismo_muestra_tipo && (
             <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
                 <p className="font-bold">Error</p>
-                <p>{formik.errors.microorganismo_muestra_resultado}</p>
+                <p>{formik.errors.microorganismo_muestra_tipo}</p>
             </div>
         )}
     </div>

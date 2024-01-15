@@ -71,6 +71,7 @@ export default function DiagnosticoNuevo  ({obtenerPaciente, isOpen, onClose }) 
                 title: 'Agregando Diagnóstico...',
                 text: 'Por favor, espera.',
                 allowOutsideClick: false,
+                showConfirmButton: false,
                 onBeforeOpen: () => {
                     Swal.showLoading()
                 },

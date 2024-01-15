@@ -7,6 +7,8 @@ import { OBTENER_PACIENTE } from '../../graphql/queries';
 import PacienteRenglon from '../../components/pacientes/PacienteRenglon';
 import PacienteTraslados from '../../components/pacientes/PacienteTraslados';
 
+import PacienteEditar from '../../components/pacientes/PacienteEditar';
+
 import PacienteMicroorganismos from '../../components/pacientes/PacienteMicroorganismos';
 import MicroNuevo from '../../components/microorganismos/MicroNuevo';
 import MicroEditar from '../../components/microorganismos/MicroEditar';
@@ -27,6 +29,8 @@ const Editar = () => {
         variables: { id }
     });
 
+    const [editPx, setEditPx] = useState(false);
+
     const [newMicro, setNewMicro] = useState(false);
     const [microorganismoActual, setMicroorganismoActual] = useState(null);
     const [editMicro, setEditMicro] = useState(false);
@@ -42,7 +46,7 @@ const Editar = () => {
         
         <Layout>
                 <div className="w-full mb-3 w-lg">  
-                    <PacienteRenglon obtenerPaciente ={data.obtenerPaciente}/>      
+                    <PacienteRenglon obtenerPaciente ={data.obtenerPaciente} onEdit={() => setEditPx(true)}/>
                 </div>
 
 
@@ -82,6 +86,12 @@ const Editar = () => {
                             setDiagnosticoActual(diagnostico);
                             setEditDx(true);
                     }}/>      
+                </div>
+
+                {/* Editar Paciente  */}
+                <div className="w-full w-lg">              
+                    {editPx && <PacienteEditar obtenerPaciente={data.obtenerPaciente} isOpen={editPx} onClose={() => setEditPx(false)}/>}
+
                 </div>
 
 

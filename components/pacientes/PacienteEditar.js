@@ -1,34 +1,43 @@
-import React, { useState, useContext } from 'react';
-import { useRouter } from 'next/router';
-import { useQuery, gql, useMutation } from '@apollo/client';
+import React, { useState, useEffect, useContext } from 'react';
+import { useMutation } from '@apollo/client';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 
 
 import { ACTUALIZAR_PACIENTE, OBTENER_PACIENTE, OBTENER_CAMAS } from '../../graphql/mutations';
+
 import { validationSchemaPatient } from '../../components/forms/validationSchemas';
 import FormPatientEdit from '../forms/FormPatientEdit';
 
 const timeZone = 'America/Mexico_City'; // Definir la zona horaria
 
+import ModalGeneralAncho from '../modals/ModalGeneralAncho';
 
-export default function PacienteEditar ({obtenerPaciente}) {
-    const router = useRouter();
+
+export default function PacienteEditar ({obtenerPaciente, isOpen, onClose}) {
     
     // Mensaje de alerta
     const [mensaje, guardarMensaje] = useState(null);
+    const [childData, setChildData] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(isOpen);
 
     const id = obtenerPaciente.id;
 
     const { cama } = useContext(PacienteContext);
-    //console.log("Valor de id.cama del contexto:", cama);
-    
-    const [childData, setChildData] = useState(null);
 
     const handleDataFromChild = (data) => {
         setChildData(data);
     }
+
+    // Sincroniza el estado local del modal con el prop 'isOpen'
+    useEffect(() => {
+        setIsModalOpen(isOpen);
+    }, [isOpen]);
+
+    const closeModal = () => {
+        onClose(); // Cierra el modal utilizando la función del padre
+    };
 
 
     const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
@@ -38,14 +47,13 @@ export default function PacienteEditar ({obtenerPaciente}) {
         ],
     });
 
-    
-
     //console.log("obtenerPaciente", obtenerPaciente);
 
     const ultimaAdmision = obtenerPaciente.admision_relacionada?.slice(-1)[0] || null;
     const camaActual = ultimaAdmision?.cama_relacionada?.slice(-1)[0]?.cama_numero || null;
     
     const initialValues  = {
+        servicio_tratante: obtenerPaciente.servicio_tratante,
         expediente: obtenerPaciente.expediente,
         pac_apellido_paterno: obtenerPaciente.pac_apellido_paterno,
         pac_apellido_materno: obtenerPaciente.pac_apellido_materno,
@@ -65,12 +73,10 @@ export default function PacienteEditar ({obtenerPaciente}) {
         hospitalizado: ultimaAdmision?.hospitalizado || false,
         cama_relacionada: camaActual
     };
-    
 
-
-    // Modifica el paciente en la BD
     const actualizarInfoPaciente = async valores => {
         const { 
+            servicio_tratante,
             expediente,
             pac_apellido_paterno,
             pac_apellido_materno,
@@ -95,6 +101,7 @@ export default function PacienteEditar ({obtenerPaciente}) {
         //console.log("Valores Inciales:", valores)
 
         const valoresActualizados = {
+            servicio_tratante,
             expediente,
             pac_apellido_paterno,
             pac_apellido_materno,
@@ -119,7 +126,7 @@ export default function PacienteEditar ({obtenerPaciente}) {
             valoresActualizados.cama_relacionada = cama;
         }
 
-        console.log("Valores actualizados:", valoresActualizados)
+        //console.log("Valores actualizados:", valoresActualizados)
 
         try {
             const { data} = await actualizarPaciente({
@@ -128,7 +135,7 @@ export default function PacienteEditar ({obtenerPaciente}) {
                     input: valoresActualizados
                 }
             });
-            console.log("Respuesta de GraphQL", data);
+            //console.log("Respuesta de GraphQL", data);
             // Mostrar Alerta
             Swal.fire(
                 'Actualizado',
@@ -137,7 +144,8 @@ export default function PacienteEditar ({obtenerPaciente}) {
             )
 
             // Redireccionar
-            router.push(`/editarpaciente/${id}`);
+            //router.push(`/editarpaciente/${id}`);
+            onClose();
             
         } catch (error) {
             console.error("Errores en graphQL:", error);
@@ -186,6 +194,7 @@ export default function PacienteEditar ({obtenerPaciente}) {
     return ( 
         
         <>
+        <ModalGeneralAncho isOpen={isModalOpen} onClose={closeModal}>
             <div className="flex justify-center mt-2">
                 <div className="w-full max-w-7xl">
                 {mensaje && mostrarMensaje()}
@@ -199,8 +208,7 @@ export default function PacienteEditar ({obtenerPaciente}) {
                     />
                 </div>
             </div>
-
-            
+        </ModalGeneralAncho>
         </>
      );
 }

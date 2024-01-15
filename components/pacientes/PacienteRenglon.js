@@ -6,7 +6,7 @@ import PacienteEditar from './PacienteEditar';
 
 const timeZone = 'America/Mexico_City'; // Definir la zona horaria
 
-export default function PacienteRenglon ({obtenerPaciente}) {
+export default function PacienteRenglon ({obtenerPaciente, onEdit}) {
 
   const [editPatient, setEditPatient] = useState(false);
 
@@ -65,6 +65,9 @@ export default function PacienteRenglon ({obtenerPaciente}) {
       };
       const CaracteristicasPacienteText = (codigo) => caracteristicasPacienteTextMap[codigo] || codigo;
     
+      const handleEditClick = (obtenerPaciente) => {
+        onEdit(obtenerPaciente);
+    };
     
       //console.log("obtenerPaciente", obtenerPaciente);
 
@@ -123,7 +126,7 @@ export default function PacienteRenglon ({obtenerPaciente}) {
                 <td className="border px-1">
                       <span className="flex justify-center items-center">
                         <button 
-                          onClick={() => setEditPatient(!editPatient)}
+                          onClick={() => handleEditClick(obtenerPaciente)}
                           className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"
                           data-tooltip="Editar"
                         >
@@ -136,9 +139,9 @@ export default function PacienteRenglon ({obtenerPaciente}) {
           </table>
 
 
-          <div className="w-full w-lg">              
+{/*             <div className="w-full w-lg">              
               {editPatient && <PacienteEditar obtenerPaciente ={obtenerPaciente}/>}
-          </div>
+          </div>   */}
     </div>
   )
 }

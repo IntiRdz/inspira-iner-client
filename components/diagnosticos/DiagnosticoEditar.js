@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
 import { format } from 'date-fns';
 
@@ -18,12 +17,10 @@ export default function DiagnosticoEditar({ diagnostico, obtenerPaciente, isOpen
   
   //console.log("Microorganismo Prop",microorganismo ); // Esto te mostrará si el microorganismo está llegando
   
-  const router = useRouter();
   const [mensaje, guardarMensaje] = useState(null);
 
   const pacId = obtenerPaciente.id;
   const id = diagnostico.id;
-
 
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
     // Sincroniza el estado local del modal con el prop 'isOpen'
@@ -44,13 +41,11 @@ export default function DiagnosticoEditar({ diagnostico, obtenerPaciente, isOpen
 
   const initialValues  = {
     fecha_diagnostico: diagnostico.fecha_diagnostico ? format(new Date(diagnostico.fecha_diagnostico), 'yyyy-MM-dd') : '',
-    fecha_resolucion: diagnostico.fecha_resolucion ? format(new Date(diagnostico.fecha_resolucion), 'yyyy-MM-dd') : '',
+    fecha_resolucion: diagnostico.fecha_resolucion ? format(new Date(diagnostico.fecha_resolucion), 'yyyy-MM-dd') : undefined,
     diagnostico_tipo: diagnostico.diagnostico_tipo,
     diagnostico_activo: diagnostico.diagnostico_activo,
     diagnostico_nombre: diagnostico.diagnostico_nombre,
 };
-
-//console.log("initialValues",initialValues); // Esto te mostrará si el microorganismo está llegando
 
 const actualizarInfoDiagnostico = async (valores) => {
     try {
@@ -60,7 +55,7 @@ const actualizarInfoDiagnostico = async (valores) => {
           input: valores,
         },
       });
-      console.log("Respuesta de GraphQL", data);
+      //console.log("Respuesta de GraphQL", data);
       // Mostrar Alerta
       Swal.fire(
           'Actualizado',

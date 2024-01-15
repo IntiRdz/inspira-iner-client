@@ -49,6 +49,8 @@ export default function  FormPatientEdit  ({ initialValues, validationSchema, on
                                 </div>
                             ) : null  }
 
+
+
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_FN">
                                     Fecha de Nacimiento
@@ -91,6 +93,29 @@ export default function  FormPatientEdit  ({ initialValues, validationSchema, on
                                 <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
                                     <p className="font-bold">Error</p>
                                     <p>{props.errors.fecha_ingreso}</p>
+                                </div>
+                            ) : null  }
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_nombre">
+                                    Nombre
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="pac_nombre"
+                                    type="text"
+                                    placeholder="Nombre Paciente"
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                    value={props.values.pac_nombre}
+                                />
+                            </div>
+
+                            { props.touched.pac_nombre && props.errors.pac_nombre ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{props.errors.pac_nombre}</p>
                                 </div>
                             ) : null  }
 
@@ -140,30 +165,6 @@ export default function  FormPatientEdit  ({ initialValues, validationSchema, on
                                 </div>
                             ) : null  }
 
-
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_nombre">
-                                    Nombre
-                                </label>
-
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="pac_nombre"
-                                    type="text"
-                                    placeholder="Nombre Paciente"
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    value={props.values.pac_nombre}
-                                />
-                            </div>
-
-                            { props.touched.pac_nombre && props.errors.pac_nombre ? (
-                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                                    <p className="font-bold">Error</p>
-                                    <p>{props.errors.pac_nombre}</p>
-                                </div>
-                            ) : null  }
-
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_genero">
                                     Género
@@ -188,8 +189,13 @@ export default function  FormPatientEdit  ({ initialValues, validationSchema, on
                                 </div>
                             ) : null  }
 
+
+
 </div>
 {/* divisor de  form */}<div className="form-column p-4">
+
+
+
 
 
 
@@ -296,7 +302,31 @@ export default function  FormPatientEdit  ({ initialValues, validationSchema, on
                                 ))}
                             </div>
 
-
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="servicio_tratante">
+                    Servicio Tratante
+                </label>
+                <select 
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="servicio_tratante"
+                    onChange={props.handleChange}
+                    onBlur={props.handleBlur}
+                    value={props.values.servicio_tratante || ''}
+                >
+                    <option value="" label="Seleccione un Servicio" />
+                    <option value="Neumologia" label="Neumología" />
+                    <option value="ORL" label="ORL" />
+                    <option value="Neumopedia" label="Neumopediatría" />
+                    <option value="CTX" label="Cirugia Tórax" />
+                    <option value="Areas_Criticas" label="Áreas Críticas" />
+                </select>
+            </div>
+            { props.touched.servicio_tratante && props.errors.servicio_tratante ? (
+                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                    <p className="font-bold">Error</p>
+                    <p>{props.errors.servicio_tratante}</p>
+                </div>
+            ) : null  }
                             <div className="mb-4" hidden>
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico">
                                     Diagnóstico
@@ -318,9 +348,37 @@ export default function  FormPatientEdit  ({ initialValues, validationSchema, on
                                 )}
                             </div>
 
-
-
                             <div className="mb-4">
+    <div className="block text-gray-700 text-sm font-bold mb-2">
+        Requiere Aislamiento
+    </div>
+
+    <div className="flex items-center">
+        <input
+            className="mr-2 leading-tight"
+            id="pac_aislamiento_true"
+            name="pac_aislamiento"
+            type="radio"
+            onChange={() => props.setFieldValue("pac_aislamiento", true)}
+            onBlur={props.handleBlur}
+            checked={props.values.pac_aislamiento === true}
+        />
+        <label htmlFor="pac_aislamiento_true">Sí</label>
+
+        <input
+            className="ml-4 mr-2 leading-tight"
+            id="pac_aislamiento_false"
+            name="pac_aislamiento"
+            type="radio"
+            onChange={() => props.setFieldValue("pac_aislamiento", false)}
+            onBlur={props.handleBlur}
+            checked={props.values.pac_aislamiento === false}
+        />
+        <label htmlFor="pac_aislamiento_false">No</label>
+    </div>
+</div>
+
+<div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_prealta">
                                     Fecha de Prealta
                                 </label>
@@ -342,9 +400,6 @@ export default function  FormPatientEdit  ({ initialValues, validationSchema, on
                                 </div>
                             ) : null  }
 
-</div>
-
-{/* divisor de  form */}<div className="form-column p-4">
 
 <div className="mb-4" hidden>
     <div className="block text-gray-700 text-sm font-bold mb-2">
@@ -415,35 +470,7 @@ export default function  FormPatientEdit  ({ initialValues, validationSchema, on
 </div>
 {/* divisor de  form */}<div className="form-column p-4">
 
-<div className="mb-4">
-    <div className="block text-gray-700 text-sm font-bold mb-2">
-        Requiere Aislamiento
-    </div>
 
-    <div className="flex items-center">
-        <input
-            className="mr-2 leading-tight"
-            id="pac_aislamiento_true"
-            name="pac_aislamiento"
-            type="radio"
-            onChange={() => props.setFieldValue("pac_aislamiento", true)}
-            onBlur={props.handleBlur}
-            checked={props.values.pac_aislamiento === true}
-        />
-        <label htmlFor="pac_aislamiento_true">Sí</label>
-
-        <input
-            className="ml-4 mr-2 leading-tight"
-            id="pac_aislamiento_false"
-            name="pac_aislamiento"
-            type="radio"
-            onChange={() => props.setFieldValue("pac_aislamiento", false)}
-            onBlur={props.handleBlur}
-            checked={props.values.pac_aislamiento === false}
-        />
-        <label htmlFor="pac_aislamiento_false">No</label>
-    </div>
-</div>
 
     <div className="mb-4">
         <div className="block text-gray-700 text-sm font-bold mb-2">
@@ -564,7 +591,7 @@ export default function  FormPatientEdit  ({ initialValues, validationSchema, on
         type="submit"
         className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
         value="Actualizar Paciente"
-    />
+            />
 </div>
                         </div>
                     </form>

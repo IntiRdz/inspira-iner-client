@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
 import { format } from 'date-fns';
 
@@ -18,12 +17,10 @@ export default function MicroEditar({ microorganismo, obtenerPaciente, isOpen, o
   
   //console.log("Microorganismo Prop",microorganismo ); // Esto te mostrará si el microorganismo está llegando
   
-  const router = useRouter();
   const [mensaje, guardarMensaje] = useState(null);
 
   const pacId = obtenerPaciente.id;
   const id = microorganismo.id;
-
 
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
     // Sincroniza el estado local del modal con el prop 'isOpen'
@@ -62,7 +59,7 @@ const actualizarInfoMicroorganismo = async (valores) => {
           input: valores,
         },
       });
-      console.log("Respuesta de GraphQL", data);
+      //console.log("Respuesta de GraphQL", data);
       // Mostrar Alerta
       Swal.fire(
           'Actualizado',

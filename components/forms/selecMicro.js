@@ -23,7 +23,7 @@ export const microorganismoOptions = [
     { value: 'Streptococcus pyogenes', label: 'Streptococcus pyogenes' },
 
     { value: 'Coronavirus', label: 'Coronavirus' },
-    { value: 'Coronavirus SARS-CoV-2', label: 'Coronavirus SARS-CoV-2' },
+    { value: 'Coronavirus SARS-CoV-2 (COVID)', label: 'Coronavirus SARS-CoV-2 (COVID)' },
     { value: 'Coronavirus 229E', label: 'Coronavirus 229E' },
     { value: 'Coronavirus NL63', label: 'Coronavirus NL63' },
     { value: 'Coronavirus OC43', label: 'Coronavirus OC43' },
@@ -44,7 +44,7 @@ export const microorganismoOptions = [
     { value: 'Virus Herpes Simple', label: 'Virus Herpes Simple' },
     { value: 'Virus Herpes Zoster', label: 'Virus Herpes Zoster' },
     { value: 'VIH', label: 'VIH' },
-    { value: 'Virus Sincitial Respiratorio', label: 'Virus Sincitial Respiratorio' },
+    { value: 'Virus Sincitial Respiratorio (VSR)', label: 'Virus Sincitial Respiratorio (VSR)' },
 
     { value: 'Aspergillus', label: 'Aspergillus' },
     { value: 'Blastomyces dermatitidis', label: 'Blastomyces dermatitidis' },
