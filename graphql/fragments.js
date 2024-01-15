@@ -6,6 +6,7 @@ export const FRAGMENTO_CAMA = gql`
   fragment FragmentoCama on Cama {
     id
     cama_numero
+    cama_orden
     cama_compartida
     cama_lado
     cama_ubicacion

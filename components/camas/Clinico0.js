@@ -27,8 +27,10 @@ export default function Clinico0 (){
 
   const camas = data ? data.obtenerCamasUrgencias : [];
 
-  const camasOrdenadas = [...camas].sort((a, b) => a.cama_numero - b.cama_numero);
+  const camasOrdenadas = [...camas].sort((a, b) => a.cama_orden - b.cama_orden);
   console.log(camasOrdenadas)
+
+
 
   // Verificación de fechas y diagnósticos
   const calcularEdad = fechaNacimiento => {
@@ -135,7 +137,7 @@ const progreso = 30;
             <thead className="bg-gray-800 ">
               <tr className="text-white">
                   {/* <th className="w-1/12 px-1 py-1">Estado</th> */}
-                  <th className="w-1/14 px-1 py-1">Cama</th>
+                  <th className="w-1/12 px-1 py-1">Cama</th>
                   <th className="w-1/12 px-1 py-1">Prioridad</th>
                   <th className="w-1/12 px-1 py-1">Género</th>
                   <th className="w-1/12 px-1 py-1">O2</th>

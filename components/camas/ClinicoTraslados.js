@@ -50,7 +50,7 @@ const ClinicoTraslados = () => {
                 {traslado.admision_relacionada.cama_relacionada[1]?.cama?.cama_numero || 'N/A'}
               </td>
               <td className="py-3 px-4 uppercase">{traslado.admision_relacionada.paciente_relacionado.pac_dispositivo_o2}</td>
-              <td className="py-3 px-4 uppercase"></td>
+              <td className="py-3 px-4 uppercase">{traslado.admision_relacionada.paciente_relacionado.pac_aislado ? 'Aislado': 'No'}</td>
               <td className="py-3 px-4 uppercase">
                 {
                   traslado.admision_relacionada.paciente_relacionado.pac_codigo_uveh

@@ -46,7 +46,7 @@ const NuevaCama = () => {
         initialValues: {
             cama_numero: '',
             cama_compartida: true,
-            cama_lado: 'Pasillo',
+            cama_lado: 'Arriba',
             cama_prioridad: 'SinPrioridad',
             cama_disponible: true,
             cama_ocupada: true,
@@ -58,12 +58,12 @@ const NuevaCama = () => {
             cama_codigo_uveh: 'Sin_Definir',
         },
         validationSchema: Yup.object({
-            cama_numero: Yup.number().required('El número de la cama es obligatorio').positive('No se aceptan números negativos'),
+            cama_numero: Yup.string().required('El número de la cama es obligatorio'),
             cama_compartida: Yup.bool(),
             cama_lado: Yup.string().oneOf([
-                'Pasillo',
+                'Arriba',
                 'Medio',
-                'Ventana',
+                'Bajo',
                 'Ninguno'
             ]),           
             cama_prioridad: Yup.string().oneOf([
@@ -185,7 +185,7 @@ const NuevaCama = () => {
                             <input
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="cama_numero"
-                                type="number"
+                                type="string"
                                 placeholder="Número de Cama"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
@@ -243,9 +243,9 @@ const NuevaCama = () => {
                                 name="cama_lado" // Agrega el atributo name para que Formik pueda rastrear el campo
                             >
                                 <option value="" label="Seleccione con quien comparte"/>
-                                <option value="Pasillo" label="Pasillo" />
+                                <option value="Arriba" label="Arriba" />
                                 <option value="Medio" label="Medio" />
-                                <option value="Ventana" label="Ventana" />
+                                <option value="Bajo" label="Bajo" />
                                 <option value="Ninguno" label="Ninguno" />
                             </select>
                         </div>
