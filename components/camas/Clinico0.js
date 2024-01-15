@@ -236,7 +236,7 @@ const progreso = 30;
                     <td className="border px-1 text-center">{ultimaAdmision.paciente_relacionado.expediente || ''}</td>
                     <td className="py-3 px-4">
                       {
-                        `${ultimaAdmision.paciente_relacionado.pac_apellido_paterno} ${ultimaAdmision.paciente_relacionado.pac_apellido_materno} ${ultimaAdmision.paciente_relacionado.pac_nombre}`
+                        `${ultimaAdmision.paciente_relacionado.pac_nombre} ${ultimaAdmision.paciente_relacionado.pac_apellido_paterno} ${ultimaAdmision.paciente_relacionado.pac_apellido_materno}`
                       }
                     </td>
                     <td className="border px-1 text-center">{calcularEdad(ultimaAdmision.paciente_relacionado.pac_FN) || ''}</td>
