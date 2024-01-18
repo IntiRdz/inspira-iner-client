@@ -4,11 +4,8 @@ import { format } from 'date-fns';
 
 import Swal from 'sweetalert2';
 
-import { OBTENER_PACIENTE } from '../../graphql/mutations';
-import { 
-    OBTENER_ADMISION,
-    ACTUALIZAR_PROGRAMA_INTEGRAL
-} from '../../graphql/mutations';
+import { OBTENER_PACIENTE, OBTENER_ADMISION } from '../../graphql/queries';
+import { ACTUALIZAR_PROGRAMA_INTEGRAL } from '../../graphql/mutations';
 
 import { validationSchemaPrograma } from '../../components/forms/validationSchemas';
 import FormProgramaIntegralEdit from '../forms/FormProgramaIntegralEdit';

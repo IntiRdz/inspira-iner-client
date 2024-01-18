@@ -7,12 +7,15 @@ import { OBTENER_ADMISION } from '../../graphql/queries';
 import PacienteRenglon from '../../components/pacientes/PacienteRenglon';
 import DiagnosticosPaciente from '../../components/pacientes/DiagnosticosPaciente';
 import PdfPacPrograma from '../../components/programa/PdfPacPrograma';
+
 import ProgramaEditar from '../../components/programas/ProgramaEditar';
 import ProgramaPaliativosEditar from '../../components/programas/ProgramaPaliativosEditar';
+import ProgramaEditarSuenio from '../../components/programas/ProgramaEditarSuenio';
 
 
 import CardDiscapacidad from '../../components/cards/CardDiscapacidad';
 import CardPaliativos from '../../components/cards/CardPaliativos';
+import CardSuenio from '../../components/cards/CardSuenio';
 
 
 
@@ -20,6 +23,7 @@ export default function ProgramaPage () {
 
     const [editProgram, setEditProgram] = useState(false);
     const [editProgramPaliativos, setEditProgramPaliativos] = useState(false);
+    const [editProgramSuenio, setEditProgramSuenio] = useState(false);
 
     const router = useRouter();
     const { query: { id } } = router;
@@ -40,7 +44,7 @@ export default function ProgramaPage () {
     const admonId = data.obtenerAdmision.id;
 
     //console.log("data ObtenerAdmision",data)
-    console.log("Programa 1",programaintegral);
+    console.log("Programa Desde pagina [id]",programaintegral);
     //console.log("Programa Preguntas contestadas",programaintegral.preguntas_contestadas); 
     //console.log("Diagnostico", diagnostico);
     //console.log("Paciente", paciente_relacionado);
@@ -67,6 +71,13 @@ export default function ProgramaPage () {
                     className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
                 >
                     Paliativos
+                </button>   
+                <button
+                    type="button"
+                    onClick={() => setEditProgramSuenio(true)}  
+                    className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
+                >
+                    Sueño
                 </button>    
             </div>
 
@@ -87,6 +98,15 @@ export default function ProgramaPage () {
                     diagnostico  = {diagnostico}
                     isOpen={editProgramPaliativos} 
                     onClose={() => setEditProgramPaliativos(false)}
+                />}
+
+                {editProgramSuenio && <ProgramaEditarSuenio
+                    admonId={id}
+                    paciente  = {paciente_relacionado}
+                    programaintegral = {programaintegral}
+                    diagnostico  = {diagnostico}
+                    isOpen={editProgramSuenio} 
+                    onClose={() => setEditProgramSuenio(false)}
                 />}
 
             </div> 
@@ -113,6 +133,18 @@ export default function ProgramaPage () {
                 programa_paliativos_ecog={programaintegral.programa_paliativos_ecog}
             
             />
+
+            <CardSuenio 
+                programa_paliativos_sorpresa={programaintegral.programa_paliativos_sorpresa}
+                programa_paliativos_perdida_funcionalidad={programaintegral.programa_paliativos_perdida_funcionalidad}
+                programa_paliativos_perdida_nutricional={programaintegral.programa_paliativos_perdida_nutricional}
+                programa_paliativos_multimorbilidad={programaintegral.programa_paliativos_multimorbilidad}
+                programa_paliativos_recursosOingresos={programaintegral.programa_paliativos_recursosOingresos}
+                programa_paliativos_otraEnfermedaAvanzada={programaintegral.programa_paliativos_otraEnfermedaAvanzada}
+                programa_paliativos_total={programaintegral.programa_paliativos_total}
+                programa_paliativos_ecog={programaintegral.programa_paliativos_ecog}
+            />
+
         </Layout>
      );
 
