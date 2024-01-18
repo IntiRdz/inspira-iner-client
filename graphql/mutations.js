@@ -6,7 +6,8 @@ import {
     FRAGMENTO_CAMA_HISTORIAL,
     FRAGMENTO_MICROORGANISMO,
     FRAGMENTO_DIAGNOSTICO,
-    FRAGMENTO_ANTIBIOTICO
+    FRAGMENTO_ANTIBIOTICO,
+    FRAGMENTO_PROGRAMA_INTEGRAL
  } from './fragments';
 
 
@@ -137,4 +138,14 @@ export const ACTUALIZAR_DIAGNOSTICO = gql`
             }
     }
 ${FRAGMENTO_DIAGNOSTICO}
+`;
+
+
+export const ACTUALIZAR_PROGRAMA_INTEGRAL = gql`
+    mutation actualizarProgramaIntegral($id: ID!, $input: ProgramaIntegralInput) {
+            actualizarProgramaIntegral(id:$id, input:$input) {
+                ...FragmentoProgramaIntegral
+            }
+    }
+${FRAGMENTO_PROGRAMA_INTEGRAL}
 `;

@@ -270,12 +270,19 @@ const progreso = 30;
                     <td className="border px-1">
                       <span className="flex justify-center items-center">
                         <button 
-                          onClick={() => navegar(`/programaintegral/${ultimaAdmision.paciente_relacionado.id}`)}
+                          onClick={() => navegar(`/programaintegral/${ultimaAdmision.id}`)}
                           className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"
                           data-tooltip="Programa Integral"
                         >
                           <TaskIcon color='white' />
                         </button>
+{/*                         <button 
+                          onClick={() => navegar(`/programaintegral/${ultimaAdmision.paciente_relacionado.id}`)}
+                          className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"
+                          data-tooltip="Programa Integral"
+                        >
+                          <TaskIcon color='white' />
+                        </button> */}
                         <button 
                           onClick={() => navegar(`/editarpaciente/${ultimaAdmision.paciente_relacionado.id}`)}
                           className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"

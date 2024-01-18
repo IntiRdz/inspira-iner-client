@@ -6,7 +6,8 @@ import {
   FRAGMENTO_MICROORGANISMO,
   FRAGMENTO_ADMISION,
   FRAGMENTO_CAMA_HISTORIAL,
-  FRAGMENTO_DIAGNOSTICO
+  FRAGMENTO_DIAGNOSTICO,
+  FRAGMENTO_PROGRAMA_INTEGRAL
 } from './fragments';
 
 
@@ -19,8 +20,6 @@ export const OBTENER_USUARIO = gql`
         }
     }
 `;
-
-
 
 export const OBTENER_PACIENTE = gql`
   query ObtenerPaciente($id: ID!) {
@@ -37,6 +36,9 @@ export const OBTENER_PACIENTE = gql`
           ...FragmentoMicroorganismo
           }
         }
+        programaintegral{
+        ...FragmentoProgramaIntegral
+        }
       }
     }
   }
@@ -45,6 +47,7 @@ export const OBTENER_PACIENTE = gql`
   ${FRAGMENTO_CAMA_HISTORIAL}
   ${FRAGMENTO_CAMA}
   ${FRAGMENTO_MICROORGANISMO}
+  ${FRAGMENTO_PROGRAMA_INTEGRAL}
 `;
 
 
@@ -688,8 +691,12 @@ query ObtenerUltimaAdmisionPaciente($id: ID!) {
     diagnostico {
       ...FragmentoDiagnostico
     }
+    programaintegral{
+      ...FragmentoProgramaIntegral
+    }
 
   }
+
 }
 ${FRAGMENTO_ADMISION}
 ${FRAGMENTO_PACIENTE}
@@ -697,6 +704,43 @@ ${FRAGMENTO_CAMA_HISTORIAL}
 ${FRAGMENTO_CAMA}
 ${FRAGMENTO_MICROORGANISMO}
 ${FRAGMENTO_DIAGNOSTICO}
+${FRAGMENTO_PROGRAMA_INTEGRAL}
+`;
+
+
+export const OBTENER_ADMISION = gql`
+query ObtenerAdmision($id: ID!) {
+    obtenerAdmision(id: $id) {
+    ...FragmentoAdmision
+    paciente_relacionado {
+      ...FragmentoPaciente
+    }
+    cama_relacionada {
+      ...FragmentoCamaHistorial
+      cama {
+        ...FragmentoCama
+      }
+      microorganismo_relacionado {
+        ...FragmentoMicroorganismo
+      }
+    }
+    diagnostico {
+      ...FragmentoDiagnostico
+    }
+    programaintegral{
+      ...FragmentoProgramaIntegral
+    }
+
+  }
+
+}
+${FRAGMENTO_ADMISION}
+${FRAGMENTO_PACIENTE}
+${FRAGMENTO_CAMA_HISTORIAL}
+${FRAGMENTO_CAMA}
+${FRAGMENTO_MICROORGANISMO}
+${FRAGMENTO_DIAGNOSTICO}
+${FRAGMENTO_PROGRAMA_INTEGRAL}
 `;
 
 

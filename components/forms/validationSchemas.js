@@ -116,6 +116,24 @@ export const  validationSchemaDx = Yup.object({
 });
 
 
+export const  validationSchemaPrograma = Yup.object({
+    programa_discapacidad_hipoacusia: Yup.boolean(),
+    programa_discapacidad_disminucion_visual: Yup.boolean(),
+    programa_discapacidad_gds_fast: Yup.number(),
+    programa_discapacidad_nu_desc: Yup.number(),
+
+    programa_paliativos_sorpresa: Yup.boolean(),
+    programa_paliativos_perdida_funcionalidad: Yup.boolean(),
+    programa_paliativos_perdida_nutricional: Yup.boolean(),
+    programa_paliativos_multimorbilidad: Yup.boolean(),
+    programa_paliativos_recursosOingresos: Yup.boolean(),
+    programa_paliativos_otraEnfermedaAvanzada: Yup.string(),
+    programa_paliativos_total: Yup.number(),
+    programa_paliativos_ecog: Yup.number(),
+});
+
+
+
 // Esquema de validación para otro formulario
 export const otroFormularioValidationSchema = Yup.object({
     // Definiciones del esquema...

@@ -125,7 +125,7 @@ export default function PacienteNuevo () {
             Swal.fire({
                 title: 'Creando Paciente...',
                 text: 'Por favor, espera.',
-                allowOutsideClick: false,
+                allowOutsideClick: true,
                 showConfirmButton: false,
                 onBeforeOpen: () => {
                     Swal.showLoading()

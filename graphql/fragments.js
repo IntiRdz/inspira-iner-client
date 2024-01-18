@@ -98,5 +98,28 @@ export const FRAGMENTO_DIAGNOSTICO = gql`
 `;
 
 
+export const FRAGMENTO_PROGRAMA_INTEGRAL = gql`
+  fragment FragmentoProgramaIntegral on ProgramaIntegral {
+    id
+    programa_discapacidad_hipoacusia
+    programa_discapacidad_disminucion_visual
+    programa_discapacidad_perdida_barthel
+    programa_discapacidad_disminucion_cognitiva
+    programa_discapacidad_gds_fast
+    programa_discapacidad_nu_desc
+    programa_paliativos_sorpresa
+    programa_paliativos_perdida_funcionalidad
+    programa_paliativos_perdida_nutricional
+    programa_paliativos_multimorbilidad
+    programa_paliativos_recursosOingresos
+    programa_paliativos_otraEnfermedaAvanzada
+    programa_paliativos_total
+    programa_paliativos_ecog
+    
+    preguntas_contestadas
+  }
+`;
+
+
 
 
