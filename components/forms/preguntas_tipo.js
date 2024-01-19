@@ -1,4 +1,5 @@
 import React from 'react'
+import Select from 'react-select'
 
 export const preguntas_tipo = () => {
   return (
