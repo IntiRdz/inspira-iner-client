@@ -9,13 +9,17 @@ import DiagnosticosPaciente from '../../components/pacientes/DiagnosticosPacient
 import PdfPacPrograma from '../../components/programa/PdfPacPrograma';
 
 import ProgramaEditar from '../../components/programas/ProgramaEditar';
-import ProgramaPaliativosEditar from '../../components/programas/ProgramaPaliativosEditar';
+import ProgramaEditarPaliativos from '../../components/programas/ProgramaEditarPaliativos';
 import ProgramaEditarSuenio from '../../components/programas/ProgramaEditarSuenio';
+import ProgramaEditarNutricion from '../../components/programas/ProgramaEditarNutricion';
+import ProgramaEditarSocial from '../../components/programas/ProgramaEditarSocial';
 
 
 import CardDiscapacidad from '../../components/cards/CardDiscapacidad';
 import CardPaliativos from '../../components/cards/CardPaliativos';
 import CardSuenio from '../../components/cards/CardSuenio';
+import CardNutricion from '../../components/cards/CardNutricion';
+import CardSocial from '../../components/cards/CardSocial';
 
 
 
@@ -24,6 +28,8 @@ export default function ProgramaPage () {
     const [editProgram, setEditProgram] = useState(false);
     const [editProgramPaliativos, setEditProgramPaliativos] = useState(false);
     const [editProgramSuenio, setEditProgramSuenio] = useState(false);
+    const [editProgramNutri, setEditProgramNutri] = useState(false);
+    const [editProgramSocial, setEditProgramSocial] = useState(false);
 
     const router = useRouter();
     const { query: { id } } = router;
@@ -78,6 +84,20 @@ export default function ProgramaPage () {
                     className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
                 >
                     Sueño
+                </button>  
+                <button
+                    type="button"
+                    onClick={() => setEditProgramNutri(true)}  
+                    className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
+                >
+                    Nutrición
+                </button>   
+                <button
+                    type="button"
+                    onClick={() => setEditProgramSocial(true)}  
+                    className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
+                >
+                    Social
                 </button>    
             </div>
 
@@ -91,7 +111,7 @@ export default function ProgramaPage () {
                     onClose={() => setEditProgram(false)}
                 />}
            
-                {editProgramPaliativos && <ProgramaPaliativosEditar 
+                {editProgramPaliativos && <ProgramaEditarPaliativos 
                     admonId={id}
                     paciente  = {paciente_relacionado}
                     programaintegral = {programaintegral}
@@ -107,6 +127,22 @@ export default function ProgramaPage () {
                     diagnostico  = {diagnostico}
                     isOpen={editProgramSuenio} 
                     onClose={() => setEditProgramSuenio(false)}
+                />}
+                {editProgramNutri && <ProgramaEditarNutricion
+                    admonId={id}
+                    paciente  = {paciente_relacionado}
+                    programaintegral = {programaintegral}
+                    diagnostico  = {diagnostico}
+                    isOpen={editProgramNutri} 
+                    onClose={() => setEditProgramNutri(false)}
+                />}
+                {editProgramSocial && <ProgramaEditarSocial
+                    admonId={id}
+                    paciente  = {paciente_relacionado}
+                    programaintegral = {programaintegral}
+                    diagnostico  = {diagnostico}
+                    isOpen={editProgramSocial} 
+                    onClose={() => setEditProgramSocial(false)}
                 />}
 
             </div> 
@@ -135,14 +171,61 @@ export default function ProgramaPage () {
             />
 
             <CardSuenio 
-                programa_paliativos_sorpresa={programaintegral.programa_paliativos_sorpresa}
-                programa_paliativos_perdida_funcionalidad={programaintegral.programa_paliativos_perdida_funcionalidad}
-                programa_paliativos_perdida_nutricional={programaintegral.programa_paliativos_perdida_nutricional}
-                programa_paliativos_multimorbilidad={programaintegral.programa_paliativos_multimorbilidad}
-                programa_paliativos_recursosOingresos={programaintegral.programa_paliativos_recursosOingresos}
-                programa_paliativos_otraEnfermedaAvanzada={programaintegral.programa_paliativos_otraEnfermedaAvanzada}
-                programa_paliativos_total={programaintegral.programa_paliativos_total}
-                programa_paliativos_ecog={programaintegral.programa_paliativos_ecog}
+                programa_suenio_imc={programaintegral.programa_suenio_imc}
+                programa_suenio_hipoventilacion={programaintegral.programa_suenio_hipoventilacion}
+                programa_suenio_restriccionTorax={programaintegral.programa_suenio_restriccionTorax}
+                programa_suenio_neuromuscular={programaintegral.programa_suenio_neuromuscular}
+            />
+
+            <CardNutricion 
+                programa_nutricion_puntuacion={programaintegral.programa_nutricion_puntuacion}
+                programa_nutricion_grupoRiesgo={programaintegral.programa_nutricion_grupoRiesgo}
+                programa_nutricion_via={programaintegral.programa_nutricion_via}
+            />
+
+            <CardSocial 
+                programa_social_grupo_etario={programaintegral.programa_social_grupo_etario}
+                programa_social_genero={programaintegral.programa_social_genero}
+                programa_social_orientacion_sexual={programaintegral.programa_social_orientacion_sexual}
+                programa_social_municipio={programaintegral.programa_social_municipio}
+                programa_social_estado={programaintegral.programa_social_estado}
+                programa_social_pais={programaintegral.programa_social_pais}
+                programa_social_zona_marginada={programaintegral.programa_social_zona_marginada}
+                programa_social_condicion_social={programaintegral.programa_social_condicion_social}
+                programa_social_deficit_economico={programaintegral.programa_social_deficit_economico}
+                programa_social_migrante={programaintegral.programa_social_migrante}
+                programa_social_abandono_social={programaintegral.programa_social_abandono_social}
+                programa_social_situacion_calle={programaintegral.programa_social_situacion_calle}
+                programa_social_red_apoyo={programaintegral.programa_social_red_apoyo}
+                programa_social_tipo_familia={programaintegral.programa_social_tipo_familia}
+                programa_social_idioma={programaintegral.programa_social_idioma}
+                programa_social_lengua_indigena={programaintegral.programa_social_lengua_indigena}
+                programa_social_discapacidad_cdpd={programaintegral.programa_social_discapacidad_cdpd}
+                programa_social_escolaridad={programaintegral.programa_social_escolaridad}
+                programa_social_ocupacion={programaintegral.programa_social_ocupacion}
+                programa_social_derechohabiencia={programaintegral.programa_social_derechohabiencia}
+                programa_social_religion={programaintegral.programa_social_religion}
+                programa_social_limitada={programaintegral.programa_social_limitada}
+                programa_social_violencia={programaintegral.programa_social_violencia}
+                programa_social_caso_medicolegal={programaintegral.programa_social_caso_medicolegal}
+                programa_social_mater={programaintegral.programa_social_mater}
+                programa_social_riesgos_vivienda={programaintegral.programa_social_riesgos_vivienda}
+                programa_social_vivienda_tipo={programaintegral.programa_social_vivienda_tipo}
+                programa_social_vivienda_material={programaintegral.programa_social_vivienda_material}
+                programa_social_vivienda_servicios={programaintegral.programa_social_vivienda_servicios}
+                programa_social_vivienda_cuartos={programaintegral.programa_social_vivienda_cuartos}
+                programa_social_vivienda_personas={programaintegral.programa_social_vivienda_personas}
+                programa_social_vivienda_hacinamiento={programaintegral.programa_social_vivienda_hacinamiento}
+                programa_social_vivienda_atencion_alarma={programaintegral.programa_social_vivienda_atencion_alarma}
+                programa_social_dispositivo_medicos={programaintegral.programa_social_dispositivo_medicos}
+                programa_social_animales={programaintegral.programa_social_animales}
+                programa_social_animales_tipo={programaintegral.programa_social_animales_tipo}
+                programa_social_lenia={programaintegral.programa_social_lenia}
+                programa_social_trabajo_riesgos={programaintegral.programa_social_trabajo_riesgos}
+                programa_social_barreras_aprendizaje={programaintegral.programa_social_barreras_aprendizaje}
+                programa_social_exposicion_sustancias={programaintegral.programa_social_exposicion_sustancias}
+                programa_social_exposicion_sustancias_anios={programaintegral.programa_social_exposicion_sustancias_anios}
+                programa_social_exposicion_sustancias_horas={programaintegral.programa_social_exposicion_sustancias_horas}
             />
 
         </Layout>

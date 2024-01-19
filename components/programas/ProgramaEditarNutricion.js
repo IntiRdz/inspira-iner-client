@@ -8,21 +8,23 @@ import { OBTENER_PACIENTE, OBTENER_ADMISION } from '../../graphql/queries';
 import { ACTUALIZAR_PROGRAMA_INTEGRAL } from '../../graphql/mutations';
 
 import { validationSchemaPrograma } from '../../components/forms/validationSchemas';
-import FormProgramaIntegralEdit from '../forms/FormProgramaIntegralEdit';
+import FormProgramaIntegralNutricionEdit from '../forms/FormProgramaIntegralNutricionEdit';
 
 import ModalGeneral from '../modals/ModalGeneral';
 
-
-export default function ProgramaEditar({ admonId, paciente, programaintegral, diagnostico, isOpen, onClose  }) {
+export default function ProgramaEditarNutricion ({ admonId, paciente, programaintegral, diagnostico, isOpen, onClose  }) {
   
   //console.log("Microorganismo Prop",microorganismo ); // Esto te mostrará si el microorganismo está llegando
   
   const [mensaje, guardarMensaje] = useState(null);
 
+
+  console.log("Llegamsos a programa nutricion editar");
+
   const pacId = paciente.id;
   const id = programaintegral.id;
 
-  console.log("ID programa integral", id);
+  console.log("ID programa integral desde paliativos", id);
 
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
     // Sincroniza el estado local del modal con el prop 'isOpen'
@@ -42,13 +44,9 @@ export default function ProgramaEditar({ admonId, paciente, programaintegral, di
     });
 
   const initialValues  = {
-    programa_discapacidad_hipoacusia: programaintegral.programa_discapacidad_hipoacusia !== null && programaintegral.programa_discapacidad_hipoacusia !== undefined ? programaintegral.programa_discapacidad_hipoacusia : '',
-    programa_discapacidad_disminucion_visual: programaintegral.programa_discapacidad_disminucion_visual !== null && programaintegral.programa_discapacidad_disminucion_visual !== undefined ? programaintegral.programa_discapacidad_disminucion_visual : '',
-    programa_discapacidad_perdida_barthel: programaintegral.programa_discapacidad_perdida_barthel !== null && programaintegral.programa_discapacidad_perdida_barthel !== undefined ? programaintegral.programa_discapacidad_perdida_barthel : '',
-    programa_discapacidad_disminucion_cognitiva: programaintegral.programa_discapacidad_disminucion_cognitiva !== null && programaintegral.programa_discapacidad_disminucion_cognitiva !== undefined ? programaintegral.programa_discapacidad_disminucion_cognitiva : '',
-    programa_discapacidad_gds_fast: programaintegral.programa_discapacidad_gds_fast !== null && programaintegral.programa_discapacidad_gds_fast !== undefined ? programaintegral.programa_discapacidad_gds_fast : '',
-    programa_discapacidad_nu_desc: programaintegral.programa_discapacidad_nu_desc !== null && programaintegral.programa_discapacidad_nu_desc !== undefined ? programaintegral.programa_discapacidad_nu_desc : '',
-    preguntas_contestadas: programaintegral.preguntas_contestadas !== null && programaintegral.preguntas_contestadas !== undefined ? programaintegral.preguntas_contestadas : '',
+    programa_nutricion_puntuacion: programaintegral.programa_nutricion_puntuacion !== null && programaintegral.programa_nutricion_puntuacion !== undefined ? programaintegral.programa_nutricion_puntuacion : '',
+    programa_nutricion_grupoRiesgo: programaintegral.programa_nutricion_grupoRiesgo !== null && programaintegral.programa_nutricion_grupoRiesgo !== undefined ? programaintegral.programa_nutricion_grupoRiesgo : '',
+    programa_nutricion_via: programaintegral.programa_nutricion_via !== null && programaintegral.programa_nutricion_via !== undefined ? programaintegral.programa_nutricion_via : '',    
 };
 
 const actualizarInfoProgramaIntegral = async (valores) => {
@@ -119,7 +117,7 @@ const mostrarMensaje = () => {
         <ModalGeneral isOpen={isModalOpen} onClose={closeModal}>
             <div className="flex justify-center mt-2">
                 <div className="w-full max-w-lg">
-                    <FormProgramaIntegralEdit
+                    <FormProgramaIntegralNutricionEdit
                         initialValues={initialValues}
                         validationSchema={validationSchemaPrograma}
                         onSubmit={actualizarInfoProgramaIntegral}    

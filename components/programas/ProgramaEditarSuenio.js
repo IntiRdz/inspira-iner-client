@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
-import { format } from 'date-fns';
 
 import Swal from 'sweetalert2';
 
@@ -8,23 +7,23 @@ import { OBTENER_PACIENTE, OBTENER_ADMISION } from '../../graphql/queries';
 import { ACTUALIZAR_PROGRAMA_INTEGRAL } from '../../graphql/mutations';
 
 import { validationSchemaPrograma } from '../../components/forms/validationSchemas';
-import FormProgramaIntegralPaliativosEdit from '../forms/FormProgramaIntegralPaliativosEdit';
+import FormProgramaIntegralSuenioEdit from '../forms/FormProgramaIntegralSuenioEdit';
 
 import ModalGeneral from '../modals/ModalGeneral';
 
-export default function ProgramaPaliativosEditar ({ admonId, paciente, programaintegral, diagnostico, isOpen, onClose  }) {
+export default function ProgramaEditarSuenio ({ admonId, paciente, programaintegral, diagnostico, isOpen, onClose  }) {
   
   //console.log("Microorganismo Prop",microorganismo ); // Esto te mostrará si el microorganismo está llegando
   
   const [mensaje, guardarMensaje] = useState(null);
 
 
-  console.log("Llegamsos a programa paliativos editar");
+  console.log("Llegamsos a programa Sueño editar");
 
   const pacId = paciente.id;
   const id = programaintegral.id;
 
-  console.log("ID programa integral desde paliativos", id);
+  console.log("ID programa integral desde sueño", id);
 
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
     // Sincroniza el estado local del modal con el prop 'isOpen'
@@ -44,16 +43,11 @@ export default function ProgramaPaliativosEditar ({ admonId, paciente, programai
     });
 
   const initialValues  = {
-/*     fecha_diagnostico: programaintegral.fecha_diagnostico ? format(new Date(programaintegral.fecha_diagnostico), 'yyyy-MM-dd') : '',
-    fecha_resolucion: programaintegral.fecha_resolucion ? format(new Date(programaintegral.fecha_resolucion), 'yyyy-MM-dd') : undefined, */
-    programa_paliativos_sorpresa: programaintegral.programa_paliativos_sorpresa ? programaintegral.programa_paliativos_sorpresa : '',
-    programa_paliativos_perdida_funcionalidad: programaintegral.programa_paliativos_perdida_funcionalidad ? programaintegral.programa_paliativos_perdida_funcionalidad : '',
-    programa_paliativos_perdida_nutricional: programaintegral.programa_paliativos_perdida_nutricional ? programaintegral.programa_paliativos_perdida_nutricional : '',
-    programa_paliativos_multimorbilidad: programaintegral.programa_paliativos_multimorbilidad ? programaintegral.programa_paliativos_multimorbilidad : '',
-    programa_paliativos_recursosOingresos: programaintegral.programa_paliativos_recursosOingresos ? programaintegral.programa_paliativos_recursosOingresos : '',
-    programa_paliativos_otraEnfermedaAvanzada: programaintegral.programa_paliativos_otraEnfermedaAvanzada || '',
-    programa_paliativos_total: programaintegral.programa_paliativos_total || '',
-    programa_paliativos_ecog: programaintegral.programa_paliativos_ecog || '',
+    programa_suenio_imc: programaintegral.programa_suenio_imc !== null && programaintegral.programa_suenio_imc !== undefined ? programaintegral.programa_suenio_imc : '',
+    programa_suenio_hipoventilacion: programaintegral.programa_suenio_hipoventilacion !== null && programaintegral.programa_suenio_hipoventilacion !== undefined ? programaintegral.programa_suenio_hipoventilacion : '',
+    programa_suenio_restriccionTorax: programaintegral.programa_suenio_restriccionTorax !== null && programaintegral.programa_suenio_restriccionTorax !== undefined ? programaintegral.programa_suenio_restriccionTorax : '',
+    programa_suenio_neuromuscular: programaintegral.programa_suenio_neuromuscular !== null && programaintegral.programa_suenio_neuromuscular !== undefined ? programaintegral.programa_suenio_neuromuscular : '',
+    
 };
 
 const actualizarInfoProgramaIntegral = async (valores) => {
@@ -124,7 +118,7 @@ const mostrarMensaje = () => {
         <ModalGeneral isOpen={isModalOpen} onClose={closeModal}>
             <div className="flex justify-center mt-2">
                 <div className="w-full max-w-lg">
-                    <FormProgramaIntegralPaliativosEdit
+                    <FormProgramaIntegralSuenioEdit
                         initialValues={initialValues}
                         validationSchema={validationSchemaPrograma}
                         onSubmit={actualizarInfoProgramaIntegral}    

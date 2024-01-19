@@ -12,7 +12,7 @@ export default function CardDiscapacidad({
 
     function renderizarValor(valor) {
         if (valor === null) {
-            return 'Nulo';
+            return 'Sin contestar';
         }
         return valor ? 'Sí' : 'No';
     }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
-import { format } from 'date-fns';
 
 import Swal from 'sweetalert2';
 
@@ -12,7 +11,7 @@ import FormProgramaIntegralPaliativosEdit from '../forms/FormProgramaIntegralPal
 
 import ModalGeneral from '../modals/ModalGeneral';
 
-export default function ProgramaPaliativosEditar ({ admonId, paciente, programaintegral, diagnostico, isOpen, onClose  }) {
+export default function ProgramaEditarPaliativos ({ admonId, paciente, programaintegral, diagnostico, isOpen, onClose  }) {
   
   //console.log("Microorganismo Prop",microorganismo ); // Esto te mostrará si el microorganismo está llegando
   
@@ -44,16 +43,15 @@ export default function ProgramaPaliativosEditar ({ admonId, paciente, programai
     });
 
   const initialValues  = {
-/*     fecha_diagnostico: programaintegral.fecha_diagnostico ? format(new Date(programaintegral.fecha_diagnostico), 'yyyy-MM-dd') : '',
-    fecha_resolucion: programaintegral.fecha_resolucion ? format(new Date(programaintegral.fecha_resolucion), 'yyyy-MM-dd') : undefined, */
-    programa_paliativos_sorpresa: programaintegral.programa_paliativos_sorpresa ? programaintegral.programa_paliativos_sorpresa : '',
-    programa_paliativos_perdida_funcionalidad: programaintegral.programa_paliativos_perdida_funcionalidad ? programaintegral.programa_paliativos_perdida_funcionalidad : '',
-    programa_paliativos_perdida_nutricional: programaintegral.programa_paliativos_perdida_nutricional ? programaintegral.programa_paliativos_perdida_nutricional : '',
-    programa_paliativos_multimorbilidad: programaintegral.programa_paliativos_multimorbilidad ? programaintegral.programa_paliativos_multimorbilidad : '',
-    programa_paliativos_recursosOingresos: programaintegral.programa_paliativos_recursosOingresos ? programaintegral.programa_paliativos_recursosOingresos : '',
-    programa_paliativos_otraEnfermedaAvanzada: programaintegral.programa_paliativos_otraEnfermedaAvanzada || '',
-    programa_paliativos_total: programaintegral.programa_paliativos_total || '',
-    programa_paliativos_ecog: programaintegral.programa_paliativos_ecog || '',
+    programa_paliativos_sorpresa: programaintegral.programa_paliativos_sorpresa !== null && programaintegral.programa_paliativos_sorpresa !== undefined ? programaintegral.programa_paliativos_sorpresa : '',
+    programa_paliativos_perdida_funcionalidad: programaintegral.programa_paliativos_perdida_funcionalidad !== null && programaintegral.programa_paliativos_perdida_funcionalidad !== undefined ? programaintegral.programa_paliativos_perdida_funcionalidad : '',
+    programa_paliativos_perdida_nutricional: programaintegral.programa_paliativos_perdida_nutricional !== null && programaintegral.programa_paliativos_perdida_nutricional !== undefined ? programaintegral.programa_paliativos_perdida_nutricional : '',
+    programa_paliativos_multimorbilidad: programaintegral.programa_paliativos_multimorbilidad !== null && programaintegral.programa_paliativos_multimorbilidad !== undefined ? programaintegral.programa_paliativos_multimorbilidad : '',
+    programa_paliativos_recursosOingresos: programaintegral.programa_paliativos_recursosOingresos !== null && programaintegral.programa_paliativos_recursosOingresos !== undefined ? programaintegral.programa_paliativos_recursosOingresos : '',
+    programa_paliativos_otraEnfermedaAvanzada: programaintegral.programa_paliativos_otraEnfermedaAvanzada !== null && programaintegral.programa_paliativos_otraEnfermedaAvanzada !== undefined ? programaintegral.programa_paliativos_otraEnfermedaAvanzada : '',
+    programa_paliativos_total: programaintegral.programa_paliativos_total !== null && programaintegral.programa_paliativos_total !== undefined ? programaintegral.programa_paliativos_total : '',
+    programa_paliativos_ecog: programaintegral.programa_paliativos_ecog !== null && programaintegral.programa_paliativos_ecog !== undefined ? programaintegral.programa_paliativos_ecog : '',
+    
 };
 
 const actualizarInfoProgramaIntegral = async (valores) => {

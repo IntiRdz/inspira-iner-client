@@ -56,14 +56,6 @@ export default function FormDiagnosticEdit ({ initialValues, validationSchema, o
             )}
         </div>
 
-        { props.touched.fecha_diagnostico && props.errors.fecha_diagnostico ? (
-            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-                <p className="font-bold">Error</p>
-                <p>{props.errors.fecha_diagnostico}</p>
-            </div>
-        ) : null  } 
-
-
         <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_resolucion">
                 Fecha de resolución del diagnóstico

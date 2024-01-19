@@ -15,7 +15,7 @@ export default function CardPaliativos({
 
     function renderizarValor(valor) {
         if (valor === null) {
-            return 'Nulo';
+            return 'Sin contestar';
         }
         return valor ? 'Sí' : 'No';
     }
