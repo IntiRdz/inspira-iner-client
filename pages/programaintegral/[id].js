@@ -34,6 +34,8 @@ export default function ProgramaPage () {
     const router = useRouter();
     const { query: { id } } = router;
 
+    console.log("ID de busqueda del router",id)
+
     const { data, loading, error } = useQuery(OBTENER_ADMISION, {
         variables: { id }
     });
@@ -42,7 +44,7 @@ export default function ProgramaPage () {
     if (loading) return <p>Cargando...</p>;
     if (error) return <p>Ha ocurrido un error</p>;
 
-    
+    console.log("Data del ID de busqueda obtener admision",data)
 
     const { programaintegral, diagnostico, paciente_relacionado } = data.obtenerAdmision;
         // Ahora puedes usar 'programaintegral' aquí
