@@ -871,7 +871,7 @@ Genero
 
 <div className="mb-4">
     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="programa_social_limitada">
-    Por valores, costumbres y/o creencias existe alguna condición que interfiera en el proceso de atención médicamente necesaria. Ej. transfusiones, intervención quirúrgica, tipo de alimento. En caso que la respuesta sea "si" colocar que procedimiento o atención no desea que se realice:
+    Por valores, costumbres y/o creencias existe alguna condición que interfiera en el proceso de atención médicamente necesaria. Ej. transfusiones, intervención quirúrgica, tipo de alimento. En caso que la respuesta sea &quot;si&quot; colocar que procedimiento o atención no desea que se realice:
     </label>
 
     <input
@@ -884,6 +884,7 @@ Genero
         value={props.values.programa_social_limitada}
     />
 </div>
+
 
 { props.touched.programa_social_limitada && props.errors.programa_social_limitada ? (
     <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
