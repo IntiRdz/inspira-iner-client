@@ -96,6 +96,7 @@ export default function FormMicroNew ({ formik }) {
                 value={formik.values.microorganismo_tipo}
             >
                 <option value="" label="Seleccione una opción" />
+                <option value="NA" label="NA" />
                 <option value="Virus" label="Virus" />
                 <option value="Bacteria" label="Bacteria" />
                 <option value="Micobacteria" label="Micobacteria" />

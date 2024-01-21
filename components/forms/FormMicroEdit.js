@@ -107,6 +107,7 @@ value={microorganismoOptions.find(option => option.value === props.values.microo
     value={props.values.microorganismo_tipo}
 >
     <option value="" label="Seleccione una opción" />
+    <option value="NA" label="NA" />
     <option value="Virus" label="Virus" />
     <option value="Bacteria" label="Bacteria" />
     <option value="Micobacteria" label="Micobacteria" />

@@ -78,6 +78,7 @@ export const  validationSchemaMicro = Yup.object({
         .required('El método de detección es obligatorio'),
     microorganismo_tipo: Yup.string()
         .oneOf([
+            'NA',
             'Virus', 
             'Bacteria', 
             'Micobacteria', 
