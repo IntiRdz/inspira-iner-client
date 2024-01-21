@@ -60,16 +60,43 @@ export default function CardSocial({
 
         <div className="max-w-sm w-full lg:max-w-full lg:flex">
             <div 
-                className="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" 
+                className="h-48 lg:h-auto lg:w-20 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden border-gray-400 border-2" 
                 title="Tamiz Social">
                {/* <AstronautIcon className="h-full w-full text-gray-400" />  */}
-               <WheelchairIcon className="h-5/6 w-5/6 text-gray-400" />
+               <WheelchairIcon className="h-2/4 w-2/4 text-gray-400" />
             </div>
             <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
                 <div className="mb-8">
                     <div className="text-gray-900 font-bold text-xl mb-2">
                         Tamiz Social
                     </div>
+                    <p className="text-gray-700 text-base">
+                        Grupo Etario  ={programa_social_grupo_etario }
+                    </p>
+                    <p className="text-gray-700 text-base">
+                        Género =  {programa_social_genero }
+                    </p>
+                    <p className="text-gray-700 text-base">
+                        Orientacion Sexual = { programa_social_orientacion_sexual}
+                    </p>
+                    <p className="text-gray-700 text-base">
+                        Municipio = {programa_social_municipio}
+                    </p>
+                    <p className="text-gray-700 text-base">
+                        Estado = {programa_social_estado }
+                    </p>
+                    <p className="text-gray-700 text-base">
+                        País = {programa_social_pais }
+                    </p>
+                    <p className="text-gray-700 text-base">
+                        Zona Marginada = {programa_social_zona_marginada}
+                    </p>
+                    <p className="text-gray-700 text-base">
+                        Condición Social = {programa_social_condicion_social }
+                    </p>
+                    <p className="text-gray-700 text-base">
+                        Déficit Económico  {renderizarValor(programa_social_deficit_economico)}
+                    </p>
 
 
                 </div>

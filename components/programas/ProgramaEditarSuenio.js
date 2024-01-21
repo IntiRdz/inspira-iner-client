@@ -43,10 +43,10 @@ export default function ProgramaEditarSuenio ({ admonId, paciente, programainteg
     });
 
   const initialValues  = {
-    programa_suenio_imc: programaintegral.programa_suenio_imc !== null && programaintegral.programa_suenio_imc !== undefined ? programaintegral.programa_suenio_imc : '',
-    programa_suenio_hipoventilacion: programaintegral.programa_suenio_hipoventilacion !== null && programaintegral.programa_suenio_hipoventilacion !== undefined ? programaintegral.programa_suenio_hipoventilacion : '',
-    programa_suenio_restriccionTorax: programaintegral.programa_suenio_restriccionTorax !== null && programaintegral.programa_suenio_restriccionTorax !== undefined ? programaintegral.programa_suenio_restriccionTorax : '',
-    programa_suenio_neuromuscular: programaintegral.programa_suenio_neuromuscular !== null && programaintegral.programa_suenio_neuromuscular !== undefined ? programaintegral.programa_suenio_neuromuscular : '',
+    programa_suenio_imc: programaintegral.programa_suenio_imc,
+    programa_suenio_hipoventilacion: programaintegral.programa_suenio_hipoventilacion,
+    programa_suenio_restriccionTorax: programaintegral.programa_suenio_restriccionTorax,
+    programa_suenio_neuromuscular: programaintegral.programa_suenio_neuromuscular,
     
 };
 

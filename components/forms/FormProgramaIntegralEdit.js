@@ -46,6 +46,13 @@ export default function FormProgramaIntegralPaliativosEdit ({ initialValues, val
             </label>
         </div>
 
+        { props.touched.programa_discapacidad_hipoacusia && props.errors.programa_discapacidad_hipoacusia ? (
+            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                <p className="font-bold">Error</p>
+                <p>{props.errors.programa_discapacidad_hipoacusia}</p>
+            </div>
+        ) : null  }
+
 
         <div>
             <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -75,6 +82,13 @@ export default function FormProgramaIntegralPaliativosEdit ({ initialValues, val
             </label>
         </div>
 
+        { props.touched.programa_discapacidad_disminucion_visual && props.errors.programa_discapacidad_disminucion_visual ? (
+            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                <p className="font-bold">Error</p>
+                <p>{props.errors.programa_discapacidad_disminucion_visual}</p>
+            </div>
+        ) : null  }
+
         <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="programa_discapacidad_perdida_barthel">
                 barthel
@@ -98,34 +112,18 @@ export default function FormProgramaIntegralPaliativosEdit ({ initialValues, val
             </div>
         ) : null  }
 
-        
-<div className="mb-4">
-    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="programa_discapacidad_disminucion_cognitiva">
-        Cognitivo
-    </label>
-
-    <input
-        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="programa_discapacidad_disminucion_cognitiva"
-        type="text"
-        placeholder="Barthel"
-        onChange={props.handleChange}
-        onBlur={props.handleBlur}
-        value={props.values.programa_discapacidad_disminucion_cognitiva}
-    />
-</div>
-
-{ props.touched.programa_discapacidad_disminucion_cognitiva && props.errors.programa_discapacidad_disminucion_cognitiva ? (
-    <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-        <p className="font-bold">Error</p>
-        <p>{props.errors.programa_discapacidad_disminucion_cognitiva}</p>
-    </div>
-) : null  }
-
 
 <div className="mb-4">
     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="programa_discapacidad_gds_fast">
-        GDS Fast
+    Tamizaje de deterioro cognitivo, preguntar cómo se encontraba 2 semanas previas al ingreso: Escala de Deterioro Cognitivo Global (GDS-FAST)<br />
+
+1. AUSENCIA DE DÉFICIT COGNITIVO<br />
+2. DÉFICIT COGNITIVO MUY LEVE.<br /> Quejas de pérdida de memoria en ubicación de objetos, nombres de personas, citas, etc.<br />
+3. DÉFICIT COGNITIVO LEVE:<br /> Haberse perdido en un lugar no familiar, dificultad para recordar palabras y nombres, pierde o coloca erróneamente objetos de valor, escasa capacidad para recordar a personas nuevas que ha conocido.<br />
+4. DÉFICIT COGNITIVO MODERADO.<br /> Olvido de hechos cotidianos recientes, incapacidad para planificar viajes, finanzas o actividades complejas.<br />
+5. DÉFICIT COGNITIVO MODERADAMENTE GRAVE.<br /> Decremento de la habilidad en escoger la ropa adecuada en cada estación del año o según las ocasiones. Es incapaz de recordar su dirección, teléfono o nombres de familiares. Es frecuente cierta desorientación en tiempo o en lugar. Sabe su nombre y generalmente el de su esposa e hijos.<br />
+6. DÉFICIT COGNITIVO GRAVE.<br /> Decremento en la habilidad para vestirse, bañarse y lavarse; Olvida a veces el nombre de su cuidador principal de quien depende para vivir. Desorientación temporo espacial.
+7. DÉFICIT COGNITIVO MUY GRAVE.<br /> Pérdida del habla y la capacidad motora. Capacidad de habla limitada aproximadamente a 6 palabras, capacidad de habla limitada a una única palabra, pérdida de la capacidad para caminar solo sin ayuda, pérdida de la capacidad para sentarse y levantarse sin ayuda, pérdida de la capacidad para sonreír, pérdida de la capacidad para mantener la cabeza erguida.<br />
     </label>
 
     <input
@@ -148,7 +146,7 @@ export default function FormProgramaIntegralPaliativosEdit ({ initialValues, val
 
 <div className="mb-4">
     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="programa_discapacidad_nu_desc">
-        Nu desc
+        Delirium: Nu-DESC (2 o más indican posible delirium)
     </label>
 
     <input
@@ -166,30 +164,6 @@ export default function FormProgramaIntegralPaliativosEdit ({ initialValues, val
     <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
         <p className="font-bold">Error</p>
         <p>{props.errors.programa_discapacidad_nu_desc}</p>
-    </div>
-) : null  }
-
-
-<div className="mb-4">
-    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="preguntas_contestadas">
-        Preguntas
-    </label>
-
-    <input
-        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="preguntas_contestadas"
-        type="number"
-        placeholder="Preguntas"
-        onChange={props.handleChange}
-        onBlur={props.handleBlur}
-        value={props.values.preguntas_contestadas}
-    />
-</div>
-
-{ props.touched.preguntas_contestadas && props.errors.preguntas_contestadas ? (
-    <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
-        <p className="font-bold">Error</p>
-        <p>{props.errors.preguntas_contestadas}</p>
     </div>
 ) : null  }
 

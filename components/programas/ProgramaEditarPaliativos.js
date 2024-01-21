@@ -43,14 +43,14 @@ export default function ProgramaEditarPaliativos ({ admonId, paciente, programai
     });
 
   const initialValues  = {
-    programa_paliativos_sorpresa: programaintegral.programa_paliativos_sorpresa !== null && programaintegral.programa_paliativos_sorpresa !== undefined ? programaintegral.programa_paliativos_sorpresa : '',
-    programa_paliativos_perdida_funcionalidad: programaintegral.programa_paliativos_perdida_funcionalidad !== null && programaintegral.programa_paliativos_perdida_funcionalidad !== undefined ? programaintegral.programa_paliativos_perdida_funcionalidad : '',
-    programa_paliativos_perdida_nutricional: programaintegral.programa_paliativos_perdida_nutricional !== null && programaintegral.programa_paliativos_perdida_nutricional !== undefined ? programaintegral.programa_paliativos_perdida_nutricional : '',
-    programa_paliativos_multimorbilidad: programaintegral.programa_paliativos_multimorbilidad !== null && programaintegral.programa_paliativos_multimorbilidad !== undefined ? programaintegral.programa_paliativos_multimorbilidad : '',
-    programa_paliativos_recursosOingresos: programaintegral.programa_paliativos_recursosOingresos !== null && programaintegral.programa_paliativos_recursosOingresos !== undefined ? programaintegral.programa_paliativos_recursosOingresos : '',
-    programa_paliativos_otraEnfermedaAvanzada: programaintegral.programa_paliativos_otraEnfermedaAvanzada !== null && programaintegral.programa_paliativos_otraEnfermedaAvanzada !== undefined ? programaintegral.programa_paliativos_otraEnfermedaAvanzada : '',
-    programa_paliativos_total: programaintegral.programa_paliativos_total !== null && programaintegral.programa_paliativos_total !== undefined ? programaintegral.programa_paliativos_total : '',
-    programa_paliativos_ecog: programaintegral.programa_paliativos_ecog !== null && programaintegral.programa_paliativos_ecog !== undefined ? programaintegral.programa_paliativos_ecog : '',
+    programa_paliativos_sorpresa: programaintegral.programa_paliativos_sorpresa,
+    programa_paliativos_perdida_funcionalidad: programaintegral.programa_paliativos_perdida_funcionalidad,
+    programa_paliativos_perdida_nutricional: programaintegral.programa_paliativos_perdida_nutricional,
+    programa_paliativos_multimorbilidad: programaintegral.programa_paliativos_multimorbilidad,
+    programa_paliativos_recursosOingresos: programaintegral.programa_paliativos_recursosOingresos,
+    programa_paliativos_otraEnfermedaAvanzada: programaintegral.programa_paliativos_otraEnfermedaAvanzada,
+    programa_paliativos_total: programaintegral.programa_paliativos_total,
+    programa_paliativos_ecog: programaintegral.programa_paliativos_ecog,
     
 };
 

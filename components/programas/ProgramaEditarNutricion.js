@@ -44,9 +44,9 @@ export default function ProgramaEditarNutricion ({ admonId, paciente, programain
     });
 
   const initialValues  = {
-    programa_nutricion_puntuacion: programaintegral.programa_nutricion_puntuacion !== null && programaintegral.programa_nutricion_puntuacion !== undefined ? programaintegral.programa_nutricion_puntuacion : '',
-    programa_nutricion_grupoRiesgo: programaintegral.programa_nutricion_grupoRiesgo !== null && programaintegral.programa_nutricion_grupoRiesgo !== undefined ? programaintegral.programa_nutricion_grupoRiesgo : '',
-    programa_nutricion_via: programaintegral.programa_nutricion_via !== null && programaintegral.programa_nutricion_via !== undefined ? programaintegral.programa_nutricion_via : '',    
+    programa_nutricion_puntuacion: programaintegral.programa_nutricion_puntuacion,
+    programa_nutricion_grupoRiesgo: programaintegral.programa_nutricion_grupoRiesgo,
+    programa_nutricion_via: programaintegral.programa_nutricion_via,    
 };
 
 const actualizarInfoProgramaIntegral = async (valores) => {

@@ -42,13 +42,11 @@ export default function ProgramaEditar({ admonId, paciente, programaintegral, di
     });
 
   const initialValues  = {
-    programa_discapacidad_hipoacusia: programaintegral.programa_discapacidad_hipoacusia !== null && programaintegral.programa_discapacidad_hipoacusia !== undefined ? programaintegral.programa_discapacidad_hipoacusia : '',
-    programa_discapacidad_disminucion_visual: programaintegral.programa_discapacidad_disminucion_visual !== null && programaintegral.programa_discapacidad_disminucion_visual !== undefined ? programaintegral.programa_discapacidad_disminucion_visual : '',
-    programa_discapacidad_perdida_barthel: programaintegral.programa_discapacidad_perdida_barthel !== null && programaintegral.programa_discapacidad_perdida_barthel !== undefined ? programaintegral.programa_discapacidad_perdida_barthel : '',
-    programa_discapacidad_disminucion_cognitiva: programaintegral.programa_discapacidad_disminucion_cognitiva !== null && programaintegral.programa_discapacidad_disminucion_cognitiva !== undefined ? programaintegral.programa_discapacidad_disminucion_cognitiva : '',
-    programa_discapacidad_gds_fast: programaintegral.programa_discapacidad_gds_fast !== null && programaintegral.programa_discapacidad_gds_fast !== undefined ? programaintegral.programa_discapacidad_gds_fast : '',
-    programa_discapacidad_nu_desc: programaintegral.programa_discapacidad_nu_desc !== null && programaintegral.programa_discapacidad_nu_desc !== undefined ? programaintegral.programa_discapacidad_nu_desc : '',
-    preguntas_contestadas: programaintegral.preguntas_contestadas !== null && programaintegral.preguntas_contestadas !== undefined ? programaintegral.preguntas_contestadas : '',
+    programa_discapacidad_hipoacusia: programaintegral.programa_discapacidad_hipoacusia,
+    programa_discapacidad_disminucion_visual: programaintegral.programa_discapacidad_disminucion_visual,
+    programa_discapacidad_perdida_barthel: programaintegral.programa_discapacidad_perdida_barthel,
+    programa_discapacidad_gds_fast: programaintegral.programa_discapacidad_gds_fast ,
+    programa_discapacidad_nu_desc: programaintegral.programa_discapacidad_nu_desc,
 };
 
 const actualizarInfoProgramaIntegral = async (valores) => {
@@ -126,8 +124,8 @@ const mostrarMensaje = () => {
                         />
                 </div>
             </div>
+                        {mensaje && mostrarMensaje()}
         </ModalGeneral>
-        {mensaje && mostrarMensaje()}
     </>
   );
 }

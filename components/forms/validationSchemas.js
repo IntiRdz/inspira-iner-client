@@ -117,15 +117,7 @@ export const  validationSchemaDx = Yup.object({
 
 
 export const  validationSchemaPrograma = Yup.object({
-    programa_social_grupo_etario: Yup.string().required('El grupo etario es obligatorio'),
-    programa_social_genero: Yup.string().required('El género es obligatorio'),
-    programa_social_orientacion_sexual: Yup.string().required('La orientación sexual es obligatoria'),
-    programa_social_municipio: Yup.string().required('El municipio es obligatorio'),
-    programa_social_estado: Yup.string().required('El estado es obligatorio'),
-    programa_social_pais: Yup.string().required('El país es obligatorio'),
-    programa_social_zona_marginada: Yup.string().required('La identificacion de zona marginada es obligatoria'),
-    programa_social_condicion_social: Yup.string().required('La condición social es obligatoria'),
-    programa_social_deficit_economico: Yup.string().required('El deficit económico es obligatorio'),
+
 
 
 });

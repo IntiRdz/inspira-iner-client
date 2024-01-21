@@ -149,6 +149,9 @@ export default function ProgramaPage () {
 
             </div> 
 
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">
+
+
             <CardDiscapacidad 
                 programa_discapacidad_hipoacusia={programaintegral.programa_discapacidad_hipoacusia}
                 programa_discapacidad_disminucion_visual={programaintegral.programa_discapacidad_disminucion_visual}
@@ -229,7 +232,7 @@ export default function ProgramaPage () {
                 programa_social_exposicion_sustancias_anios={programaintegral.programa_social_exposicion_sustancias_anios}
                 programa_social_exposicion_sustancias_horas={programaintegral.programa_social_exposicion_sustancias_horas}
             />
-
+        </div> 
         </Layout>
      );
 

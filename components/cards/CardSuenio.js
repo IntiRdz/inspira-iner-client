@@ -22,10 +22,10 @@ export default function CardSuenio({
 
         <div className="max-w-sm w-full lg:max-w-full lg:flex">
             <div 
-                className="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" 
+                className="h-48 lg:h-auto lg:w-20 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden border-gray-400 border-2" 
                 title="Tamiz sueño">
                {/* <AstronautIcon className="h-full w-full text-gray-400" />  */}
-               <WheelchairIcon className="h-5/6 w-5/6 text-gray-400" />
+               <WheelchairIcon className="h-2/4 w-2/4 text-gray-400" />
             </div>
             <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
                 <div className="mb-8">
