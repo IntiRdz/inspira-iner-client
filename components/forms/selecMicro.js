@@ -1,5 +1,6 @@
 
 export const microorganismoOptions = [
+    { value: 'Negativo', label: 'Negativo' },
     { value: 'Acinetobacter', label: 'Acinetobacter' },
     { value: 'Burkholderia', label: 'Burkholderia' },
     { value: 'Chlamydophila pneumoniae', label: 'Chlamydophila pneumoniae' },

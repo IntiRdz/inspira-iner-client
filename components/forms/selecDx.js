@@ -243,6 +243,7 @@ export const diagnosticoOptions = [
   { value: 'Tumor Hipofisario', label: 'Tumor Hipofisario' },
   { value: 'Anemia', label: 'Anemia' },
   { value: 'Tuberculosis Pulmonar', label: 'Tuberculosis Pulmonar' },
+  { value: 'Tuberculosis Latente', label: 'Tuberculosis Latente' },
   { value: 'Anafilaxia', label: 'Anafilaxia' },
   { value: 'Síndrome de Dress', label: 'Síndrome de Dress' },
   { value: 'Insuficiencia Hepática Aguda', label: 'Insuficiencia Hepática Aguda' },
