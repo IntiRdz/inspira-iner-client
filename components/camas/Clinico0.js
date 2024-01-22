@@ -136,24 +136,33 @@ const progreso = 30;
           <table className="table-auto shadow-md mt-2 w-full w-lg ">
             <thead className="bg-gray-800 ">
               <tr className="text-white">
-                  <th className="w-1/14 px-1 py-1">Cama</th>
+                  {/* <th className="w-1/12 px-1 py-1">Estado</th> */}
+                  <th className="w-1/12 px-1 py-1">Cama</th>
+                  <th className="w-1/12 px-1 py-1">Prioridad</th>
+                  <th className="w-1/12 px-1 py-1">Género</th>
+                  <th className="w-1/12 px-1 py-1">O2</th>
+                  <th className="w-1/12 px-1 py-1">Hemodialisis</th>
+                  <th className="w-1/11 px-1 py-1">Código UVEH</th>
+                  {/* <th className="w-1/12 px-1 py-1">Aislamiento</th> */}
+                  <th className="w-1/12 px-1 py-1">DAN</th>
+                  <th className="w-1/12 px-1 py-1">Editar</th>
 
-                  <th className="w-1/13 px-1 py-1">Tratante</th>
-                  <th className="w-1/12 px-1 py-1">Grupo</th>
-                  <th className="w-1/14 px-1 py-1">Genero</th>
-                  <th className="w-1/14 px-1 py-1">O2</th>
-                  <th className="w-1/13 px-1 py-1">HD</th>
-                  <th className="w-1/10 px-1 py-1">Código UVEH</th>
-                  <th className="w-1/14 px-1 py-1">Aislamiento</th>
-                  <th className="w-1/14 px-1 py-1">Expediente</th>
-                  <th className="w-1/5 px-1 py-1">Nombre</th>
-                  <th className="w-1/13 px-1 py-1">Edad</th>
-                  <th className="w-1/13 px-1 py-1">Ingreso</th>
-                  <th className="w-1/13 px-1 py-1">Prealta</th>
-                  <th className="w-1/14 px-1 py-1">DEH</th>
-                  <th className="w-1/4 px-1 py-1">Dx</th>
-                  <th className="w-1/5 px-1 py-1">Microorganismos</th>
-                  <th className="w-1/13 px-1 py-1">Atención Integral</th>
+                  <th className="w-1/12 px-1 py-1">Tratante</th>
+                  <th className="w-1/12 px-1 py-1">Caracteristicas</th>
+                  <th className="w-1/12 px-1 py-1">Genero</th>
+                  <th className="w-1/12 px-1 py-1">O2</th>
+                  <th className="w-1/12 px-1 py-1">Hemodialisis</th>
+                  <th className="w-1/11 px-1 py-1">Código UVEH</th>
+                  <th className="w-1/12 px-1 py-1">Aislamiento</th>
+                  <th className="w-1/12 px-1 py-1">Expediente</th>
+                  <th className="w-1/7 px-1 py-1">Nombre</th>
+                  <th className="w-1/12 px-1 py-1">Edad</th>
+                  <th className="w-1/12 px-1 py-1">Ingreso</th>
+                  <th className="w-1/12 px-1 py-1">Prealta</th>
+                  <th className="w-1/12 px-1 py-1">DEH</th>
+                  <th className="w-1/12 px-1 py-1">Microorganismos</th>
+                  <th className="w-1/12 px-1 py-1">Dx</th>
+                  <th className="w-1/12 px-1 py-1">Atención Integral</th>
                   <th className="w-1/12 px-1 py-1">Editar</th>
               </tr>
             </thead>
@@ -174,7 +183,28 @@ const progreso = 30;
 
             return (
               <tr key={cama.id} className={`${cama.cama_lado === 'Arriba' ? 'border-t-2 border-t-sky-700' : cama.cama_lado === 'Bajo' ? 'border-b-2 border-b-sky-700' : ''} ${!cama.cama_ocupada ? 'bg-gray-200' : ''}`}>
+                {/* <td className="border px-1">{cama.cama_ocupada ? 'Ocupada' : 'Libre'}</td> */}
                 <td className= "border px-1 text-center text-white bg-blue-800">{cama.cama_numero}</td>
+                <td className= "border px-1 text-left"  >{cama.cama_prioridad !== "SinPrioridad" ? cama.cama_prioridad : ''}</td>
+                <td className= "border px-1 text-center">{cama.cama_genero === 'Mujer' ? <Female width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }} /> : cama.cama_genero === 'Hombre' ? <Male width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }}/> : ''}</td>
+                <td className= "border px-1 text-center">{cama.cama_dispositivo_o2}</td>
+                <td className= "border px-1 text-center">{cama.cama_hemodialisis ? <Kidneys width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }} /> : ''}</td>
+                <td className={`border px-1 text-left ${getUvehColor(cama.cama_codigo_uveh)}`}>{aislamientoCamaText(cama.cama_codigo_uveh)}</td>
+                {/* <td className={`border px-1 text-center ${cama.cama_aislamiento ? 'bg-rose-200' : ''}`}>{cama.cama_aislamiento ? 'Aislamiento' : ''}</td> */}
+                <td className={`border px-1 text-center ${cama.cama_dan ? 'bg-red-200' : ''}`}>{cama.cama_dan ? <SoapIcon width="2rem" height="2rem" style={{ display: 'inline-block' }} /> : ''}</td>
+          
+                <td className="border px-1 border-r-2 border-r-sky-700 ">
+                  <span className="flex justify-center items-center">
+                    <button 
+                      onClick={() => navegar(`/editarcama/${cama.id}`)}
+                      className="tooltip flex justify-center items-center bg-blue-800 p-2 rounded text-xs"
+                      data-tooltip="Editar"
+                    >
+                      <EditIcon color='white' />
+                    </button>
+                  </span>
+
+                </td>
                 {cama.cama_ocupada && ultimaAdmision && ultimaAdmision.hospitalizado ? (
                   <>
                     <td className="border px-1 ">{ultimaAdmision.servicio_tratante || ''}</td>
@@ -246,6 +276,13 @@ const progreso = 30;
                         >
                           <TaskIcon color='white' />
                         </button>
+{/*                         <button 
+                          onClick={() => navegar(`/programaintegral/${ultimaAdmision.paciente_relacionado.id}`)}
+                          className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"
+                          data-tooltip="Programa Integral"
+                        >
+                          <TaskIcon color='white' />
+                        </button> */}
                         <button 
                           onClick={() => navegar(`/editarpaciente/${ultimaAdmision.paciente_relacionado.id}`)}
                           className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"

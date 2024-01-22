@@ -79,7 +79,8 @@ export const diagnosticoOptions = [
   { value: 'Embolia pulmonar', label: 'Embolia pulmonar' },
   { value: 'Empiema', label: 'Empiema' },
   { value: 'Enfermedad Pulmonar Multinodular', label: 'Enfermedad Pulmonar Multinodular' },
-  { value: 'Enfermedad Renal Crónica (ERC)', label: 'Enfermedad Renal Crónica (ERC)' },
+  { value: 'Enfermedad Renal Crónica (ERC) sin TSFR', label: 'Enfermedad Renal Crónica (ERC) sin TSFR' },
+  { value: 'Enfermedad Renal Crónica (ERC) con TSFR', label: 'Enfermedad Renal Crónica (ERC) con TSFR' },
   { value: 'Enfermedad de Alzheimer', label: 'Enfermedad de Alzheimer' },
   { value: 'Enfermedad de Crohn', label: 'Enfermedad de Crohn' },
   { value: 'Enfermedad de Parkinson', label: 'Enfermedad de Parkinson' },
@@ -248,4 +249,6 @@ export const diagnosticoOptions = [
   { value: 'Síndrome de Dress', label: 'Síndrome de Dress' },
   { value: 'Insuficiencia Hepática Aguda', label: 'Insuficiencia Hepática Aguda' },
   { value: 'Insuficiencia Hepática Crónica', label: 'Insuficiencia Hepática Crónica' },
+  { value: 'Hipertrofia de Cornete', label: 'Hipertrofia de Cornetes' },
+  { value: 'Epistaxis', label: 'Epistaxis' },
   ];

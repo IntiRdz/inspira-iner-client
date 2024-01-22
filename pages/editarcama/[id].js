@@ -52,7 +52,7 @@ const EditarCama = () => {
 
     // Schema de validación
     const schemaValidacion = Yup.object({
-        cama_numero: Yup.number().required('El número de la cama es obligatorio').positive('No se aceptan números negativos'),
+        cama_numero: Yup.string().required('El número de la cama es obligatorio'),
         cama_prioridad: Yup.string().oneOf([
             'SinPrioridad',
             'COVID',
@@ -71,7 +71,7 @@ const EditarCama = () => {
             'Indeterminado'
         ]).required('El género es obligatorio'),
         cama_dispositivo_o2: Yup.string().oneOf([
-            'No_VM', 
+            'PN', 
             'VM'
         ]).required('El dispositivo O2 es obligatorio'),
         cama_hemodialisis: Yup.bool(),
@@ -94,7 +94,8 @@ const EditarCama = () => {
     const { obtenerCama } = data;
 
     const valoresIniciales = {
-        cama_numero: obtenerCama.cama_numero,
+        cama_numero: obtenerCama.cama_numero || '',
+        cama_orden: obtenerCama.cama_orden || '',
         cama_prioridad: obtenerCama.cama_prioridad ,
         cama_compartida: obtenerCama.cama_compartida ,
         cama_disponible: obtenerCama.cama_disponible,
@@ -112,6 +113,7 @@ const EditarCama = () => {
     const actualizarInfoCama = async valores => {
         const {
             cama_numero,
+            cama_orden,
             cama_prioridad,
             cama_compartida,
             cama_disponible,
@@ -129,6 +131,7 @@ const EditarCama = () => {
                     id, 
                     input: {
                         cama_numero,
+                        cama_orden,
                         cama_prioridad,
                         cama_compartida,
                         cama_disponible,
@@ -201,11 +204,11 @@ const EditarCama = () => {
                                         <input
                                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                             id="cama_numero"
-                                            type="number"
+                                            type="text"
                                             placeholder={props.values.cama_numero}
                                             onChange={props.handleChange}
                                             value={props.values.cama_numero}
-                                            readOnly
+                                            
                                         />
                                     </div>
 
@@ -215,6 +218,22 @@ const EditarCama = () => {
                                             <p>{props.errors.cama_numero}</p>
                                         </div>
                                     ) : null  } 
+
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_orden">
+                                            Orden
+                                        </label>
+
+                                        <input
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="cama_orden"
+                                            type="number"
+                                            placeholder={props.values.cama_orden}
+                                            onChange={props.handleChange}
+                                            value={props.values.cama_orden}
+                                            
+                                        />
+                                    </div>
 
                                     <div className="mb-4">
                                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cama_prioridad">
@@ -365,7 +384,7 @@ const EditarCama = () => {
                                             value={props.values.cama_dispositivo_o2}
                                         >
                                             <option value="" label="Seleccione un dispositivo" />
-                                            <option value="No_VM" label="No VM" />
+                                            <option value="PN" label="PN" />
                                             <option value="VM" label="VM" />
                                         </select>
                                     </div>

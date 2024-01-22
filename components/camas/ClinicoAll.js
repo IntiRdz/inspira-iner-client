@@ -1,16 +1,19 @@
-import React, {useState, useEffect} from 'react';
+'use client';
 import { useQuery, useSubscription } from '@apollo/client';
 import { format, differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz'; 
-import Router from 'next/router';
+import { useRouter } from 'next/navigation';
 
-import { EditIcon, TaskIcon, BedIcon, Female, Male, Kidneys, SoapIcon } from '../icons';
+import { EditIcon, TaskIcon, BedIcon, Female, Male, Kidneys, SoapIcon } from '../../components/icons';
 
 import { OBTENER_CAMAS } from '../../graphql/queries'; 
 
 const timeZone = 'America/Mexico_City'; // Define la zona horaria
 
-const ClinicoAll = () => {
+export default function ClinicoAll (){
+
+  const router = useRouter();
+
   const { data, loading, error } = useQuery(OBTENER_CAMAS);
 
   if (loading) {
@@ -24,8 +27,10 @@ const ClinicoAll = () => {
 
   const camas = data ? data.obtenerCamas : [];
 
-  const camasOrdenadas = [...camas].sort((a, b) => a.cama_numero - b.cama_numero);
-  //console.log(camasOrdenadas)
+  const camasOrdenadas = [...camas].sort((a, b) => a.cama_orden - b.cama_orden);
+  console.log(camasOrdenadas)
+
+
 
   // Verificación de fechas y diagnósticos
   const calcularEdad = fechaNacimiento => {
@@ -120,7 +125,7 @@ const ClinicoAll = () => {
 
 const progreso = 30;
   
-  const navegar = (ruta) => Router.push({ pathname: ruta });
+  const navegar = (ruta) => router.push(ruta);
 
   return (
     
@@ -132,13 +137,13 @@ const progreso = 30;
             <thead className="bg-gray-800 ">
               <tr className="text-white">
                   {/* <th className="w-1/12 px-1 py-1">Estado</th> */}
-                  <th className="w-1/14 px-1 py-1">Cama</th>
+                  <th className="w-1/12 px-1 py-1">Cama</th>
                   <th className="w-1/12 px-1 py-1">Prioridad</th>
                   <th className="w-1/12 px-1 py-1">Género</th>
                   <th className="w-1/12 px-1 py-1">O2</th>
                   <th className="w-1/12 px-1 py-1">Hemodialisis</th>
                   <th className="w-1/11 px-1 py-1">Código UVEH</th>
-                  <th className="w-1/12 px-1 py-1">Aislamiento</th>
+                  {/* <th className="w-1/12 px-1 py-1">Aislamiento</th> */}
                   <th className="w-1/12 px-1 py-1">DAN</th>
                   <th className="w-1/12 px-1 py-1">Editar</th>
 
@@ -148,15 +153,15 @@ const progreso = 30;
                   <th className="w-1/12 px-1 py-1">O2</th>
                   <th className="w-1/12 px-1 py-1">Hemodialisis</th>
                   <th className="w-1/11 px-1 py-1">Código UVEH</th>
+                  <th className="w-1/12 px-1 py-1">Aislamiento</th>
                   <th className="w-1/12 px-1 py-1">Expediente</th>
-                  <th className="w-1/12 px-1 py-1">Nombre</th>
-                  <th className="w-1/11 px-1 py-1">Apellido Paterno</th>
-                  <th className="w-1/12 px-1 py-1">Apellido Materno</th>
+                  <th className="w-1/7 px-1 py-1">Nombre</th>
                   <th className="w-1/12 px-1 py-1">Edad</th>
                   <th className="w-1/12 px-1 py-1">Ingreso</th>
                   <th className="w-1/12 px-1 py-1">Prealta</th>
                   <th className="w-1/12 px-1 py-1">DEH</th>
                   <th className="w-1/12 px-1 py-1">Microorganismos</th>
+                  <th className="w-1/12 px-1 py-1">Dx</th>
                   <th className="w-1/12 px-1 py-1">Atención Integral</th>
                   <th className="w-1/12 px-1 py-1">Editar</th>
               </tr>
@@ -185,7 +190,7 @@ const progreso = 30;
                 <td className= "border px-1 text-center">{cama.cama_dispositivo_o2}</td>
                 <td className= "border px-1 text-center">{cama.cama_hemodialisis ? <Kidneys width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }} /> : ''}</td>
                 <td className={`border px-1 text-left ${getUvehColor(cama.cama_codigo_uveh)}`}>{aislamientoCamaText(cama.cama_codigo_uveh)}</td>
-                <td className={`border px-1 text-center ${cama.cama_aislamiento ? 'bg-rose-200' : ''}`}>{cama.cama_aislamiento ? 'Aislamiento' : ''}</td>
+                {/* <td className={`border px-1 text-center ${cama.cama_aislamiento ? 'bg-rose-200' : ''}`}>{cama.cama_aislamiento ? 'Aislamiento' : ''}</td> */}
                 <td className={`border px-1 text-center ${cama.cama_dan ? 'bg-red-200' : ''}`}>{cama.cama_dan ? <SoapIcon width="2rem" height="2rem" style={{ display: 'inline-block' }} /> : ''}</td>
           
                 <td className="border px-1 border-r-2 border-r-sky-700 ">
@@ -227,14 +232,24 @@ const progreso = 30;
                         : aislamientoPacienteText(ultimaAdmision.paciente_relacionado.pac_codigo_uveh)
                         }
                     </td>
+                    <td className={`border px-1 text-center ${ultimaAdmision.paciente_relacionado.pac_aislamiento ? 'bg-rose-200' : ''}`}>{ultimaAdmision.paciente_relacionado.pac_aislamiento ? 'Aislamiento' : ''}</td>
                     <td className="border px-1 text-center">{ultimaAdmision.paciente_relacionado.expediente || ''}</td>
-                    <td className="border px-1 ">{ultimaAdmision.paciente_relacionado.pac_nombre || ''}</td>
-                    <td className="border px-1 ">{ultimaAdmision.paciente_relacionado.pac_apellido_paterno || ''}</td>
-                    <td className="border px-1 ">{ultimaAdmision.paciente_relacionado.pac_apellido_materno || ''}</td>
+                    <td className="py-3 px-4">
+                      {
+                        `${ultimaAdmision.paciente_relacionado.pac_nombre} ${ultimaAdmision.paciente_relacionado.pac_apellido_paterno} ${ultimaAdmision.paciente_relacionado.pac_apellido_materno}`
+                      }
+                    </td>
                     <td className="border px-1 text-center">{calcularEdad(ultimaAdmision.paciente_relacionado.pac_FN) || ''}</td>
                     <td className="border px-1 ">{ultimaAdmision.fecha_ingreso ? format(utcToZonedTime(new Date(ultimaAdmision.fecha_ingreso), timeZone), 'dd/MM/yy') : ''}</td>
                     <td className={fechaPreAltaClasses}>{ultimaAdmision.fecha_prealta ? format(utcToZonedTime(new Date(ultimaAdmision.fecha_prealta), timeZone), 'dd/MM/yy') : ''}</td>
                     <td className="border px-1 text-center">{calcularDiasEstancia(ultimaAdmision.fecha_ingreso)}</td>
+                    <td className="py-3 px-4">
+                      {
+                        ultimaAdmision.diagnostico
+                          .map(diagnostico => diagnostico.diagnostico_nombre)
+                          .join(', ')
+                      }
+                    </td>
                     <td className="border px-1">
                       {ultimaAdmision.cama_relacionada.flatMap(cama => 
                         Array.isArray(cama.microorganismo_relacionado) 
@@ -255,12 +270,19 @@ const progreso = 30;
                     <td className="border px-1">
                       <span className="flex justify-center items-center">
                         <button 
-                          onClick={() => navegar(`/programaintegral/${ultimaAdmision.paciente_relacionado.id}`)}
+                          onClick={() => navegar(`/programaintegral/${ultimaAdmision.id}`)}
                           className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"
                           data-tooltip="Programa Integral"
                         >
                           <TaskIcon color='white' />
                         </button>
+{/*                         <button 
+                          onClick={() => navegar(`/programaintegral/${ultimaAdmision.paciente_relacionado.id}`)}
+                          className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"
+                          data-tooltip="Programa Integral"
+                        >
+                          <TaskIcon color='white' />
+                        </button> */}
                         <button 
                           onClick={() => navegar(`/editarpaciente/${ultimaAdmision.paciente_relacionado.id}`)}
                           className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"
@@ -311,4 +333,3 @@ const progreso = 30;
     
   );
 }
-export default ClinicoAll;
