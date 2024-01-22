@@ -5,7 +5,8 @@ import { format } from 'date-fns';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 
 
-import { ACTUALIZAR_PACIENTE, OBTENER_PACIENTE, OBTENER_CAMAS } from '../../graphql/mutations';
+import { OBTENER_CAMAS_DISPONIBLES, OBTENER_PACIENTE } from '../../graphql/queries';
+import { ACTUALIZAR_PACIENTE } from '../../graphql/mutations';
 
 import { validationSchemaPatient } from '../../components/forms/validationSchemas';
 import FormPatientEdit from '../forms/FormPatientEdit';
@@ -43,7 +44,7 @@ export default function PacienteEditar ({obtenerPaciente, isOpen, onClose}) {
     const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
         refetchQueries: [
             { query: OBTENER_PACIENTE, variables: { id: id } },
-            /* { query: OBTENER_CAMAS } */
+            { query: OBTENER_CAMAS_DISPONIBLES }
         ],
     });
 

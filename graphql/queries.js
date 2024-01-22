@@ -196,6 +196,40 @@ export const OBTENER_CAMAS_URGENCIAS = gql`
   ${FRAGMENTO_DIAGNOSTICO}
 `;
 
+
+export const OBTENER_CAMAS_NO_0 = gql`
+  query ObtenerCamasNo0 {
+    obtenerCamasNo0 {
+      ...FragmentoCama
+          camahistorial {
+              ...FragmentoCamaHistorial
+              admision_relacionada {
+              ...FragmentoAdmision
+                paciente_relacionado {
+                  ...FragmentoPaciente
+                }
+                cama_relacionada {
+                  ...FragmentoCamaHistorial
+                  microorganismo_relacionado {
+                  ...FragmentoMicroorganismo
+                  }
+                }
+                diagnostico {
+                  ...FragmentoDiagnostico
+                }
+            }
+          }
+        }
+
+    }
+  ${FRAGMENTO_CAMA}
+  ${FRAGMENTO_CAMA_HISTORIAL}
+  ${FRAGMENTO_ADMISION}
+  ${FRAGMENTO_PACIENTE}
+  ${FRAGMENTO_MICROORGANISMO}
+  ${FRAGMENTO_DIAGNOSTICO}
+`;
+
 export const OBTENER_CAMAS_1 = gql`
   query ObtenerCamas1 {
     obtenerCamas1 {

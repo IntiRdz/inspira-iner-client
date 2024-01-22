@@ -3,23 +3,17 @@ import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import { useQuery, gql, useMutation } from '@apollo/client';
 
-import {differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
-import { utcToZonedTime } from 'date-fns-tz'; 
 
 import { Formik } from 'formik';
 import Swal from 'sweetalert2';
 
 import PacienteContext from '../../context/pacientes/PacienteContext';
 import { AsignarCama } from '../../components/forms/AsignarCama';
-import ReactCamaDispHombre from '../../components/tablas/ReactCamaDispHombre';
-import ClinicoAllSimple from '../../components/camas/ClinicoAllSimple';
-import ReactCamaDispMujer from '../../components/tablas/ReactCamaDispMujer';
 
-//import CamasDisponiblesHombre from '../../components/camas/CamasDisponiblesHom';
-//import CamasDisponiblesMujer from '../../components/camas/CamasDisponiblesMujer';
-import { OBTENER_PACIENTE, OBTENER_PACIENTES } from '../../graphql/queries';
+import { OBTENER_PACIENTE, OBTENER_PACIENTES, OBTENER_CAMAS_DISPONIBLES } from '../../graphql/queries';
 import { ACTUALIZAR_PACIENTE } from '../../graphql/mutations';
 import PacienteRenglon from '../../components/pacientes/PacienteRenglon';
+import ClinicoAll from '../../components/camas/ClinicoAll';
 
 const timeZone = 'America/Mexico_City'; // Definir la zona horaria
 
@@ -47,18 +41,11 @@ const NewBed = () => {
     
 
     const [mostrarAsignarCama, setMostrarAsignarCama] = useState(false);
-    const [mostrarCamasMujeres, setMostrarCamasMujeres] = useState(false);
-    const [mostrarCamasHombres, setMostrarCamasHombres] = useState(false);
-    const [mostrarPacientes, setMostrarPacientes] = useState(false);
+
 
     const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
     
 
-    const calcularEdad = fechaNacimiento => {
-        if (!fechaNacimiento) return '';
-        const fechaNacZoned = utcToZonedTime(new Date(fechaNacimiento), timeZone);
-        return differenceInYears(new Date(), fechaNacZoned);
-      };
     
     // Mutation para modificar al paceinte
     const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
@@ -151,11 +138,14 @@ const NewBed = () => {
     return ( 
         
         <Layout>
-            <PacienteRenglon obtenerPaciente ={data.obtenerPaciente}/>
-            
+
             <div className="flex justify-center mt-2">
+            <div style={{ position: 'sticky', top: '0px', zIndex: '1000' }}>
+                <PacienteRenglon obtenerPaciente ={data.obtenerPaciente}/>
+            </div>  
                 
-                <div className="w-full max-w-6xl">
+                <div className="w-full max-w-5">
+
 
                 <Formik
                         enableReinitialize
@@ -201,51 +191,13 @@ const NewBed = () => {
             </div>
 
 
+   
 
-            <div className="flex justify-center ">        
-                <div className="w-full max-w-4xl">
-                    <div className="flex justify-center"> {/* Contenedor para centrar el botón */}
-                        <button
-                            type="button"
-                            onClick={() => setMostrarCamasMujeres(!mostrarCamasMujeres)}
-                            className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
-                        >
-                            {mostrarCamasMujeres ? 'Ocultar Camas Mujeres' : 'Camas Disponibles Mujeres'}
-                        </button>
-                   
-                        <button
-                            type="button"
-                            onClick={() => setMostrarCamasHombres(!mostrarCamasHombres)}
-                            className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
-                            >
-                            {mostrarCamasHombres ? 'Ocultar Camas Hombres' : 'Camas Disponibles Hombres'}
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={() => setMostrarPacientes(!mostrarPacientes)}
-                            className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
-                            >
-                            {mostrarPacientes ? 'Ocultar Pacientes' : 'Pacientes'}
-                        </button>
-                    </div>
-                </div>
+            <div className="flex justify-center ">   
+                <ClinicoAll />
             </div>
 
-            <div className="flex flex-row ">
-                <div className="w-2/6 mr-2 bg-white p-1 border border-gray-300 shadow-lg rounded-lg">
-                    {/* Columna 1 */}
-                    {mostrarCamasHombres && <ReactCamaDispHombre />}
-                    {mostrarCamasMujeres && <ReactCamaDispMujer/>}
-                    {/* {mostrarCamasMujeres && <CamasDisponiblesMujer />} */}
-                </div>
 
-                <div className="w-4/6">
-                    {/* Columna 2 */}
-                    {mostrarPacientes && <ClinicoAllSimple />}
-                    {/* {mostrarCamasHombres && <CamasDisponiblesHombre />} */}
-                </div>
-            </div>
 
             
         </Layout>
