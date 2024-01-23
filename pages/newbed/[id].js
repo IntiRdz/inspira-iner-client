@@ -12,8 +12,9 @@ import { AsignarCama } from '../../components/forms/AsignarCama';
 
 import { OBTENER_PACIENTE, OBTENER_PACIENTES, OBTENER_CAMAS_DISPONIBLES } from '../../graphql/queries';
 import { ACTUALIZAR_PACIENTE } from '../../graphql/mutations';
-import PacienteRenglon from '../../components/pacientes/PacienteRenglon';
+import PacienteRenglon2 from '../../components/pacientes/PacienteRenglon2';
 import ClinicoAll from '../../components/camas/ClinicoAll';
+import ClinicoAllNo0Simple from '../../components/camas/ClinicoAllNo0Simple';
 
 const timeZone = 'America/Mexico_City'; // Definir la zona horaria
 
@@ -137,31 +138,34 @@ const NewBed = () => {
 
     return ( 
         
-        <Layout>
-
-            <div className="flex justify-center mt-2">
-            <div style={{ position: 'sticky', top: '0px', zIndex: '1000' }}>
-                <PacienteRenglon obtenerPaciente ={data.obtenerPaciente}/>
-            </div>  
-                
-                <div className="w-full max-w-5">
+<Layout>
 
 
-                <Formik
-                        enableReinitialize
-                        initialValues={initialValues}
-                        onSubmit={ ( valores ) => {
-                            actualizarInfoPaciente(valores)
-                        }}
+<div className="w-full w-lg mt-4 backdrop-filter backdrop-blur-lg bg-white border border-gray-300 shadow-lg rounded-lg p-2">  
+    <div style={{ position: 'sticky', top: '0px', zIndex: '1000' }}>
+        <PacienteRenglon2 obtenerPaciente ={data.obtenerPaciente}/>
+    </div> 
+</div>
+    <div className="flex justify-center w-full mt-2">
+
+        <div className="w-lg">
+
+
+            <Formik
+                enableReinitialize
+                initialValues={initialValues}
+                onSubmit={ ( valores ) => {
+                    actualizarInfoPaciente(valores)
+                }}
+            >
+
+                {props => {
+                // console.log(props);
+                return (
+                    <form
+                    className="bg-white shadow-md mt-2"
+                    onSubmit={props.handleSubmit}
                     >
-
-                    {props => {
-                    // console.log(props);
-                    return (
-                        <form
-                        className="bg-white shadow-md mt-2"
-                        onSubmit={props.handleSubmit}
-                        >
                         <div className="form-row p-4"> 
                             {/* Botón para mostrar/ocultar AsignarCama */}
                             <button
@@ -171,36 +175,40 @@ const NewBed = () => {
                             >
                                 {mostrarAsignarCama ? 'Misma Cama' : 'Cambiar Cama'}
                             </button>
-                            <a>  Cama Actual:  {camaActual} </a>
                             {/* Renderizar AsignarCama si el estado es true */}
-                            {mostrarAsignarCama && <AsignarCama />}  
+                            {mostrarAsignarCama && <AsignarCama 
+                            
+                            
+                            
+                            
+                            />}  
 
                             <input
                             type="submit"
-                            className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
+                            className="bg-gray-800  mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900 rounded"
                             value="Actualizar Paciente"
                         />
-                 
-                    </div>
-                        </form>
-                        )
-                    }}
-                    </Formik>
+                    
+                        </div>
+                    </form>
+                )
+            }}
+        </Formik>
 
-                </div>
-            </div>
-
-
-   
-
-            <div className="flex justify-center ">   
-                <ClinicoAll />
-            </div>
+        </div>
+    </div>
 
 
 
-            
-        </Layout>
+
+    <div className="flex justify-center ">   
+        <ClinicoAllNo0Simple />
+    </div>
+
+
+
+    
+</Layout>
      );
 }
  
