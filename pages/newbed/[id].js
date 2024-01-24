@@ -49,7 +49,7 @@ const NewBed = () => {
     
 
     
-    const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
+/*     const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
         update(cache, { data: { actualizarPaciente } }) {
             // Actualizar OBTENER_PACIENTES
             const { obtenerPacientes } = cache.readQuery({ query: OBTENER_PACIENTES });
@@ -82,6 +82,16 @@ const NewBed = () => {
                 console.log("No se pudo actualizar OBTENER_CAMAS: ", error);
             }
         },
+    });
+ */
+
+
+    const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
+        refetchQueries: [
+            { query: OBTENER_PACIENTE, variables: { id: id } },
+            { query: OBTENER_CAMAS_DISPONIBLES },
+            { query: OBTENER_CAMAS }
+        ],
     });
     
 

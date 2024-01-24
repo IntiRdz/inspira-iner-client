@@ -42,7 +42,7 @@ export default function PacienteEditar ({obtenerPaciente, isOpen, onClose}) {
     }
 
 
-    const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
+/*     const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
         update(cache, { data: { actualizarPaciente } }) {
             // Actualizar OBTENER_PACIENTES
             const { obtenerPacientes } = cache.readQuery({ query: OBTENER_PACIENTES });
@@ -75,16 +75,15 @@ export default function PacienteEditar ({obtenerPaciente, isOpen, onClose}) {
                 console.log("No se pudo actualizar OBTENER_CAMAS: ", error);
             }
         },
-    });
+    }); */
 
-/*     const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
+    const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
         refetchQueries: [
             { query: OBTENER_PACIENTE, variables: { id: id } },
             { query: OBTENER_CAMAS_DISPONIBLES },
             { query: OBTENER_CAMAS }
-
         ],
-    }); */
+    });
 
     //console.log("obtenerPaciente", obtenerPaciente);
 
