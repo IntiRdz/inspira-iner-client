@@ -1,327 +1,755 @@
-'use client';
-import { useQuery, useSubscription } from '@apollo/client';
+import React, { useState, useContext } from 'react';
+import Layout from '../components/Layout';
+import { gql, useMutation, useQuery  } from '@apollo/client';
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/router'
 import { format, differenceInYears, differenceInDays, isTomorrow } from 'date-fns';
-import { utcToZonedTime } from 'date-fns-tz'; 
-import { useRouter } from 'next/navigation';
 
-import { EditIcon, TaskIcon, BedIcon, Female, Male, Kidneys, SoapIcon } from '../../components/icons';
+import PacienteContext from '../context/pacientes/PacienteContext';
+import { AsignarCama } from '../components/pacientes/AsignarCama';
 
-import { OBTENER_CAMAS_URGENCIAS } from '../../graphql/queries'; 
-
-const timeZone = 'America/Mexico_City'; // Define la zona horaria
-
-export default function Clinico0 (){
-
-  const router = useRouter();
-
-  const { data, loading, error } = useQuery(OBTENER_CAMAS_URGENCIAS);
-
-  if (loading) {
-    return <h2><a href="#loading" aria-hidden="true" className="aal_anchor" id="loading"><svg aria-hidden="true" className="aal_svg" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fillRule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Loading...</h2>;
-  }
-
-  if (error) {
-    console.error(error);
-    return null;
-  }
-
-  const camas = data ? data.obtenerCamasUrgencias : [];
-
-  const camasOrdenadas = [...camas].sort((a, b) => a.cama_numero - b.cama_numero);
-  console.log(camasOrdenadas)
-
-
-  // Verificación de fechas y diagnósticos
-  const calcularEdad = fechaNacimiento => {
-    if (!fechaNacimiento) return '';
-    const fechaNacZoned = utcToZonedTime(new Date(fechaNacimiento), timeZone);
-    return differenceInYears(new Date(), fechaNacZoned);
-  };
-  // Función para calcular los días de estancia basado en fecha de ingreso y egreso
-  const calcularDiasEstancia = (fechaIngreso, fechaEgreso) => {
-    if (!fechaIngreso) return '';
-    const inicio = utcToZonedTime(new Date(fechaIngreso), timeZone);
-    const fin = fechaEgreso ? utcToZonedTime(new Date(fechaEgreso), timeZone) : utcToZonedTime(new Date(), timeZone);
-    return differenceInDays(fin, inicio);
-  };
-
-  // Verificar si es mañana para fecha prealta
-  const calcularFechaPreAltaClasses = (fechaPrealta) => {
-    if (!fechaPrealta) return "border px-1 py-1";
-    const fechaPrealtaZoned = utcToZonedTime(new Date(fechaPrealta), timeZone);
-    return isTomorrow(fechaPrealtaZoned) ? "border px-1 py-1 bg-blue-500 text-white" : "border px-1 py-1";
-  };
-
-  
-  const aislamientoCamaTextMap = {
-    'Sin_Definir': 'Sin definir',
-    'Sin_Aislamientos': ' ',
-    'Previamente_Acinetobacter': 'Previamente Acinetobacter',
-    'Previamente_Clostridium': 'Previamente Clostridium',
-    'Previamente_Enterobacterias_XDR': 'Previamente Enterobacterias XDR',
-    'Previamente_Pseudomonas_Aeruginosa_XDR': 'Previamente Pseudomonas Aeruginosa XDR',
-    // ...otros casos...
-  };
-  const aislamientoCamaText = (codigo) => aislamientoCamaTextMap[codigo] || codigo;
-
-  const getUvehColor = (codigoUveh) => {
-    switch (codigoUveh) {
-      case 'Previamente_Acinetobacter': return 'bg-pink-300';
-      case 'Previamente_Clostridium': return 'bg-emerald-300';
-      case 'Previamente_Enterobacterias_XDR': return 'bg-violet-300';
-      case 'Previamente_Pseudomonas_Aeruginosa_XD': return 'bg-amber-400';
-      default: return ''; 
+const NUEVO_PACIENTE = gql`
+    mutation nuevoPaciente($input: PacienteInput) {
+        nuevoPaciente(input: $input) {
+            id
+            expediente
+            pac_apellido_paterno
+            pac_apellido_materno
+            pac_nombre
+            pac_genero
+            pac_FN
+            pac_dispositivo_o2
+            pac_hemodialisis
+            diagnostico1
+            diagnostico
+            pac_codigo_uveh
+            fecha_prealta
+            fecha_ingreso
+            fecha_egreso
+            hospitalizado
+        }
     }
-  };
+`;
 
-  const aislamientoPacienteTextMap = {
-    'Sin_Definir': 'Sin definir',
-    'Sin_Aislamientos': ' ',
-    'Acinetobacter': 'Acinetobacter',
-    'Colonizacion_Acinetobacter': 'Colonización Acinetobacter',
-    'Contacto_Acinetobacter': 'Contacto Acinetobacter',
-    'Hisopado_Rectal': 'Hisopado Rectal',
-    'Clostridium_Difficile': 'Clostridium Difficile',
-    'Enterobacterias_XDR_MDR': 'Enterobacterias XDR/MDR',
-    'Pseudomonas_XDR_MDR': 'Pseudomonas XDR/MDR',
-    'Tuberculosisis_o_Sospecha': 'Tuberculosisis o sospecha',
-    'SAMR': 'SAMR',
-    'SAMS': 'SAMS',
-    // ...otros casos...
-  };
-  const aislamientoPacienteText = (codigo) => aislamientoPacienteTextMap[codigo] || codigo;
-
-
-  const uvehColorPaciente = (pac_codigo_uveh) => {
-    switch (pac_codigo_uveh) {
-      case 'Acinetobacter': return 'bg-pink-300';
-      case 'Colonizacion_Acinetobacter': return 'bg-pink-300';
-      case 'Contacto_Acinetobacter': return 'bg-pink-300';
-      case 'Hisopado_Rectal': return 'bg-pink-300';
-      case 'Clostridium_Difficile': return 'bg-emerald-300';
-      case 'Enterobacterias_XDR_MDR': return 'bg-violet-300';
-      case 'Pseudomonas_XDR_MDR': return 'bg-amber-400';
-      case 'Tuberculosisis_o_Sospecha': return 'bg-emerald-300';
-      case 'SAMR': return 'bg-emerald-300';
-      case 'SAMS': return 'bg-emerald-300';
-      default: return ''; 
+const OBTENER_PACIENTES = gql`
+    query obtenerPacientes {
+        obtenerPacientes {
+            id
+            expediente
+            pac_apellido_paterno
+            pac_apellido_materno
+            pac_nombre
+            pac_genero
+            pac_FN
+            pac_dispositivo_o2
+            pac_hemodialisis
+            diagnostico1
+            diagnostico
+            pac_codigo_uveh
+            fecha_prealta
+            fecha_ingreso
+            fecha_egreso
+            hospitalizado
+        }
     }
-  };
-  
-  
-  const caracteristicasPacienteTextMap = {
-    'TrasladoDeHospital': 'Traslado de Hospital',
-    'InfeccionReciente': 'Infección Reciente',
-    'Embarazo': 'Embarazo',
-    'Inmunosupresion': 'Inmunosupresión',
-    'ComunidadLG': 'Comunidad LG',
 
-    // ...otros casos...
-  };
-  const CaracteristicasPacienteText = (codigo) => caracteristicasPacienteTextMap[codigo] || codigo;
+`;
 
-
-
-const progreso = 30;
-  
-  const navegar = (ruta) => router.push(ruta);
-
-  return (
+const NuevoPaciente = () => {
     
-      <>
+    // routing
+    const router = useRouter();
 
-          <div  className="p-4 backdrop-filter backdrop-blur-lg bg-white border border-gray-300 shadow-lg rounded-lg w-full w-lg" >
+    // Mensaje de alerta
+    const [mensaje, guardarMensaje] = useState(null);
 
-          <table className="table-auto shadow-md mt-2 w-full w-lg ">
-            <thead className="bg-gray-800 ">
-              <tr className="text-white">
-                  {/* <th className="w-1/12 px-1 py-1">Estado</th> */}
-                  <th className="w-1/14 px-1 py-1">Cama</th>
-                  <th className="w-1/12 px-1 py-1">Prioridad</th>
-                  <th className="w-1/12 px-1 py-1">Género</th>
-                  <th className="w-1/12 px-1 py-1">O2</th>
-                  <th className="w-1/12 px-1 py-1">Hemodialisis</th>
-                  <th className="w-1/11 px-1 py-1">Código UVEH</th>
-                  {/* <th className="w-1/12 px-1 py-1">Aislamiento</th> */}
-                  <th className="w-1/12 px-1 py-1">DAN</th>
-                  <th className="w-1/12 px-1 py-1">Editar</th>
+    const { cama } = useContext(PacienteContext);
 
-                  <th className="w-1/12 px-1 py-1">Tratante</th>
-                  <th className="w-1/12 px-1 py-1">Caracteristicas</th>
-                  <th className="w-1/12 px-1 py-1">Genero</th>
-                  <th className="w-1/12 px-1 py-1">O2</th>
-                  <th className="w-1/12 px-1 py-1">Hemodialisis</th>
-                  <th className="w-1/11 px-1 py-1">Código UVEH</th>
-                  <th className="w-1/12 px-1 py-1">Aislamiento</th>
-                  <th className="w-1/12 px-1 py-1">Expediente</th>
-                  <th className="w-1/7 px-1 py-1">Nombre</th>
-                  <th className="w-1/12 px-1 py-1">Edad</th>
-                  <th className="w-1/12 px-1 py-1">Ingreso</th>
-                  <th className="w-1/12 px-1 py-1">Prealta</th>
-                  <th className="w-1/12 px-1 py-1">DEH</th>
-                  <th className="w-1/12 px-1 py-1">Microorganismos</th>
-                  <th className="w-1/12 px-1 py-1">Dx</th>
-                  <th className="w-1/12 px-1 py-1">Atención Integral</th>
-                  <th className="w-1/12 px-1 py-1">Editar</th>
-              </tr>
-            </thead>
-            <tbody>
-            {camasOrdenadas.map((cama) => {
-              // Asumiendo que 'camahistorial' es un arreglo y queremos la última entrada
-              const ultimoHistorial = cama.camahistorial && cama.camahistorial.length > 0
-                ? cama.camahistorial[cama.camahistorial.length - 1]
-                : null;
 
-              // Acceder a 'admision_relacionada' a través del 'ultimoHistorial'
-              const ultimaAdmision = ultimoHistorial && ultimoHistorial.admision_relacionada
-                ? ultimoHistorial.admision_relacionada
-                : {};
+    const { data: pacientesData, loading: pacientesLoading, error: pacientesError } = useQuery(OBTENER_PACIENTES);
+ 
+    // Mutation de apollo
+    const [nuevoPaciente] = useMutation(NUEVO_PACIENTE, {
+        update(cache, { data: { nuevoPaciente } }) {
+            // Obtener el objeto de cache directamente desde la consulta anterior
+            const { obtenerPacientes } = pacientesData;
+    
+            // Verificar si hay errores o está cargando en la consulta original
+            if (pacientesLoading || pacientesError) {
+                console.log('Cargando o error en la consulta de pacientes');
+                return;
+            }
+    
+            // Reescribir ese objeto
+            cache.writeQuery({
+                query: OBTENER_PACIENTES,
+                data: {
+                    obtenerPacientes: [...obtenerPacientes, nuevoPaciente]
+                }
+            });
+        },
+    });
 
-              // Calcular las clases para la fecha de prealta
-              let fechaPreAltaClasses = calcularFechaPreAltaClasses(ultimaAdmision.fecha_prealta);
 
-            return (
-              <tr key={cama.id} className={`${cama.cama_lado === 'Arriba' ? 'border-t-2 border-t-sky-700' : cama.cama_lado === 'Bajo' ? 'border-b-2 border-b-sky-700' : ''} ${!cama.cama_ocupada ? 'bg-gray-200' : ''}`}>
-                {/* <td className="border px-1">{cama.cama_ocupada ? 'Ocupada' : 'Libre'}</td> */}
-                <td className= "border px-1 text-center text-white bg-blue-800">{cama.cama_numero}</td>
-                <td className= "border px-1 text-left"  >{cama.cama_prioridad !== "SinPrioridad" ? cama.cama_prioridad : ''}</td>
-                <td className= "border px-1 text-center">{cama.cama_genero === 'Mujer' ? <Female width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }} /> : cama.cama_genero === 'Hombre' ? <Male width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }}/> : ''}</td>
-                <td className= "border px-1 text-center">{cama.cama_dispositivo_o2}</td>
-                <td className= "border px-1 text-center">{cama.cama_hemodialisis ? <Kidneys width="2rem" height="2rem" color='#808080' style={{ display: 'inline-block' }} /> : ''}</td>
-                <td className={`border px-1 text-left ${getUvehColor(cama.cama_codigo_uveh)}`}>{aislamientoCamaText(cama.cama_codigo_uveh)}</td>
-                {/* <td className={`border px-1 text-center ${cama.cama_aislamiento ? 'bg-rose-200' : ''}`}>{cama.cama_aislamiento ? 'Aislamiento' : ''}</td> */}
-                <td className={`border px-1 text-center ${cama.cama_dan ? 'bg-red-200' : ''}`}>{cama.cama_dan ? <SoapIcon width="2rem" height="2rem" style={{ display: 'inline-block' }} /> : ''}</td>
-          
-                <td className="border px-1 border-r-2 border-r-sky-700 ">
-                  <span className="flex justify-center items-center">
-                    <button 
-                      onClick={() => navegar(`/editarcama/${cama.id}`)}
-                      className="tooltip flex justify-center items-center bg-blue-800 p-2 rounded text-xs"
-                      data-tooltip="Editar"
+    // Formulario para nuevos microorganismos
+    const formik = useFormik({
+        initialValues: {
+            expediente: '',
+            pac_apellido_paterno: '',
+            pac_apellido_materno: '',
+            pac_nombre: '',
+            pac_genero: '',
+            pac_FN: '',
+            pac_dispositivo_o2: '',
+            pac_hemodialisis: false,
+            diagnostico1: [],
+            diagnostico: '',
+            caracteristicas_especiales: [],
+            pac_codigo_uveh: ['SinDefinir'],
+            fecha_ingreso: format(new Date(), 'yyyy-MM-dd\'T\'HH:mm:ss'),
+            fecha_prealta: '',
+            fecha_egreso: '',
+            hospitalizado: true,
+        },
+        validationSchema: Yup.object({
+            expediente: Yup.string()
+            .required('El expediente del paciente es obligatorio')
+            .matches(/^[a-zA-Z0-9]{6,8}$/, 'El expediente debe tener entre 6 y 8 caracteres alfanuméricos'),            pac_apellido_paterno: Yup.string().required('El apellido paterno del paciente es obligatorio'),
+            pac_apellido_materno: Yup.string().required('El apellido materno del paciente es obligatorio'),
+            pac_nombre: Yup.string().required('El nombre del paciente es obligatorio'),
+            pac_genero: Yup.string().oneOf(['Hombre', 'Mujer']).required('El género del paciente es obligatorio'),
+            pac_FN: Yup.date().required('La fecha de nacimiento del paciente es obligatoria'),
+            pac_dispositivo_o2: Yup.string().oneOf([
+                'AA', 
+                'PN', 
+                'PNAF', 
+                'VMNI',
+                'VMNI_Intermiente',  
+                'VM']).required('El dispositivo O2 del paciente es obligatorio'),
+            pac_hemodialisis: Yup.boolean(),
+            diagnostico1: Yup.array()
+            .min(0, 'Debe seleccionar al menos un diagnóstico')
+            .of(
+                Yup.string().oneOf([
+                'CodigoHemoptisis',
+                'CodigoViaAerea',
+                'CodigoInfarto',
+                'COVID',
+                'Influenza',
+                'Parainfluenza',
+                'Adenovirus',
+                'VirusSincialRespiratorio',
+                'Metaneumovirus',
+                'TuberculosisSensible',
+                'TuberculosisResistente',
+                'B24',
+                'SIRA',
+                'NeumoniaBacteriana',
+                'EPOC',
+                'Asma',
+                'TromboembiaPulmonar',
+                'DerramePleural',
+                'Neumotorax',
+                'NeumoniaIntersticialDifusa',
+                'InsuficienciaCaridiaca',
+                'CaPulmonarOSospecha',
+                ])
+            ),
+            diagnostico: Yup.string(),
+            caracteristicas_especiales:  Yup.array()
+            .min(0, 'Seleccione una catecteristica especial del paciente')
+            .of(
+                Yup.string().oneOf([
+                'TrasladoDeHospital',
+                'InfeccionReciente',
+                'Embarazo',
+                'Inmunosupresion',
+                ])
+            ),
+            pac_codigo_uveh:  Yup.array()
+            .min(0, 'Debe seleccionar al menos un diagnóstico')
+            .of(
+                Yup.string().oneOf([
+                'SinDefinir',
+                'SinAislamientos',
+                'Acinetobacter',
+                'ColonizaciónAcinetobacter',
+                'ContactoAcinetobacter',
+                'HisopadoRectal',
+                'ClostridiumDifficile',
+                'Enterobacterias-XDR-MDR',
+                'Pseudomonas-XDR-MDR',
+                'SAMR',
+                'TuberculosisisOSospecha',
+                'SAMS'
+                ])
+            ),
+            fecha_ingreso: Yup.date().required('La fecha de ingreso es obligatoria'),
+            fecha_prealta: Yup.date(),
+            fecha_egreso: Yup.date(),
+            hospitalizado: Yup.boolean()
+        }),
+        onSubmit: async valores => {
+            const { 
+                expediente,
+                pac_apellido_paterno,
+                pac_apellido_materno,
+                pac_nombre,
+                pac_genero,
+                pac_FN,
+                pac_dispositivo_o2,
+                pac_hemodialisis,
+                diagnostico1,
+                diagnostico,
+                caracteristicas_especiales,
+                pac_codigo_uveh,
+                fecha_ingreso,
+                fecha_prealta,
+                fecha_egreso,
+                hospitalizado,
+            } = valores;
+
+            //console.log("valores inciales del nuevo objeto", valores)
+
+            // Verificar si las fechas son nulas o vacías
+            const fechaPrealta = fecha_prealta || undefined; // Establece un valor predeterminado si es nulo o vacío
+            const fechaEgreso = fecha_egreso || undefined; // Establece un valor predeterminado si es nulo o vacío
+
+            const valoresActualizados = {
+                expediente,
+                pac_apellido_paterno,
+                pac_apellido_materno,
+                pac_nombre,
+                pac_genero,
+                pac_FN,
+                pac_dispositivo_o2,
+                pac_hemodialisis,
+                diagnostico,
+                diagnostico1,
+                caracteristicas_especiales,
+                pac_codigo_uveh,
+                fecha_ingreso,
+                fecha_prealta: fechaPrealta,
+                fecha_egreso: fechaEgreso,
+                hospitalizado,
+                cama_relacionada: cama,
+            };
+
+            //console.log("Valores actualizados:", valoresActualizados)
+
+
+        
+            try {
+                const { data } = await nuevoPaciente({
+                    variables: {
+                        input: valoresActualizados
+                    }
+                });
+                
+                
+                console.log("Después de la llamada a crear Paciente");
+
+                //console.log(data);
+
+                //Mostrar alerta
+                Swal.fire(
+                    'Creado',
+                    'Se agregó correctamente al paciente',
+                    'success'
+                )
+
+                //Redireccionar
+                router.push('/');
+
+            } catch (error) {
+                console.error("Error durante la llamada a actualizarPaciente:", error);
+
+                guardarMensaje(error.message.replace('GraphQL error: ', ''));
+                setTimeout(() => {
+                    guardarMensaje(null);
+                }, 5000);
+            }
+        }
+        
+    })
+
+    const mostrarMensaje = () => {
+        return(
+            <div className="bg-white py-2 px-3 w-full my-3 max-w-sm text-center mx-auto">
+                <p>{mensaje}</p>
+            </div>
+        )
+    }
+
+    return (
+        <Layout>
+            <h2 className="text-2xl text-gray-800 font-light">Nuevo Paciente</h2>
+                 
+            <div className="flex justify-center mt-5">
+                <div className="w-full max-w-5xl">
+                    <form
+                        className="bg-white shadow-md mt-2"
+                        onSubmit={formik.handleSubmit}
                     >
-                      <EditIcon color='white' />
-                    </button>
-                  </span>
+                        <div className="form-row p-4"> 
+{/* divisor de  form */}   <div className="form-column p-4 mr-4">
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="expediente">
+                                    Expediente
+                                </label>
 
-                </td>
-                {cama.cama_ocupada && ultimaAdmision && ultimaAdmision.hospitalizado ? (
-                  <>
-                    <td className="border px-1 ">{ultimaAdmision.servicio_tratante || ''}</td>
-                    <td className="border px-1 ">
-                        {Array.isArray(ultimaAdmision.paciente_relacionado.caracteristicas_especiales)
-                            ? ultimaAdmision.paciente_relacionado.caracteristicas_especiales.map((caracteristica, index) => (
-                                <div key={index}>{CaracteristicasPacienteText(caracteristica)}</div>
-                              ))
-                            : (ultimaAdmision.paciente_relacionado.caracteristicas_especiales || '')
-                        }
-                    </td>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="expediente"
+                                    type="text"
+                                    placeholder="Expediente"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.expediente}
+                                />
+                            </div>
 
-                    <td className="border px-1 text-center">{ultimaAdmision.paciente_relacionado.pac_genero ==='Mujer' ? <Female width="2rem" height="2rem" color="#c084fc" style={{ display: 'inline-block' }}/> : ultimaAdmision.paciente_relacionado.pac_genero === 'Hombre' ? <Male width="2rem" height="2rem" color="#1e40af" style={{ display: 'inline-block' }} /> : ''}</td>
-                    <td className="border px-1 text-center">{ultimaAdmision.paciente_relacionado.pac_dispositivo_o2 || ''}</td>
-                    <td className="border px-1 text-center">{ultimaAdmision.paciente_relacionado.pac_hemodialisis ? <Kidneys width="2rem" height="2rem" color="#1e40af" style={{ display: 'inline-block' }}/> : ''}</td>
-                    <td className={`border px-1 text-left ${
-                        Array.isArray(ultimaAdmision.paciente_relacionado.pac_codigo_uveh) 
-                        ? ultimaAdmision.paciente_relacionado.pac_codigo_uveh.map(uvehColorPaciente).join(' ') 
-                        : getUvehColor(ultimaAdmision.paciente_relacionado.pac_codigo_uveh)
-                    }`}>
-                        {Array.isArray(ultimaAdmision.paciente_relacionado.pac_codigo_uveh) 
-                        ? ultimaAdmision.paciente_relacionado.pac_codigo_uveh.map((codigo, index) => (
-                            <div key={index}>{aislamientoPacienteText(codigo)}</div>
-                          ))
-                        : aislamientoPacienteText(ultimaAdmision.paciente_relacionado.pac_codigo_uveh)
-                        }
-                    </td>
-                    <td className={`border px-1 text-center ${ultimaAdmision.paciente_relacionado.pac_aislamiento ? 'bg-rose-200' : ''}`}>{ultimaAdmision.paciente_relacionado.pac_aislamiento ? 'Aislamiento' : ''}</td>
-                    <td className="border px-1 text-center">{ultimaAdmision.paciente_relacionado.expediente || ''}</td>
-                    <td className="py-3 px-4">
-                      {
-                        `${ultimaAdmision.paciente_relacionado.pac_apellido_paterno} ${ultimaAdmision.paciente_relacionado.pac_apellido_materno} ${ultimaAdmision.paciente_relacionado.pac_nombre}`
-                      }
-                    </td>
-                    <td className="border px-1 text-center">{calcularEdad(ultimaAdmision.paciente_relacionado.pac_FN) || ''}</td>
-                    <td className="border px-1 ">{ultimaAdmision.fecha_ingreso ? format(utcToZonedTime(new Date(ultimaAdmision.fecha_ingreso), timeZone), 'dd/MM/yy') : ''}</td>
-                    <td className={fechaPreAltaClasses}>{ultimaAdmision.fecha_prealta ? format(utcToZonedTime(new Date(ultimaAdmision.fecha_prealta), timeZone), 'dd/MM/yy') : ''}</td>
-                    <td className="border px-1 text-center">{calcularDiasEstancia(ultimaAdmision.fecha_ingreso)}</td>
-                    <td className="py-3 px-4">
-                      {
-                        ultimaAdmision.diagnostico
-                          .map(diagnostico => diagnostico.diagnostico_nombre)
-                          .join(', ')
-                      }
-                    </td>
-                    <td className="border px-1">
-                      {ultimaAdmision.cama_relacionada.flatMap(cama => 
-                        Array.isArray(cama.microorganismo_relacionado) 
-                          ? cama.microorganismo_relacionado.map(microorganismo => microorganismo.microorganismo_nombre) 
-                          : [cama.microorganismo_relacionado.microorganismo_nombre]
-                      ).join(', ')}
-                    </td>
-                    <td className="border px-1 relative">
-                      <div className="w-full bg-gray-200 rounded">
-                          <div 
-                              className="bg-blue-800 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded" 
-                              style={{ width: `${progreso}%` }}
-                          >
-                              {progreso}%
-                          </div>
-                      </div>
-                    </td>
-                    <td className="border px-1">
-                      <span className="flex justify-center items-center">
-                        <button 
-                          onClick={() => navegar(`/programaintegral/${ultimaAdmision.paciente_relacionado.id}`)}
-                          className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"
-                          data-tooltip="Programa Integral"
-                        >
-                          <TaskIcon color='white' />
-                        </button>
-                        <button 
-                          onClick={() => navegar(`/editarpaciente/${ultimaAdmision.paciente_relacionado.id}`)}
-                          className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"
-                          data-tooltip="Editar"
-                        >
-                          <EditIcon color='white' />
-                        </button>
-                        <button 
-                          onClick={() => navegar(`/newbed/${ultimaAdmision.paciente_relacionado.id}`)}
-                          className="tooltip flex justify-center items-center bg-blue-800 p-2 rounded text-xs"
-                          data-tooltip="Cambiar Cama"
-                        >
-                          <BedIcon color='white' />
-                        </button>
-                      </span>
-                    </td>
-                  </>
-                ) : (
-                  <>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                  <td className="border px-1"></td>
-                </>
-                )}
-              </tr>
-            );
-          })}
-        </tbody>
+                            { formik.touched.expediente && formik.errors.expediente ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{formik.errors.expediente}</p>
+                                </div>
+                            ) : null  }
 
-        </table>
-        </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_apellido_paterno">
+                                    Apellido Paterno
+                                </label>
 
-      </>
-    
-  );
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="pac_apellido_paterno"
+                                    type="text"
+                                    placeholder="Apellido Paterno"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.pac_apellido_paterno}
+                                />
+                            </div>
+
+                            { formik.touched.pac_apellido_paterno && formik.errors.pac_apellido_paterno ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{formik.errors.pac_apellido_paterno}</p>
+                                </div>
+                            ) : null  }
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_apellido_materno">
+                                    Apellido Materno
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="pac_apellido_materno"
+                                    type="text"
+                                    placeholder="Apellido Materno"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.pac_apellido_materno}
+                                />
+                            </div>
+
+                            { formik.touched.pac_apellido_materno && formik.errors.pac_apellido_materno ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{formik.errors.pac_apellido_materno}</p>
+                                </div>
+                            ) : null  }
+
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_nombre">
+                                    Nombre
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="pac_nombre"
+                                    type="text"
+                                    placeholder="Nombre Paciente"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.pac_nombre}
+                                />
+                            </div>
+
+                            { formik.touched.pac_nombre && formik.errors.pac_nombre ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{formik.errors.pac_nombre}</p>
+                                </div>
+                            ) : null  }
+
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_genero">
+                                    Género
+                                </label>
+                                <select 
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="pac_genero"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.pac_genero}
+                                >
+                                    <option value="" label="Seleccione un género" />
+                                    <option value="Hombre" label="Hombre" />
+                                    <option value="Mujer" label="Mujer" />
+                                </select>
+                            </div>
+
+                            { formik.touched.pac_genero && formik.errors.pac_genero ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{formik.errors.pac_genero}</p>
+                                </div>
+                            ) : null  }
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_FN">
+                                    Fecha de Nacimiento
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="pac_FN"
+                                    type="date"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.pac_FN}
+                                />
+                            </div>
+
+                            { formik.touched.pac_FN && formik.errors.pac_FN ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{formik.errors.pac_FN}</p>
+                                </div>
+                            ) : null  }
+
+
+
+                            
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_dispositivo_o2">
+                                    Dispositivo O2
+                                </label>
+                                <select 
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="pac_dispositivo_o2"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.pac_dispositivo_o2 || ''}
+                                >
+                                    <option value="" label="Seleccione un dispositivo" />
+                                    <option value="AA" label="AA" />
+                                    <option value="PN" label="PN" />
+                                    <option value="PNAF" label="PNAF" />
+                                    <option value="VMNI" label="VMNI" />
+                                    <option value="VMNI_Intermitente" label="VMNI Intermiente" />
+                                    <option value="VM" label="VM" />
+                                </select>
+                            </div>
+
+                            { formik.touched.pac_dispositivo_o2 && formik.errors.pac_dispositivo_o2 ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{formik.errors.pac_dispositivo_o2}</p>
+                                </div>
+                            ) : null  }
+
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pac_hemodialisis">
+                                    Hemodialisis
+                                </label>
+
+                                <div className="flex items-center">
+                                    <input
+                                        className="mr-2 leading-tight"
+                                        id="pac_hemodialisis_true"
+                                        type="radio"
+                                        onChange={() => formik.setFieldValue("pac_hemodialisis", true)}
+                                        onBlur={formik.handleBlur}
+                                        checked={formik.values.pac_hemodialisis === true}
+                                    />
+                                    <label htmlFor="pac_hemodialisis_true">Sí</label>
+
+                                    <input
+                                        className="ml-4 mr-2 leading-tight"
+                                        id="pac_hemodialisis_false"
+                                        type="radio"
+                                        onChange={() => formik.setFieldValue("pac_hemodialisis", false)}
+                                        onBlur={formik.handleBlur}
+                                        checked={formik.values.pac_hemodialisis === false}
+                                    />
+                                    <label htmlFor="pac_hemodialisis_false">No</label>
+                                </div>
+                            </div>
+
+                            <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="caracteristicas_especiales">
+                                Caracteristicas Especiales 
+                            </label>
+                            {[
+                                'TrasladoDeHospital',
+                                'InfeccionReciente',
+                                'Embarazo',
+                                'Inmunosupresion',
+                            ].map((option) => (
+                                <label key={option} className="block">
+                                <input
+                                    type="checkbox"
+                                    name="caracteristicas_especiales"
+                                    value={option}
+                                    onChange={(e) => {
+                                    const isChecked = e.target.checked;
+                                    const value = e.target.value;
+
+                                    formik.setFieldValue(
+                                        'caracteristicas_especiales',
+                                        isChecked
+                                        ? [...formik.values.caracteristicas_especiales, value]
+                                        : formik.values.caracteristicas_especiales.filter((val) => val !== value)
+                                    );
+                                    }}
+                                    onBlur={formik.handleBlur}
+                                    checked={formik.values.caracteristicas_especiales.includes(option)}
+                                    className="mr-2"
+                                />
+                                {option}
+                                </label>
+                            ))}
+                            </div>
+
+
+
+
+
+                            </div>
+{/* divisor de  form */}<div className="form-column p-4">
+
+<div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico1">
+                                Diagnósticos Generales
+                            </label>
+                            {[
+                                'CodigoHemoptisis',
+                                'CodigoViaAerea',
+                                'CodigoInfarto',
+                                'COVID',
+                                'Influenza',
+                                'Parainfluenza',
+                                'Adenovirus',
+                                'VirusSincialRespiratorio',
+                                'TuberculosisSensible',
+                                'TuberculosisResistente',
+                                'B24',
+                                'SIRA',
+                                'NeumoniaBacteriana',
+                                'EPOC',
+                                'Asma',
+                                'TromboembiaPulmonar',
+                                'DerramePleural',
+                                'Neumotorax',
+                                'NeumoniaIntersticialDifusa',
+                                'InsuficienciaCaridiaca',
+                                'CaPulmonarOSospecha',
+                            ].map((option) => (
+                                <label key={option} className="block">
+                                <input
+                                    type="checkbox"
+                                    name="diagnostico1"
+                                    value={option}
+                                    onChange={(e) => {
+                                    const isChecked = e.target.checked;
+                                    const value = e.target.value;
+
+                                    formik.setFieldValue(
+                                        'diagnostico1',
+                                        isChecked
+                                        ? [...formik.values.diagnostico1, value]
+                                        : formik.values.diagnostico1.filter((val) => val !== value)
+                                    );
+                                    }}
+                                    onBlur={formik.handleBlur}
+                                    checked={formik.values.diagnostico1.includes(option)}
+                                    className="mr-2"
+                                />
+                                {option}
+                                </label>
+                            ))}
+                            </div>
+
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico">
+                                    Diagnósticos Específicos
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="diagnostico"
+                                    type="text"
+                                    placeholder="Diagnóstico"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.diagnostico}
+                                />
+                            </div>
+
+                            { formik.touched.diagnostico && formik.errors.diagnostico ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{formik.errors.diagnostico}</p>
+                                </div>
+                            ) : null  }
+
+
+
+
+                            <div className="mb-4" hidden>
+                                <select 
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="pac_codigo_uveh"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.pac_codigo_uveh}
+                                >
+                                    <option value="SinDefinir" label="Sin Definir" />
+                                    <option value="SinAislamientos" label="Sin Aislamientos" />
+                                    <option value="Acinetobacter" label="Acinetobacter" />
+                                    <option value="ColonizaciónAcinetobacter" label="Colonización Acinetobacter" />
+                                    <option value="ContactoAcinetobacter" label="Contacto Acinetobacter" />
+                                    <option value="HisopadoRectal" label="Hisopado Rectal" />
+                                    <option value="ClostridiumDifficile" label="Clostridium Difficile" />
+                                    <option value="Enterobacterias-XDR-MDR" label="Enterobacterias XDR MDR" />
+                                    <option value="Pseudomonas-XDR-MDR" label="Pseudomonas XDR MDR" />
+                                    <option value="SAMR" label="SAMR" />                                  
+                                    <option value="TuberculosisisOSospecha" label="Tuberculosisis o Sospecha" />
+                                    <option value="SAMS" label="SAMS" />  
+                                </select>
+                            </div>
+                            { formik.touched.pac_codigo_uveh && formik.errors.pac_codigo_uveh ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{formik.errors.pac_codigo_uveh}</p>
+                                </div>
+                            ) : null  }
+                        <div className="mb-4" hidden>
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_ingreso">
+                                Fecha de Ingreso
+                            </label>
+        
+                            <input
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="fecha_ingreso"
+                                type="datetime-local"
+                                placeholder="Fecha de Ingreso"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.fecha_ingreso}
+                            />
+                        </div>
+                        { formik.touched.fecha_ingreso && formik.errors.fecha_ingreso ? (
+                            <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                <p className="font-bold">Error</p>
+                                <p>{formik.errors.fecha_ingreso}</p>
+                            </div>
+                        ) : null  } 
+                            <div className="mb-4" hidden>
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_prealta">
+                                    Fecha de Prealta
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="fecha_prealta"
+                                    type="date"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.fecha_prealta}
+                                />
+                            </div>
+                            { formik.touched.fecha_prealta && formik.errors.fecha_prealta ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{formik.errors.fecha_prealta}</p>
+                                </div>
+                            ) : null  }
+                            <div className="mb-4" hidden>
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_egreso">
+                                    Fecha de Egreso
+                                </label>
+
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="fecha_egreso"
+                                    type="date"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.fecha_egreso}
+                                />
+                            </div>
+
+                            { formik.touched.fecha_egreso && formik.errors.fecha_egreso ? (
+                                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                                    <p className="font-bold">Error</p>
+                                    <p>{formik.errors.fecha_egreso}</p>
+                                </div>
+                            ) : null  }
+
+                            <div className="mb-4" hidden>
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="hospitalizado">
+                                    Hospitalizado
+                                </label>
+
+                                <div className="flex items-center">
+                                    <input
+                                        className="mr-2 leading-tight"
+                                        id="hospitalizado_true"
+                                        type="radio"
+                                        onChange={() => formik.setFieldValue("hospitalizado", true)}
+                                        onBlur={formik.handleBlur}
+                                        checked={formik.values.hospitalizado === true}
+                                    />
+                                    <label htmlFor="hospitalizado_true">Sí</label>
+
+                                    <input
+                                        className="ml-4 mr-2 leading-tight"
+                                        id="hospitalizado_false"
+                                        type="radio"
+                                        onChange={() => formik.setFieldValue("hospitalizado", false)}
+                                        onBlur={formik.handleBlur}
+                                        checked={formik.values.hospitalizado === false}
+                                    />
+                                    <label htmlFor="hospitalizado_false">No</label>
+                                </div>
+                            </div>  
+                            <AsignarCama />               
+
+                            <input
+                            type="submit"
+                            className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
+                            value="Registrar Paciente"
+
+                            
+                        />
+                    </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            {mensaje && mostrarMensaje()}
+        </Layout>
+    );
 }
+ 
+export default NuevoPaciente;

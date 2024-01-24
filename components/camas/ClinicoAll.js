@@ -28,7 +28,7 @@ export default function ClinicoAll (){
   const camas = data ? data.obtenerCamasNo0 : [];
 
   const camasOrdenadas = [...camas].sort((a, b) => a.cama_orden - b.cama_orden);
-  console.log(camasOrdenadas)
+  //console.log(camasOrdenadas)
 
 
 

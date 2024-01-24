@@ -153,7 +153,7 @@ const progreso = 30;
                   <th className="w-1/14 px-1 py-1">DEH</th>
                   <th className="w-1/4 px-1 py-1">Dx</th>
                   <th className="w-1/5 px-1 py-1">Microorganismos</th>
-                  <th className="w-1/13 px-1 py-1">Atención Integral</th>
+                  {/* <th className="w-1/13 px-1 py-1">Atención Integral</th> */}
                   <th className="w-1/12 px-1 py-1">Editar</th>
               </tr>
             </thead>
@@ -227,7 +227,7 @@ const progreso = 30;
                           : [cama.microorganismo_relacionado.microorganismo_nombre]
                       ).join(', ')}
                     </td>
-                    <td className="border px-1 relative">
+{/*                     <td className="border px-1 relative">
                       <div className="w-full bg-gray-200 rounded">
                           <div 
                               className="bg-blue-800 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded" 
@@ -236,16 +236,16 @@ const progreso = 30;
                               {progreso}%
                           </div>
                       </div>
-                    </td>
+                    </td> */}
                     <td className="border px-1">
                       <span className="flex justify-center items-center">
-                        <button 
+{/*                         <button 
                           onClick={() => navegar(`/programaintegral/${ultimaAdmision.id}`)}
                           className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"
                           data-tooltip="Programa Integral"
                         >
                           <TaskIcon color='white' />
-                        </button>
+                        </button> */}
                         <button 
                           onClick={() => navegar(`/editarpaciente/${ultimaAdmision.paciente_relacionado.id}`)}
                           className="tooltip mr-2 flex justify-center items-center bg-blue-800 p-2  rounded text-xs"
@@ -265,7 +265,6 @@ const progreso = 30;
                   </>
                 ) : (
                   <>
-                  <td className="border px-1"></td>
                   <td className="border px-1"></td>
                   <td className="border px-1"></td>
                   <td className="border px-1"></td>

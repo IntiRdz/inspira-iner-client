@@ -14,21 +14,28 @@ import { validationSchemaPatient } from '../../components/forms/validationSchema
 import { NUEVO_PACIENTE } from '../../graphql/mutations';
 
 import { SUSCRIPCION_NUEVO_PACIENTE } from '../../graphql/subscriptions';
-import { OBTENER_CAMAS_URGENCIAS } from '../../graphql/queries';
+import { OBTENER_CAMAS_URGENCIAS, OBTENER_CAMAS } from '../../graphql/queries';
  import { SUSCRIPCION_ACTUALIZAR_CAMA } from '../../graphql/subscriptions';  
 import FormPatientNew from '../../components/forms/FormPatientNew';
 
 export default function PacienteNuevo () {
+
     
     // routing
     const router = useRouter();
-
+    
     // Mensaje de alerta
     const [mensaje, guardarMensaje] = useState(null);
+    const [actualizando, setActualizando] = useState(false);
+
+
     const { cama } = useContext(PacienteContext);
 
     const [nuevoPaciente] = useMutation(NUEVO_PACIENTE, {
-        refetchQueries: [{ query: OBTENER_CAMAS_URGENCIAS }],
+        refetchQueries: [
+            { query: OBTENER_CAMAS_URGENCIAS },
+            { query: OBTENER_CAMAS}
+        ],
         onError: (error) => {
             console.error("Error al crear paciente:", error);
         }
@@ -66,10 +73,10 @@ export default function PacienteNuevo () {
             hospitalizado: true,
         },
 
-        validationSchemaPatient,
+        validationSchema: validationSchemaPatient,
 
         onSubmit: async valores => {
-            //console.log("Formulario enviado con los siguientes valores:", valores);
+            console.log("onSubmit llamado");
             const { 
                 servicio_tratante,
                 expediente,
@@ -119,72 +126,65 @@ export default function PacienteNuevo () {
                 cama_relacionada: cama,
             };
 
-            //console.log("Valores actualizados:", valoresActualizados)
-
-
-            Swal.fire({
-                title: 'Creando Paciente...',
-                text: 'Por favor, espera.',
-                allowOutsideClick: true,
-                showConfirmButton: false,
-                onBeforeOpen: () => {
-                    Swal.showLoading()
-                },
-            });
-
+            if (!formik.isValid) {
+                console.log("Formulario no válido según Formik");
+                return;
+            }
+            setActualizando(true);
             try {
-                //console.log("antes de la llamada a crear Paciente");
                 const { data } = await nuevoPaciente({
                     variables: {
                         input: valoresActualizados
                     },
                 });
 
-            // Captura el ID del paciente creado
-            const pacienteId = data.nuevoPaciente.id; 
+                // Captura el ID del paciente creado
+                const pacienteId = data.nuevoPaciente.id; 
 
-            // Cierra la alerta de carga
-            Swal.close();
-
-            // Muestra la alerta de éxito
-            Swal.fire(
-                'Creado',
-                'Se agregó correctamente al paciente',
-                'success'
-            );
+                setActualizando(false);
+                Swal.fire(
+                    'Creado', 
+                    'Se agregó correctamente al paciente', 
+                    'success');
 
                 /* router.push('/'); */
                 router.push(`/editarpaciente/${pacienteId}`);
 
             } catch (error) {
-                console.error("Error completo:", error);
-            
-                let mensajeError = "Error durante la actualización del paciente.";
-            
-                // Verificar si es un error de Apollo y tratar de obtener detalles más específicos
-                if (error.networkError && error.networkError.result) {
-                    let errores = error.networkError.result.errors;
-                    if (errores && errores.length > 0) {
-                        // Asumiendo que el servidor devuelve mensajes de error útiles
-                        mensajeError = errores.map(err => err.message).join(", ");
-                    }
-                } else if (error.networkError) {
-                    mensajeError = `Error de red: ${error.networkError.message}`;
-                } else if (error.graphQLErrors) {
-                    mensajeError = `Error en GraphQL: ${error.graphQLErrors.map(err => err.message).join(", ")}`;
-                } else {
-                    mensajeError = `Error: ${error.message}`;
-                }
-            
-                guardarMensaje(mensajeError);
-                // Ocultar mensaje después de 5 segundos
-                setTimeout(() => {
-                    guardarMensaje(null);
-                }, 10000);
+                setActualizando(false); // Reactiva el botón si hay un error
+                handleUpdateError(error);
             }
         }
         
     })
+
+    const handleUpdateError = (error) => {
+        console.error("Errores en graphQL:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Errores de validación',
+            text: 'Por favor, revise los datos del formulario.',
+            footer: 'Detalles del error en la consola.'
+        });
+    
+        let mensajeError = getErrorMessage(error);
+        guardarMensaje(mensajeError);
+        setTimeout(() => guardarMensaje(null), 10000);
+    };
+    
+    const getErrorMessage = (error) => {
+        if (error.networkError?.result?.errors) {
+            return error.networkError.result.errors.map(err => err.message).join(", ");
+        }
+        if (error.networkError) {
+            return `Error de red: ${error.networkError.message}`;
+        }
+        if (error.graphQLErrors) {
+            return `Error en GraphQL: ${error.graphQLErrors.map(err => err.message).join(", ")}`;
+        }
+        return `Error: ${error.message}`;
+    };
+
 
     const mostrarMensaje = () => {
         return(
@@ -201,6 +201,7 @@ export default function PacienteNuevo () {
                     
                 <FormPatientNew 
                     formik={formik}
+                    actualizando={actualizando}
                 />
                 </div>
             </div>

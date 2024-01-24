@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 export const validationSchemaPatient = Yup.object({
     expediente: Yup.string()
     .required('El expediente del paciente es obligatorio')
-    .matches(/^[a-zA-Z0-9]{6,9}$/, 'El expediente debe tener entre 6 y 9 caracteres alfanuméricos'),            
+    .matches(/^[a-zA-Z0-9]{9,9}$/, 'El expediente debe tener entre 9 caracteres alfanuméricos ejem 000xxxxx o IANxxxxx'),            
     pac_apellido_paterno: Yup.string().required('El apellido paterno del paciente es obligatorio'),
     pac_apellido_materno: Yup.string().required('El apellido materno del paciente es obligatorio'),
     pac_nombre: Yup.string().required('El nombre del paciente es obligatorio'),

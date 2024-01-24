@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Formik } from 'formik';
 import { AsignarCama } from './AsignarCama';
 
-export default function  FormPatientEdit  ({ initialValues, validationSchema, onSubmit, camaActual, onData=1  })  {
+export default function  FormPatientEdit  ({ initialValues, validationSchema, onSubmit, camaActual, onData=1, actualizando })  {
 
     const someData = "Data from child";
 
@@ -588,10 +588,11 @@ export default function  FormPatientEdit  ({ initialValues, validationSchema, on
         {mostrarAsignarCama && <AsignarCama />}  
 
         <input
-        type="submit"
-        className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
-        value="Actualizar Paciente"
-            />
+            type="submit"
+            className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
+            value={actualizando ? "Actualizando..." : "Actualizar Paciente"}
+            disabled={actualizando}
+        />
 </div>
                         </div>
                     </form>

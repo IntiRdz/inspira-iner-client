@@ -1,7 +1,7 @@
 import React from 'react';
 import { AsignarCama } from './AsignarCama';
 
-export default function FormPatientNew  ({ formik }) {
+export default function FormPatientNew  ({ formik, actualizando}) {
     return (
         
         <form
@@ -394,15 +394,14 @@ export default function FormPatientNew  ({ formik }) {
                 </div>
             </div>
 
-
+                <p>Asignar cama</p>
             <AsignarCama />               
 
             <input
-            type="submit"
-            className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
-            value="Registrar Paciente"
-
-            
+                type="submit"
+                className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
+                value={actualizando ? "Registrando..." : "Registrar Paciente"}
+                disabled={actualizando}
             />
         </div>
         </div>

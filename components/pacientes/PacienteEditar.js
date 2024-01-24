@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import PacienteContext from '../../context/pacientes/PacienteContext';
 
 
-import { OBTENER_CAMAS_DISPONIBLES, OBTENER_PACIENTE } from '../../graphql/queries';
+import { OBTENER_CAMAS, OBTENER_CAMAS_DISPONIBLES, OBTENER_PACIENTE, OBTENER_PACIENTES } from '../../graphql/queries';
 import { ACTUALIZAR_PACIENTE } from '../../graphql/mutations';
 
 import { validationSchemaPatient } from '../../components/forms/validationSchemas';
@@ -22,14 +22,11 @@ export default function PacienteEditar ({obtenerPaciente, isOpen, onClose}) {
     const [mensaje, guardarMensaje] = useState(null);
     const [childData, setChildData] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(isOpen);
+    const [actualizando, setActualizando] = useState(false);
 
     const id = obtenerPaciente.id;
 
     const { cama } = useContext(PacienteContext);
-
-    const handleDataFromChild = (data) => {
-        setChildData(data);
-    }
 
     // Sincroniza el estado local del modal con el prop 'isOpen'
     useEffect(() => {
@@ -40,13 +37,54 @@ export default function PacienteEditar ({obtenerPaciente, isOpen, onClose}) {
         onClose(); // Cierra el modal utilizando la función del padre
     };
 
+    const handleDataFromChild = (data) => {
+        setChildData(data);
+    }
+
 
     const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
+        update(cache, { data: { actualizarPaciente } }) {
+            // Actualizar OBTENER_PACIENTES
+            const { obtenerPacientes } = cache.readQuery({ query: OBTENER_PACIENTES });
+            cache.writeQuery({
+                query: OBTENER_PACIENTES,
+                data: { obtenerPacientes: [...obtenerPacientes, actualizarPaciente] },
+            });
+    
+            // Actualizar OBTENER_CAMAS_DISPONIBLES si es necesario
+            try {
+                const { obtenerCamasDisponibles } = cache.readQuery({ query: OBTENER_CAMAS_DISPONIBLES });
+                // Aquí, actualiza obtenerCamasDisponibles según sea necesario
+                cache.writeQuery({
+                    query: OBTENER_CAMAS_DISPONIBLES,
+                    data: { obtenerCamasDisponibles: actualizarPaciente },
+                });
+            } catch (error) {
+                console.log("No se pudo actualizar OBTENER_CAMAS_DISPONIBLES: ", error);
+            }
+    
+            // Actualizar OBTENER_CAMAS si es necesario
+            try {
+                const { obtenerCamas } = cache.readQuery({ query: OBTENER_CAMAS });
+                // Aquí, actualiza obtenerCamas según sea necesario
+                cache.writeQuery({
+                    query: OBTENER_CAMAS,
+                    data: { obtenerCamas: actualizarPaciente },
+                });
+            } catch (error) {
+                console.log("No se pudo actualizar OBTENER_CAMAS: ", error);
+            }
+        },
+    });
+
+/*     const [actualizarPaciente] = useMutation(ACTUALIZAR_PACIENTE, {
         refetchQueries: [
             { query: OBTENER_PACIENTE, variables: { id: id } },
-            { query: OBTENER_CAMAS_DISPONIBLES }
+            { query: OBTENER_CAMAS_DISPONIBLES },
+            { query: OBTENER_CAMAS }
+
         ],
-    });
+    }); */
 
     //console.log("obtenerPaciente", obtenerPaciente);
 
@@ -68,120 +106,67 @@ export default function PacienteEditar ({obtenerPaciente, isOpen, onClose}) {
         caracteristicas_especiales: obtenerPaciente.caracteristicas_especiales || [],
         pac_codigo_uveh: obtenerPaciente.pac_codigo_uveh || [],
         pac_aislamiento: obtenerPaciente.pac_aislamiento,
-        fecha_ingreso: ultimaAdmision?.fecha_ingreso ? format(new Date(ultimaAdmision.fecha_ingreso), 'yyyy-MM-dd HH:mm') : '',
-        fecha_prealta: ultimaAdmision?.fecha_prealta ? format(new Date(ultimaAdmision.fecha_prealta), 'yyyy-MM-dd HH:mm') : '',
-        fecha_egreso: ultimaAdmision?.fecha_egreso ? format(new Date(ultimaAdmision.fecha_egreso), 'yyyy-MM-dd') : '',
+        fecha_ingreso: ultimaAdmision?.fecha_ingreso ? format(new Date(ultimaAdmision.fecha_ingreso), 'yyyy-MM-dd HH:mm') : undefined,
+        fecha_prealta: ultimaAdmision?.fecha_prealta ? format(new Date(ultimaAdmision.fecha_prealta), 'yyyy-MM-dd HH:mm') : undefined,
+        fecha_egreso: ultimaAdmision?.fecha_egreso ? format(new Date(ultimaAdmision.fecha_egreso), 'yyyy-MM-dd') : undefined,
         hospitalizado: ultimaAdmision?.hospitalizado || false,
         cama_relacionada: camaActual
     };
 
     const actualizarInfoPaciente = async valores => {
-        const { 
-            servicio_tratante,
-            expediente,
-            pac_apellido_paterno,
-            pac_apellido_materno,
-            pac_nombre,
-            pac_genero,
-            pac_FN,
-            pac_dispositivo_o2,
-            pac_hemodialisis,
-            diagnostico1,
-            creado,
-            diagnostico,
-            caracteristicas_especiales,
-            pac_codigo_uveh,
-            pac_aislamiento,
-            fecha_ingreso,
-            fecha_prealta,
-            fecha_egreso,
-            hospitalizado,
-            cama_relacionada
-        } = valores;
-
-        //console.log("Valores Inciales:", valores)
-
-        const valoresActualizados = {
-            servicio_tratante,
-            expediente,
-            pac_apellido_paterno,
-            pac_apellido_materno,
-            pac_nombre,
-            creado,
-            pac_genero,
-            pac_FN,
-            pac_dispositivo_o2,
-            pac_hemodialisis,
-            diagnostico1,
-            diagnostico,
-            caracteristicas_especiales,
-            pac_codigo_uveh,
-            pac_aislamiento,
-            fecha_ingreso: fecha_ingreso === '' ? undefined : fecha_ingreso, // Si es cadena vacía, se envía undefined
-            fecha_prealta: fecha_prealta === '' ? undefined : fecha_prealta, // Si es cadena vacía, se envía undefined
-            fecha_egreso: fecha_egreso === '' ? undefined : fecha_egreso,
-            hospitalizado,
-        };
-        // Si se muestra el componente childData y hay una cama asignada, incluir en los valores actualizados
-        if (cama && childData) {
-            valoresActualizados.cama_relacionada = cama;
-        }
-
-        //console.log("Valores actualizados:", valoresActualizados)
-
+        setActualizando(true); // Desactiva el botón al iniciar la actualización
         try {
-            const { data} = await actualizarPaciente({
+            // Incluye la cama asignada si está disponible
+            const valoresActualizados = {
+                ...valores,
+                cama_relacionada: cama && childData ? cama : valores.cama_relacionada
+            };
+    
+            await actualizarPaciente({
                 variables: {
                     id,
                     input: valoresActualizados
                 }
             });
-            //console.log("Respuesta de GraphQL", data);
-            // Mostrar Alerta
+    
+            setActualizando(false);
             Swal.fire(
-                'Actualizado',
-                'El paciente se actualizó correctamente',
-                'success'
-            )
-
-            // Redireccionar
-            //router.push(`/editarpaciente/${id}`);
+                'Actualizado', 
+                'El paciente se actualizó correctamente', 
+                'success');
             onClose();
-            
         } catch (error) {
-            console.error("Errores en graphQL:", error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Errores de validación',
-                text: 'Por favor, revise los datos del formulario.',
-                footer: 'Detalles del error en la consola.'
-            });
-            console.error("Error completo:", error);
-        
-            let mensajeError = "Error desconocido durante la actualización del paciente.";
-        
-            // Verificar si es un error de Apollo y tratar de obtener detalles más específicos
-            if (error.networkError && error.networkError.result) {
-                let errores = error.networkError.result.errors;
-                if (errores && errores.length > 0) {
-                    // Asumiendo que el servidor devuelve mensajes de error útiles
-                    mensajeError = errores.map(err => err.message).join(", ");
-                }
-            } else if (error.networkError) {
-                mensajeError = `Error de red: ${error.networkError.message}`;
-            } else if (error.graphQLErrors) {
-                mensajeError = `Error en GraphQL: ${error.graphQLErrors.map(err => err.message).join(", ")}`;
-            } else {
-                mensajeError = `Error: ${error.message}`;
-            }
-        
-            guardarMensaje(mensajeError);
-            // Ocultar mensaje después de 5 segundos
-            setTimeout(() => {
-                guardarMensaje(null);
-            }, 10000);
+            setActualizando(false); // Reactiva el botón si hay un error
+            handleUpdateError(error);
         }
-    }
+    };
+
+    const handleUpdateError = (error) => {
+        console.error("Errores en graphQL:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Errores de validación',
+            text: 'Por favor, revise los datos del formulario.',
+            footer: 'Detalles del error en la consola.'
+        });
+    
+        let mensajeError = getErrorMessage(error);
+        guardarMensaje(mensajeError);
+        setTimeout(() => guardarMensaje(null), 10000);
+    };
+    
+    const getErrorMessage = (error) => {
+        if (error.networkError?.result?.errors) {
+            return error.networkError.result.errors.map(err => err.message).join(", ");
+        }
+        if (error.networkError) {
+            return `Error de red: ${error.networkError.message}`;
+        }
+        if (error.graphQLErrors) {
+            return `Error en GraphQL: ${error.graphQLErrors.map(err => err.message).join(", ")}`;
+        }
+        return `Error: ${error.message}`;
+    };
 
 
     const mostrarMensaje = () => {
@@ -205,6 +190,7 @@ export default function PacienteEditar ({obtenerPaciente, isOpen, onClose}) {
                         onSubmit={actualizarInfoPaciente}
                         camaActual={camaActual}
                         onData={handleDataFromChild}
+                        actualizando={actualizando}
                         
                     />
                 </div>

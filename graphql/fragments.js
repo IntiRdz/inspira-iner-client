@@ -26,6 +26,7 @@ export const FRAGMENTO_CAMA_HISTORIAL = gql`
   fragment FragmentoCamaHistorial on CamaHistorial {
     id
     fecha_traslado
+    fecha_creado
   }
 `;
 

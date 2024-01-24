@@ -28,7 +28,7 @@ const Editar = () => {
     const { data, loading, error } = useQuery(OBTENER_PACIENTE, {
         variables: { id }
     });
-    console.log("data", data);
+    //console.log("data", data);
 
     const [editPx, setEditPx] = useState(false);
 
