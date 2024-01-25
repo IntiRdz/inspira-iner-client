@@ -122,8 +122,6 @@ export default function Clinico3 (){
   const CaracteristicasPacienteText = (codigo) => caracteristicasPacienteTextMap[codigo] || codigo;
 
 
-
-const progreso = 30;
   
   const navegar = (ruta) => router.push(ruta);
 
@@ -168,6 +166,10 @@ const progreso = 30;
               const ultimaAdmision = ultimoHistorial && ultimoHistorial.admision_relacionada
                 ? ultimoHistorial.admision_relacionada
                 : {};
+
+
+                const { paciente_relacionado, cama_relacionada, microorganismo_relacionado, programaintegral } = ultimaAdmision;
+                console.log("programa integral", programaintegral)
 
               // Calcular las clases para la fecha de prealta
               let fechaPreAltaClasses = calcularFechaPreAltaClasses(ultimaAdmision.fecha_prealta);
@@ -231,9 +233,19 @@ const progreso = 30;
                       <div className="w-full bg-gray-200 rounded">
                           <div 
                               className="bg-blue-800 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded" 
-                              style={{ width: `${progreso}%` }}
-                          >
-                              {progreso}%
+                              style={{ 
+                                width: `${
+                                    ultimaAdmision.programaintegral && ultimaAdmision.programaintegral.preguntas_contestadas !== null 
+                                    ? ((ultimaAdmision.programaintegral.preguntas_contestadas / 12) * 100).toFixed(1)
+                                    : '0'
+                                }%` 
+                            }}
+                        >
+                            {   
+                                ultimaAdmision.programaintegral && ultimaAdmision.programaintegral.preguntas_contestadas !== null 
+                                ? ((ultimaAdmision.programaintegral.preguntas_contestadas / 12) * 100).toFixed(1)
+                                : '0'
+                            }%
                           </div>
                       </div>
                     </td>

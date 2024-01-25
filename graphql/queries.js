@@ -250,6 +250,9 @@ export const OBTENER_CAMAS_1 = gql`
                 diagnostico {
                   ...FragmentoDiagnostico
                 }
+                programaintegral{
+                  ...FragmentoProgramaIntegral
+                }
             }
           }
         }
@@ -261,6 +264,7 @@ export const OBTENER_CAMAS_1 = gql`
   ${FRAGMENTO_PACIENTE}
   ${FRAGMENTO_MICROORGANISMO}
   ${FRAGMENTO_DIAGNOSTICO}
+  ${FRAGMENTO_PROGRAMA_INTEGRAL}
 `;
 
 export const OBTENER_CAMAS_2 = gql`
@@ -283,6 +287,9 @@ export const OBTENER_CAMAS_2 = gql`
                 diagnostico {
                   ...FragmentoDiagnostico
                 }
+                programaintegral{
+                  ...FragmentoProgramaIntegral
+                }
             }
           }
         }
@@ -294,6 +301,7 @@ export const OBTENER_CAMAS_2 = gql`
   ${FRAGMENTO_PACIENTE}
   ${FRAGMENTO_MICROORGANISMO}
   ${FRAGMENTO_DIAGNOSTICO}
+  ${FRAGMENTO_PROGRAMA_INTEGRAL}
 `;
 
 export const OBTENER_CAMAS_3 = gql`
@@ -316,6 +324,9 @@ export const OBTENER_CAMAS_3 = gql`
                 diagnostico {
                   ...FragmentoDiagnostico
                 }
+                programaintegral{
+                  ...FragmentoProgramaIntegral
+                }
             }
           }
         }
@@ -327,6 +338,7 @@ export const OBTENER_CAMAS_3 = gql`
   ${FRAGMENTO_PACIENTE}
   ${FRAGMENTO_MICROORGANISMO}
   ${FRAGMENTO_DIAGNOSTICO}
+  ${FRAGMENTO_PROGRAMA_INTEGRAL}
 `;
 
 export const OBTENER_CAMAS_4 = gql`

@@ -51,8 +51,19 @@ export default function ProgramaPage () {
 
     const admonId = data.obtenerAdmision.id;
 
+
+
     //console.log("data ObtenerAdmision",data)
-    console.log("Programa Desde pagina [id]",programaintegral);
+    console.log("Objeto Programa Desde pagina [id]",programaintegral);
+
+
+
+
+
+    const num_contestadas = programaintegral.preguntas_contestadas;
+    console.log("Contestadas",num_contestadas);
+
+
     //console.log("Programa Preguntas contestadas",programaintegral.preguntas_contestadas); 
     //console.log("Diagnostico", diagnostico);
     //console.log("Paciente", paciente_relacionado);
